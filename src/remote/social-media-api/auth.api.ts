@@ -17,10 +17,10 @@ export const apiLogout = async (): Promise<socialApiResponse> => {
     return { status: response.status, payload: response.data };
 }
 
-export const apiRegister = async (firstName: string, lastName: string, email: string, password: string): Promise<socialApiResponse> => {
+export const apiRegister = async (firstName: string, lastName: string, email: string, password: string, username: string): Promise<socialApiResponse> => {
     const response = await socialClient.post<any>(
         `${baseURL}/register`,
-        { firstName: firstName, lastName: lastName, email: email, password: password }
+        { firstName: firstName, lastName: lastName, email: email, password: password, username: username }
     );
     return { status: response.status, payload: response.data };
 }
