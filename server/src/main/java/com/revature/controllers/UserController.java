@@ -4,10 +4,9 @@ import com.revature.models.User;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,5 +21,9 @@ public class UserController {
 
 //    public ResponseEntity<User> upsertUser (@RequestBody User user) {
 //
-//    } 
+//    }
+    @GetMapping(value="/{username}")
+    public ResponseEntity<Optional<User>> findByUsername(@PathVariable String username){
+        return ResponseEntity.ok(this.userService.findByUsername(username));
+    }
 }
