@@ -40,6 +40,7 @@ public class UserController {
         }
         return ResponseEntity.ok(userOptional.get());
     }
+
     @GetMapping("/user/{username}")
     public ResponseEntity<User> findByUsername(@PathVariable String username) {
         Optional<User> userOptional = userService.findByUsername(username);
@@ -56,4 +57,5 @@ public class UserController {
 //        }
 //        return ResponseEntity.ok(userOptional.get());
 //    }
+
 }

@@ -1,23 +1,17 @@
 package com.revature.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.annotations.Authorized;
 import com.revature.models.Post;
 import com.revature.services.PostService;
 
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"}, allowCredentials = "true")
 public class PostController {
 
@@ -42,6 +36,24 @@ public class PostController {
     @GetMapping("/feed")
     public ResponseEntity<List<Post>> getAllTopPosts() {
         return ResponseEntity.ok(this.postService.getAllTop());
+    }
+
+    // Testing Method: Create/Add A Post
+    @PostMapping
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+        return ResponseEntity.ok(this.postService.upsert(post));
+    }
+
+    // Testing Method: Get a Post By Id
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable int id) {
+        Optional<Post> postOptional = postService.findById(id);
+
+        if (!postOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(postOptional.get());
     }
 
 }
