@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.revature.models.PostType;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,9 @@ public class PostService {
 
 	public List<Post> getAllTop() {
 		return postRepository.findAllByPostType(PostType.Top);
+	}
+
+	public Optional<Post> findById(int id) {
+		return postRepository.findById(id);
 	}
 }
