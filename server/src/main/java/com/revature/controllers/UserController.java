@@ -40,7 +40,7 @@ public class UserController {
         }
         return ResponseEntity.ok(userOptional.get());
     }
-    @GetMapping("/{username}")
+    @GetMapping("/user/{username}")
     public ResponseEntity<User> findByUsername(@PathVariable String username) {
         Optional<User> userOptional = userService.findByUsername(username);
         if(!userOptional.isPresent()){
@@ -48,4 +48,12 @@ public class UserController {
         }
         return ResponseEntity.ok(userOptional.get());
     }
+//    @GetMapping("/user")
+//    public ResponseEntity<User> findByUsername(@RequestBody String username) {
+//        Optional<User> userOptional = userService.findByUsername(username);
+//        if(!userOptional.isPresent()){
+//            return ResponseEntity.badRequest().build();
+//        }
+//        return ResponseEntity.ok(userOptional.get());
+//    }
 }
