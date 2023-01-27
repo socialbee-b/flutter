@@ -58,4 +58,10 @@ public class UserController {
 //        return ResponseEntity.ok(userOptional.get());
 //    }
 
+    @PutMapping("/user/{id}")
+    public ResponseEntity<User> updateImageUrl(@PathVariable int id, @RequestBody String imageUrl) {
+        User u = userService.updateImageUrl(id, imageUrl);
+        return ResponseEntity.ok().body(u);
+    }
+
 }
