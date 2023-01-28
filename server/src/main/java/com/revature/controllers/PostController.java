@@ -77,4 +77,15 @@ public class PostController {
         post.setLikes(post.getLikes() - 1);
         return ResponseEntity.ok(postService.upsert(post));
     }
+    @PostMapping("editPost/{id}")
+    public ResponseEntity<Post> editPost(@PathVariable int id, @RequestBody String editString) {
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        Post newPost = postOptional.get();
+        newPost.setText(editString);
+
+        return ResponseEntity.ok(this.postService.upsert(newPost));
+    }
 }
