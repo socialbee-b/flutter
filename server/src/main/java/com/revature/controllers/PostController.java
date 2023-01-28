@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.revature.repositories.PostRepository;
-import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -64,9 +63,13 @@ public class PostController {
 
     @PostMapping("editPost/{id}")
     public ResponseEntity<Post> editPost(@PathVariable int id, @RequestBody String editString) {
-        Optional<Post> oldPost = postService.findById(id);
-        Post newPost = oldPost.get();
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        Post newPost = postOptional.get();
         newPost.setText(editString);
+
         return ResponseEntity.ok(this.postService.upsert(newPost));
     }
     @PutMapping("/{id}/like")
