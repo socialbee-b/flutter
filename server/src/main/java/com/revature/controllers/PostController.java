@@ -62,12 +62,33 @@ public class PostController {
         return ResponseEntity.ok(postOptional.get());
     }
 
-
     @PostMapping("editPost/{id}")
     public ResponseEntity<Post> editPost(@PathVariable int id, @RequestBody String editString) {
         Optional<Post> oldPost = postService.findById(id);
         Post newPost = oldPost.get();
         newPost.setText(editString);
         return ResponseEntity.ok(this.postService.upsert(newPost));
+    }
+    @PutMapping("/{id}/like")
+    public ResponseEntity<Post> addPostLikes(@PathVariable int id) {
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Post post = postOptional.get();
+        post.setLikes(post.getLikes() + 1);
+        return ResponseEntity.ok(postService.upsert(post));
+    }
+
+    @PutMapping("/{id}/unlike")
+    public ResponseEntity<Post> removePostLikes(@PathVariable int id) {
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Post post = postOptional.get();
+        post.setLikes(post.getLikes() - 1);
+        return ResponseEntity.ok(postService.upsert(post));
+
     }
 }
