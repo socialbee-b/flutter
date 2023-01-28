@@ -24,15 +24,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
-        Optional<User> optional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
+        Optional<User> userOptional = authService.findByCredentials(loginRequest.getEmail(), loginRequest.getPassword());
 
-        if(!optional.isPresent()) {
+        if(!userOptional.isPresent()) {
             return ResponseEntity.badRequest().build();
         }
 
-        session.setAttribute("user", optional.get());
+        session.setAttribute("user", userOptional.get());
 
-        return ResponseEntity.ok(optional.get());
+        return ResponseEntity.ok(userOptional.get());
     }
 
     @PostMapping("/logout")
@@ -44,11 +44,12 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest) {
-        User created = new User(0,
+        User created = new User(
                 registerRequest.getEmail(),
                 registerRequest.getPassword(),
                 registerRequest.getFirstName(),
-                registerRequest.getLastName());
+                registerRequest.getLastName(),
+                registerRequest.getUsername());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(authService.register(created));
     }

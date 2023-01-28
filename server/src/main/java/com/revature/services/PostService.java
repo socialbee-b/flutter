@@ -30,5 +30,8 @@ public class PostService {
 		return postRepository.findAllByPostType(PostType.Top);
 	}
 
+	public Optional<Post> findById(int id) {
+		return postRepository.findById(id);
+	}
 
 }

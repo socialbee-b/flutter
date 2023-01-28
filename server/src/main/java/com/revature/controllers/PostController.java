@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 @RestController
-@RequestMapping("/post")
+@RequestMapping("/posts")
 @CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"}, allowCredentials = "true")
 public class PostController {
 
@@ -45,12 +45,22 @@ public class PostController {
         return ResponseEntity.ok(this.postService.getAllTop());
     }
 
-    @PatchMapping(value="/updatePost/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable int id, @RequestBody Post post, String t){
-        Optional<Post> p = postRepository.findById(id);
 
-        post.setText(t);
+    // Testing Method: Create/Add A Post
+    @PostMapping
+    public ResponseEntity<Post> createPost(@RequestBody Post post) {
+        return ResponseEntity.ok(this.postService.upsert(post));
+    }
 
-        return ResponseEntity.ok(this.postRepository.save(post));
+    // Testing Method: Get a Post By Id
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable int id) {
+        Optional<Post> postOptional = postService.findById(id);
+
+        if (!postOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(postOptional.get());
     }
 }
