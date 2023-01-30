@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import com.revature.models.Post;
 import com.revature.models.User;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
@@ -58,6 +59,42 @@ public class UserController {
 //        }
 //        return ResponseEntity.ok(userOptional.get());
 //    }
+
+    @PostMapping("editUser/password/{id}")
+    public ResponseEntity<User> editPassword(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userOptional = userService.findById(id);
+        if(!userOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = userOptional.get();
+        newUser.setPassword(editString);
+
+        return ResponseEntity.ok(this.userService.save(newUser));
+    }
+
+    @PostMapping("editUser/email/{id}")
+    public ResponseEntity<User> editEmail(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userOptional = userService.findById(id);
+        if(!userOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = userOptional.get();
+        newUser.setEmail(editString);
+
+        return ResponseEntity.ok(this.userService.save(newUser));
+    }
+
+    @PostMapping("editUser/username/{id}")
+    public ResponseEntity<User> editUsername(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userOptional = userService.findById(id);
+        if(!userOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = userOptional.get();
+        newUser.setUsername(editString);
+
+        return ResponseEntity.ok(this.userService.save(newUser));
+    }
 
     @PutMapping("/user/{id}")
     @Transactional
