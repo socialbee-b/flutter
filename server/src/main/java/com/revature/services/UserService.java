@@ -36,6 +36,7 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+
     public User updateImageUrl(Integer id, String imageUrl) {
         User u = userRepository.getOne(id);
         u.setImageUrl(imageUrl);

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.revature.models.Post;
 import com.revature.repositories.PostRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class PostService {
@@ -34,5 +35,6 @@ public class PostService {
 		return postRepository.findById(id);
 	}
 
+	@Transactional
 	public void deletePost(int id) { this.postRepository.deleteById(id);}
 }

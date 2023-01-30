@@ -57,7 +57,6 @@ public class PostController {
         return ResponseEntity.ok(postOptional.get());
     }
     @DeleteMapping("/{id}")
-    @Transactional
     public ResponseEntity<String> deletePost(@PathVariable Integer id) {
         postService.deletePost(id);
         return ResponseEntity.ok("this post was deleted");
