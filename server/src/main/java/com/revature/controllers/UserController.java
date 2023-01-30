@@ -74,6 +74,12 @@ public class UserController {
 
     @PutMapping("/{id}/email")
     public ResponseEntity<User> editEmail(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByEmail(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<User> userOptional = userService.findById(id);
         if(!userOptional.isPresent()){
             return ResponseEntity.badRequest().build();
@@ -81,15 +87,21 @@ public class UserController {
         User newUser = userOptional.get();
         newUser.setEmail(editString);
 
-        if(!(this.userService.findByEmail(editString)).isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
-
         return ResponseEntity.ok(this.userService.save(newUser));
     }
 
     @PutMapping("/{id}/username")
     public ResponseEntity<User> editUsername(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByUsername(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(!(this.userService.findByUsername(editString)).isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<User> userOptional = userService.findById(id);
         if(!userOptional.isPresent()){
             return ResponseEntity.badRequest().build();
@@ -97,9 +109,6 @@ public class UserController {
         User newUser = userOptional.get();
         newUser.setUsername(editString);
 
-        if(!(this.userService.findByUsername(editString)).isEmpty()){
-            return ResponseEntity.badRequest().build();
-        }
 
         return ResponseEntity.ok(this.userService.save(newUser));
     }
