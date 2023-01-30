@@ -3,7 +3,9 @@ package com.revature.services;
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,11 +38,38 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    @Transactional
+    public List<User> addFollower(User followed, User follower) {
+        List<User> followSuccess = new ArrayList();
 
-    public User updateImageUrl(Integer id, String imageUrl) {
-        User u = userRepository.getOne(id);
-        u.setImageUrl(imageUrl);
-        return userRepository.saveAndFlush(u);
+        List<User> newFollowers = followed.getFollowers();
+        newFollowers.add(follower);
+        followed.setFollowers(newFollowers);
+
+        List<User> newFollowing = follower.getFollowing();
+        newFollowing.add(followed);
+        follower.setFollowing(newFollowing);
+
+        followSuccess.add(followed);
+        followSuccess.add(follower);
+        return followSuccess;
+    }
+
+    @Transactional
+    public List<User> removeFollower(User followed, User follower) {
+        List<User> followSuccess = new ArrayList();
+
+        List<User> newFollowers = followed.getFollowers();
+        newFollowers.remove(follower);
+        followed.setFollowers(newFollowers);
+
+        List<User> newFollowing = follower.getFollowing();
+        newFollowing.remove(followed);
+        follower.setFollowing(newFollowing);
+
+        followSuccess.add(followed);
+        followSuccess.add(follower);
+        return followSuccess;
     }
 }
 
