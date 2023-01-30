@@ -1,5 +1,7 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,9 +19,14 @@ public class User {
     private String lastName;
     @Column(unique = true)
     private String username;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"following", "followers"})
+    @JoinTable(name = "follower_following",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id", referencedColumnName = "id"))
     private List<User> followers;
-    @OneToMany(cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "followers")
+    @JsonIgnoreProperties({"following", "followers"})
     private List<User> following;
     private String imageUrl;
 
