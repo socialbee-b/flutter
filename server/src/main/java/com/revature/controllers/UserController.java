@@ -5,6 +5,7 @@ import com.revature.models.User;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -94,4 +95,12 @@ public class UserController {
 
         return ResponseEntity.ok(this.userService.save(newUser));
     }
+
+    @PutMapping("/user/{id}")
+    @Transactional
+    public ResponseEntity<User> updateImageUrl(@PathVariable int id, @RequestBody String imageUrl) {
+        User u = userService.updateImageUrl(id, imageUrl);
+        return ResponseEntity.ok().body(u);
+    }
+
 }

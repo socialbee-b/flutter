@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.annotations.Authorized;
@@ -54,6 +55,11 @@ public class PostController {
         }
 
         return ResponseEntity.ok(postOptional.get());
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable Integer id) {
+        postService.deletePost(id);
+        return ResponseEntity.ok("this post was deleted");
     }
 
     @PutMapping("/{id}/like")
