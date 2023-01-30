@@ -3,6 +3,7 @@ package com.revature.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.revature.models.PostType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -94,4 +95,5 @@ public class PostController {
 
         return ResponseEntity.ok(this.postService.upsert(newPost));
     }
+
 }
