@@ -81,6 +81,10 @@ public class UserController {
         User newUser = userOptional.get();
         newUser.setEmail(editString);
 
+        if(!(this.userService.findByEmail(editString)).isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
         return ResponseEntity.ok(this.userService.save(newUser));
     }
 
@@ -92,6 +96,11 @@ public class UserController {
         }
         User newUser = userOptional.get();
         newUser.setUsername(editString);
+
+        System.out.println((this.userService.findByUsername(editString)).isEmpty());
+        if(!(this.userService.findByUsername(editString)).isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
 
         return ResponseEntity.ok(this.userService.save(newUser));
     }
