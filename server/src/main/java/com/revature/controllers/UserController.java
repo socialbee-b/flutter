@@ -97,7 +97,6 @@ public class UserController {
         User newUser = userOptional.get();
         newUser.setUsername(editString);
 
-        System.out.println((this.userService.findByUsername(editString)).isEmpty());
         if(!(this.userService.findByUsername(editString)).isEmpty()){
             return ResponseEntity.badRequest().build();
         }
