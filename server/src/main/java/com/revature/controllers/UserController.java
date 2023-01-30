@@ -74,6 +74,12 @@ public class UserController {
 
     @PutMapping("/{id}/email")
     public ResponseEntity<User> editEmail(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByEmail(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<User> userOptional = userService.findById(id);
         if(!userOptional.isPresent()){
             return ResponseEntity.badRequest().build();
@@ -86,12 +92,23 @@ public class UserController {
 
     @PutMapping("/{id}/username")
     public ResponseEntity<User> editUsername(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByUsername(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(!(this.userService.findByUsername(editString)).isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<User> userOptional = userService.findById(id);
         if(!userOptional.isPresent()){
             return ResponseEntity.badRequest().build();
         }
         User newUser = userOptional.get();
         newUser.setUsername(editString);
+
 
         return ResponseEntity.ok(this.userService.save(newUser));
     }

@@ -38,6 +38,10 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     @Transactional
     public List<User> addFollower(User followed, User follower) {
         List<User> followSuccess = new ArrayList();
