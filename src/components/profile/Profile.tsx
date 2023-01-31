@@ -1,4 +1,5 @@
 import React from "react";
+import UploadFile from "../../s3/UploadFile";
 import { PostCard } from "../post-feed/PostCard";
 import "./Profile.css";
 
@@ -13,6 +14,7 @@ const Profile: React.FC<any> = () => {
 					<div className="flex-row">
 						<p className="followers">123 Followers</p>
 						<p className="following">123 Following</p>
+						<UploadFile />
 					</div>
 				</div>
 			</div>
