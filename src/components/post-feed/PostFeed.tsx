@@ -50,8 +50,9 @@ export const PostFeed = () => {
 				<Button
 					type="submit"
 					variant="contained"
-					sx={{ mt: 3, ml: 1 }}
-					color="warning"
+					sx={{ my: 3, ml: 1 }}
+					// none of the following work: , textAlign: 'center', alignItems: 'center', justifyContent: 'center'
+					// color="warning" //make the color not override the theme
 				>
 					Create Post
 				</Button>
@@ -84,7 +85,10 @@ export const PostFeed = () => {
 			<Container
 				maxWidth="xl"
 				sx={{
-					backgroundColor: "#fff",
+					// backgroundColor: "#fff",
+					mx: 18, //set both margin sizes equal
+					border: 2, //define border
+					borderRadius: '16px', //round the corners, sharp boxes are...fed-esque
 					height: "auto",
 				}}
 			>
