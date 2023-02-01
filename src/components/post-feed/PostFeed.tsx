@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Grid, Button } from "@mui/material";
-import Navbar from "../navbar/Navbar";
 import { PostCard } from "./PostCard";
 import Post from "../../models/Post";
 import { apiGetAllPosts } from "../../remote/social-media-api/postFeed.api";
-import { useContext } from "react";
-import { UserContext } from "../../context/user.context";
 import TextField from "@mui/material/TextField";
 import { apiUpsertPost } from "../../remote/social-media-api/post.api";
+import { getUser } from "../store/users.slice";
+import { useSelector } from "react-redux";
 
 export const PostFeed = () => {
 	const [post, setPosts] = useState<Post[]>([]);
-	const { user } = useContext(UserContext);
+	const user = useSelector(getUser);
 	let welcomeText = "Welcome!";
 	let postForm = <></>;
 
