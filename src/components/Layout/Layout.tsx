@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
+import Toasts from "../toasts/Toasts";
 
 const Layout: React.FC<any> = () => {
 	return (
@@ -9,6 +10,7 @@ const Layout: React.FC<any> = () => {
 			<div className="p-3">
 				<Outlet />
 			</div>
+			<Toasts />
 		</>
 	);
 };

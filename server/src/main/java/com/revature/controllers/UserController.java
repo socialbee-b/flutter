@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import com.revature.models.Post;
+import com.revature.models.PostType;
 import com.revature.models.User;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
@@ -17,6 +18,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -74,6 +76,12 @@ public class UserController {
 
     @PutMapping("/{id}/email")
     public ResponseEntity<User> editEmail(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByEmail(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<User> userOptional = userService.findById(id);
         if(!userOptional.isPresent()){
             return ResponseEntity.badRequest().build();
@@ -86,12 +94,23 @@ public class UserController {
 
     @PutMapping("/{id}/username")
     public ResponseEntity<User> editUsername(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByUsername(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(!(this.userService.findByUsername(editString)).isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
         Optional<User> userOptional = userService.findById(id);
         if(!userOptional.isPresent()){
             return ResponseEntity.badRequest().build();
         }
         User newUser = userOptional.get();
         newUser.setUsername(editString);
+
 
         return ResponseEntity.ok(this.userService.save(newUser));
     }
@@ -134,5 +153,17 @@ public class UserController {
         }
 
         return ResponseEntity.ok(userService.removeFollower(followedUserOpt.get(), followerOpt.get()));
+    }
+    @GetMapping("/{id}/feed")
+    public ResponseEntity<List<Post>> getFeedForUser(@PathVariable int id){
+        Optional<User> optionalUser = userService.findById(id);
+        if(!optionalUser.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        List<Post> feed = userService.getFeedForUser(optionalUser.get());
+        if(feed == null) {
+           return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(feed);
     }
 }

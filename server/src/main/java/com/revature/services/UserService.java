@@ -1,6 +1,9 @@
 package com.revature.services;
 
+import com.revature.models.Post;
+import com.revature.models.PostType;
 import com.revature.models.User;
+import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,9 +16,11 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PostService postService;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PostService postService) {
         this.userRepository = userRepository;
+        this.postService = postService;
     }
 
     public Optional<User> findByCredentials(String email, String password) {
@@ -36,6 +41,10 @@ public class UserService {
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Transactional
@@ -70,6 +79,14 @@ public class UserService {
         followSuccess.add(followed);
         followSuccess.add(follower);
         return followSuccess;
+    }
+    public List<Post> getFeedForUser(User user){
+        List<User> following = user.getFollowing();
+        Optional<List<Post>> feedOptional = postService.getFeedForUser(following);
+        if(!feedOptional.isPresent()){
+            return null;
+        }
+        return feedOptional.get();
     }
 }
 
