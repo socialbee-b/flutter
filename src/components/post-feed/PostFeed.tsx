@@ -1,17 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Box, Container, Grid, Button } from "@mui/material";
-import Navbar from "../navbar/Navbar";
 import { PostCard } from "./PostCard";
 import Post from "../../models/Post";
 import { apiGetAllPosts } from "../../remote/social-media-api/postFeed.api";
-import { useContext } from "react";
-import { UserContext } from "../../context/user.context";
 import TextField from "@mui/material/TextField";
 import { apiUpsertPost } from "../../remote/social-media-api/post.api";
+import { getUser } from "../store/users.slice";
+import { useSelector } from "react-redux";
 
 export const PostFeed = () => {
 	const [post, setPosts] = useState<Post[]>([]);
-	const { user } = useContext(UserContext);
+	const user = useSelector(getUser);
 	let welcomeText = "Welcome!";
 	let postForm = <></>;
 
@@ -50,8 +49,9 @@ export const PostFeed = () => {
 				<Button
 					type="submit"
 					variant="contained"
-					sx={{ mt: 3, ml: 1 }}
-					color="warning"
+					sx={{ my: 3, ml: 1 }}
+					// none of the following work: , textAlign: 'center', alignItems: 'center', justifyContent: 'center'
+					// color="warning" //make the color not override the theme
 				>
 					Create Post
 				</Button>
@@ -84,7 +84,10 @@ export const PostFeed = () => {
 			<Container
 				maxWidth="xl"
 				sx={{
-					backgroundColor: "#fff",
+					// backgroundColor: "#fff",
+					mx: 18, //set both margin sizes equal
+					border: 2, //define border
+					borderRadius: '16px', //round the corners, sharp boxes are...fed-esque
 					height: "auto",
 				}}
 			>
