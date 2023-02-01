@@ -10,6 +10,7 @@ import Tooltip from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
 import { getUser } from "../store/users.slice";
 
+
 export default function Navbar() {
 	const navigate = useNavigate();
 	const user = useSelector(getUser);
