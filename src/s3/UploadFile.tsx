@@ -1,5 +1,7 @@
 import axios from 'axios';
 import React , {useState} from 'react';
+import { useSelector } from 'react-redux';
+import { getUser } from '../components/store/users.slice';
 import { generateUploadURL } from './s3Config';
 
 
@@ -10,6 +12,8 @@ window.Buffer = window.Buffer || require("buffer").Buffer;
 
 const UploadFile: React.FC<any> = () => {
 
+
+    const user = useSelector(getUser);
     const [selectedFile, setSelectedFile] = useState(null);
 
 
@@ -19,7 +23,8 @@ const UploadFile: React.FC<any> = () => {
 
     const uploadFile = async (file: any) => {
         // All axios request here
-        const url = await generateUploadURL();
+        console.log(file);
+        const url = await generateUploadURL(user?.id, file.name);
         console.log(url);
         const response = await axios.put(url, file);
         const imageUrl = url.split('?')[0];

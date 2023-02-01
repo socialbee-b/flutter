@@ -1,12 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
+import SearchBar from "../searchbar/SearchBar";
 import Toasts from "../toasts/Toasts";
 
 const Layout: React.FC<any> = () => {
 	return (
 		<>
-			<Navbar />
+			{/* <Navbar /> */}
+			<SearchBar />
 			<div className="p-3">
 				<Outlet />
 			</div>

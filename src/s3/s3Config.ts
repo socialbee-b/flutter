@@ -1,6 +1,4 @@
 import aws from 'aws-sdk';
-import crypto from 'crypto';
-import { promisify } from 'util';
 // const randomBytes = promisify(crypto.randomBytes);
 
 
@@ -17,10 +15,10 @@ const s3 = new aws.S3({
     signatureVersion: 'v4'
 })
 
-export async function generateUploadURL() {
+export async function generateUploadURL(id: Number, imgName: String) {
     // const rawBytes = await randomBytes(16)
     // const imageName = rawBytes.toString('hex')
-    const imageName = "randomImageName.jpg";
+    const imageName = `user${id}${imgName}`;
 
     const params = ({
         Bucket: bucketName,
