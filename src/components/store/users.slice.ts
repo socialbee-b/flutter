@@ -6,6 +6,7 @@ const BASE_URL = "http://localhost:8080";
 // define our initial state
 const initialState = {
 	status: "idle",
+	users: [],
 };
 
 export const register = createAsyncThunk("auth/register", async (body: any) => {
@@ -39,7 +40,7 @@ export const changeUsername = createAsyncThunk(
 	async (payload: any) => {
 		try {
 			const response = await axios.put(
-				`${BASE_URL}/editUser/username/${payload?.id}`,
+				`${BASE_URL}/users/${payload?.id}/username`,
 				{ password: payload?.newPassword }
 			);
 			return response.data;
@@ -53,7 +54,7 @@ export const changeEmail = createAsyncThunk(
 	async (payload: any) => {
 		try {
 			const response = await axios.put(
-				`${BASE_URL}/editUser/email/${payload?.id}`,
+				`${BASE_URL}/users/${payload?.id}/email`,
 				{ password: payload?.newPassword }
 			);
 			return response.data;
@@ -68,7 +69,7 @@ export const changePassword = createAsyncThunk(
 	async (payload: any) => {
 		try {
 			const response = await axios.put(
-				`${BASE_URL}/editUser/password/${payload?.id}`,
+				`${BASE_URL}/users/${payload?.id}/password`,
 				{ password: payload?.newPassword }
 			);
 			return response.data;
@@ -77,6 +78,15 @@ export const changePassword = createAsyncThunk(
 		}
 	}
 );
+
+export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
+	try {
+		const response = await axios.get(`${BASE_URL}/users`);
+		return response.data;
+	} catch (err: any) {
+		return err.message;
+	}
+});
 
 // create the user slice
 const usersSlice = createSlice({
