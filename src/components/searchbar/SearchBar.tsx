@@ -11,8 +11,8 @@ import TextField from '@mui/material/TextField';
 import InputBase from '@mui/material/InputBase';
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
-import { useSelector } from "react-redux";
-import { getUser } from "../store/users.slice"; 
+import { useDispatch, useSelector } from "react-redux";
+import { getAllUsers, getUser } from "../store/users.slice"; 
 import { styled, alpha } from '@mui/material/styles';
 import { useEffect, useState } from "react";
 
@@ -64,7 +64,7 @@ export default function SearchBar() {
 	const user = useSelector(getUser);
   const [log, setLog] = useState('Login');
   const [logButton, setLogButton] = useState(<></>);
-
+  const dispatch = useDispatch<any>();
   useEffect(() => {
     if(user?.email) {
       setLog('Logout');
@@ -86,22 +86,23 @@ export default function SearchBar() {
 	};
 
   // Options to be replaced with actual users/post data from backend
-  const users : any[] = [
-    {
-      username: "tlast"
-    },
-    {
-      username: "test"
-    },
-    {
-      username: "newuser"
-    },
-    {
-      username: "spinner"
-    }
-  ]
+  // const users : any[] = [
+  //   {
+  //     username: "tlast"
+  //   },
+  //   {
+  //     username: "test"
+  //   },
+  //   {
+  //     username: "newuser"
+  //   },
+  //   {
+  //     username: "spinner"
+  //   }
+  // ]
   // "users" variable should equal to the Axios call to get all users as a list
   // const user = useSelector(whatever the response list is called here);
+  const users = useSelector((state: any) => state.users.users);
 
   const posts : any[] = [
     {
@@ -143,7 +144,7 @@ export default function SearchBar() {
 
   // This compiles all the users and posts in one list of options that will be searchable through.
   const options = [
-    ...users.map((option) => {
+    ...users.map((option: any) => {
       const type = "Users";
       return {
         type: type,
@@ -187,6 +188,9 @@ const filterOptions = (options: any, state: any) => {
               <SearchIcon/>
             </SearchIconWrapper>
             <Autocomplete
+              onFocus={(event) => {
+                dispatch(getAllUsers());
+              }}
               id="free-solo-demo"
               freeSolo
               sx={{ 
