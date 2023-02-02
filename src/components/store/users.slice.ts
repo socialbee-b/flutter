@@ -79,14 +79,45 @@ export const changePassword = createAsyncThunk(
 	}
 );
 
-export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
-	try {
-		const response = await axios.get(`${BASE_URL}/users`);
-		return response.data;
-	} catch (err: any) {
-		return err.message;
+export const getAllUsers = createAsyncThunk(
+	"users/getAllUsers",
+	async () => {
+		try {
+			const response = await axios.get(
+				`${BASE_URL}/users`
+			);
+			return response.data;
+		} catch (err: any) {
+			return new Error(err.message);
+		}
 	}
-});
+);
+
+export const changeProfilePic = createAsyncThunk(
+	"users/changeProfilePic",
+	async (payload: any) => {
+		try {
+			const response = await axios.put(
+				`${BASE_URL}/users/${payload?.id}/profileImage`,
+				payload.imageUrl,
+				{
+					headers: { "Content-type": "application/json" }
+				}
+			);
+			return response.data;
+		} catch (err: any) {
+			return new Error(err.message);
+		}
+	}
+);
+// export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
+// 	try {
+// 		const response = await axios.get(`${BASE_URL}/users`);
+// 		return response.data;
+// 	} catch (err: any) {
+// 		return err.message;
+// 	}
+// });
 
 // create the user slice
 const usersSlice = createSlice({
@@ -116,6 +147,26 @@ const usersSlice = createSlice({
 				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(login.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(getAllUsers.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(getAllUsers.fulfilled, (state, action) => {
+				state.status = "success";
+				state.users = action.payload;
+			})
+			.addCase(getAllUsers.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(changeProfilePic.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(changeProfilePic.fulfilled, (state, action) => {
+				state.status = "success";
+				localStorage.setItem("user", JSON.stringify(action.payload));
+			})
+			.addCase(changeProfilePic.rejected, (state, action) => {
 				state.status = "rejected";
 			});
 	},
