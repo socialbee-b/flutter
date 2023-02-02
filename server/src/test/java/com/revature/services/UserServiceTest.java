@@ -17,7 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mock.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -26,7 +28,14 @@ class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private PostService postService;
-
+    @Mock
+    private User testFollowedUser;
+    @Mock
+    private User testFollowerUser;
+    @Mock
+    private User mockedUserObject;
+    @Mock
+    private Post mockedPostObject;
 
     @Test
     void findByCredentialsSuccessTest() {
@@ -78,11 +87,11 @@ class UserServiceTest {
     @Test
     void saveTestSuccess() {
         UserService userService = new UserService(userRepository,postService);
-        User mockUser = new User("test.com","password","John","Doe", "JDoe");
-        when(userRepository.save(mockUser)).thenReturn(mockUser);
-        User resultUser = userService.save(mockUser);
-        verify(userRepository, times(1)).save(mockUser);
-        assertEquals(mockUser, resultUser);
+        //User mockUser = new User("test.com","password","John","Doe", "JDoe");
+        when(userRepository.save(mockedUserObject)).thenReturn(mockedUserObject);
+        User resultUser = userService.save(mockedUserObject);
+        verify(userRepository, times(1)).save(mockedUserObject);
+        assertEquals(mockedUserObject, resultUser);
     }
     @Test
     void saveTestFail() {
@@ -104,12 +113,10 @@ class UserServiceTest {
     void getAllUsersTestSuccess() {
         //instantiating a UserService object to use it's methods
         UserService userService = new UserService(userRepository,postService);
-        //creating test user
-        User mockUser = new User("test.com","password","John","Doe", "JDoe");
         //creating empty ArrayList
         List<User> expectedList = new ArrayList<User>();
-        //adding mockUser to the list of users
-        expectedList.add(mockUser);
+        //adding mockedUserObject to the list of users
+        expectedList.add(mockedUserObject);
         //testing Repository method, when findAll is mocked it should return our expectedList
         when(userRepository.findAll()).thenReturn(expectedList);
         //using the user Service method and saving the result as an ArrayList
@@ -124,17 +131,15 @@ class UserServiceTest {
     void getAllUsersTestFail() {
         //instantiating a UserService object to use it's methods
         UserService userService = new UserService(userRepository,postService);
-        //creating test user
-        User mockUser = new User("test.com","password","John","Doe", "JDoe");
         //creating empty ArrayList
         List<User> expectedList = new ArrayList<User>();
-        //adding mockUser to the list of users
-        expectedList.add(mockUser);
+        //adding mockedUserObject to the list of users
+        expectedList.add(mockedUserObject);
         //testing Repository method, when findAll is mocked it should return our expectedList
         when(userRepository.findAll()).thenReturn(expectedList);
         //using the user Service method and saving the result as an ArrayList
         List<User> resultList = userService.getAll();
-        //using asserEquals to compare the expected size (1000) to the actual result size
+        //using assertEquals to compare the expected size (1000) to the actual result size
         assertNotEquals(1000, resultList.size());
         assertNotEquals(expectedList.size(), 1000);
         //using assertEquals to compare the mockUser from our expectedList to the 1st user returned from
@@ -146,22 +151,148 @@ class UserServiceTest {
 
 
     @Test
-    void findByUsername() {
+    void findByUsernameTestSuccess() {
+        UserService userService = new UserService(userRepository,postService);
+        User mockUser = new User("test.com","password","John","Doe", "JDoe");
+        when(userRepository.findByUsername("JDoe")).thenReturn(Optional.of(mockUser));
+        Optional<User> resultUser = userService.findByUsername("JDoe");
+        assertEquals(resultUser.get().getUsername(), mockUser.getUsername());
+    }
+    @Test
+    void findByUsernameTestFail() {
+        UserService userService = new UserService(userRepository,postService);
+        User mockUser = new User("test.com","password","John","Doe", "JDoe");
+        when(userRepository.findByUsername("JDoe")).thenReturn(Optional.of(mockUser));
+        Optional<User> resultUser = userService.findByUsername("JDoe");
+        assertNotEquals(resultUser.get().getUsername(), "Eodj");
+        assertNotEquals("Eodj", mockUser.getUsername());
     }
 
     @Test
-    void findByEmail() {
+    void findByEmailTestSuccess() {
+        UserService userService = new UserService(userRepository,postService);
+        User mockUser = new User("test.com","password","John","Doe", "JDoe");
+        when(userRepository.findByEmail("test.com")).thenReturn(Optional.of(mockUser));
+        Optional<User> resultUser = userService.findByEmail("test.com");
+        assertEquals(resultUser.get().getEmail(), mockUser.getEmail());
+    }
+    @Test
+    void findByEmailTestFail() {
+        UserService userService = new UserService(userRepository,postService);
+        User mockUser = new User("test.com","password","John","Doe", "JDoe");
+        when(userRepository.findByEmail("test.com")).thenReturn(Optional.of(mockUser));
+        Optional<User> resultUser = userService.findByEmail("test.com");
+        assertNotEquals(resultUser.get().getEmail(), "com.test");
+        assertNotEquals("com.test", mockUser.getEmail());
     }
 
     @Test
-    void addFollower() {
+    void addUserToFollowingTestSuccess() {
+        UserService userService = new UserService(userRepository,postService);
+        //creating arrayLists when get methods are mocked on our mock user objects
+        when(testFollowedUser.getFollowers()).thenReturn(new ArrayList<>());
+        when(testFollowerUser.getFollowing()).thenReturn(new ArrayList<>());
+        //creating our followsuccessList when service method addFollower is called with our mock
+        //user objects passed in as arguments
+        List<User> mockFollowSuccessList = userService.addFollower(testFollowedUser, testFollowerUser);
+        //testing that the mockFollowSuccessList is actually 2 (like it should be)
+        assertEquals(mockFollowSuccessList.size(), 2);
+        //testing that each of the mock user objects were added to our mockFollowSuccessList
+        assertEquals(mockFollowSuccessList.get(0),testFollowedUser);
+        assertEquals(mockFollowSuccessList.get(1),testFollowerUser);
+        //creating an expected followers list and adding our testFollowerUser to that list
+        List<User> expectedFollowers = new ArrayList<>();
+        expectedFollowers.add(testFollowerUser);
+        //verifying that our mockFollowedUser had it's followers list updated with the expectedFollowers list
+        verify(testFollowedUser).setFollowers(expectedFollowers);
+        //creating an expectedFollowing list and adding our testFollowedUser to that list
+        List<User> expectedFollowing = new ArrayList<>();
+        expectedFollowing.add(testFollowedUser);
+        //verifying that our mockFollowerUser had it's following list updated with the expectedFollowing list
+        verify(testFollowerUser).setFollowing(expectedFollowing);
+
+    }
+    @Test
+    void addUserToFollowingListTestFail() {
+        UserService userService = new UserService(userRepository,postService);
+        //when takes in testFollowedUser mock object, tries to get followers and is expected to throw a runtime
+        // exception when trying to add followers.
+        when(testFollowedUser.getFollowers()).thenThrow(new RuntimeException("Error adding followed user"));
+        /*assertThrows takes in 2 arguments(exceptions) and compares the first exception to the second
+        using a lambda function that contains the code that should throw the exception*/
+        assertThrows(RuntimeException.class, () -> userService.addFollower(testFollowedUser,testFollowerUser));
+        //finally the verify methods in this case are expected to never actually run if the exception was
+        //correctly thrown.
+        verify(testFollowedUser, never()).setFollowers(any());
+        verify(testFollowerUser, never()).setFollowing(any());
     }
 
     @Test
-    void removeFollower() {
+    void removeFollowerTestSuccess() {
+        UserService userService = new UserService(userRepository,postService);
+
+        List<User> testFollowers = new ArrayList<>();
+        testFollowers.add(testFollowerUser);
+        when(testFollowedUser.getFollowers()).thenReturn(testFollowers);
+
+        List<User> testFollowing = new ArrayList<>();
+        testFollowing.add(testFollowedUser);
+        when(testFollowerUser.getFollowing()).thenReturn(testFollowing);
+
+        List<User> unFollowSuccessList = userService.removeFollower(testFollowedUser, testFollowerUser);
+        assertEquals(unFollowSuccessList.size(), 2);
+        assertEquals(unFollowSuccessList.get(0),testFollowedUser);
+        assertEquals(unFollowSuccessList.get(1),testFollowerUser);
+
+        List<User> expectedFollowers = new ArrayList<>();
+        verify(testFollowedUser).setFollowers(expectedFollowers);
+        List<User> expectedFollowing = new ArrayList<>();
+        verify(testFollowerUser).setFollowing(expectedFollowing);
+    }
+    //something is off about this one. We need to double-check the code in the service class
+    //to make sure it is doing exactly what we need
+    @Test
+    void removeFollowerTestFailure() {
+        UserService userService = new UserService(userRepository, postService);
+
+        List<User> testFollowers = new ArrayList<>();
+        when(testFollowedUser.getFollowers()).thenReturn(testFollowers);
+
+        List<User> testFollowing = new ArrayList<>();
+        when(testFollowerUser.getFollowing()).thenReturn(testFollowing);
+
+        List<User> unFollowFailureList = userService.removeFollower(testFollowedUser, testFollowerUser);
+        assertEquals(unFollowFailureList.size(), 2);
+
+        verify(testFollowedUser, never()).setFollowers(anyList());
+        verify(testFollowerUser, never()).setFollowing(anyList());
     }
 
     @Test
-    void getFeedForUser() {
+    void getFeedForUserTestSuccess() {
+        UserService userService = new UserService(userRepository, postService);
+        List<User> following = new ArrayList<>();
+        following.add(testFollowedUser);
+        when(mockedUserObject.getFollowing()).thenReturn(following);
+        List<Post> expectedFeed = new ArrayList<>();
+        expectedFeed.add(mockedPostObject);
+        when(postService.getFeedForUser(following)).thenReturn(Optional.of(expectedFeed));
+        List<Post> actualFeed = userService.getFeedForUser(mockedUserObject);
+        assertEquals(expectedFeed, actualFeed);
+
+
+    }
+    @Test
+    void getFeedForUserTestFail(){
+        UserService userService = new UserService(userRepository, postService);
+        List<User> following = new ArrayList<>();
+        following.add(testFollowedUser);
+        when(mockedUserObject.getFollowing()).thenReturn(following);
+        List<Post> expectedFeed = new ArrayList<>();
+        expectedFeed.add(mockedPostObject);
+        when(postService.getFeedForUser(following)).thenReturn(Optional.empty());
+        List<Post> actualFeed = userService.getFeedForUser(mockedUserObject);
+        assertNull(actualFeed);
+
     }
 }
