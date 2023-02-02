@@ -3,6 +3,7 @@ package com.revature.services;
 import com.revature.models.User;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -18,10 +19,12 @@ class AuthServiceTest {
 
     @Mock
     private UserService userService;
+    @InjectMocks
+    private AuthService authService;
+
 
     @Test
     void findByCredentialsSuccess() {
-        AuthService authService = new AuthService(userService);
         User mockUser = new User ("blorp@email.com","blorp","david","mata", "norping");
 
         when(authService.findByCredentials("blorp@email.com", "blorp")).thenReturn(Optional.of(mockUser));
@@ -34,7 +37,6 @@ class AuthServiceTest {
 
     @Test
     void findByCredentialsFail() {
-        AuthService authService = new AuthService(userService);
         User mockUser = new User ("blorp@email.com","blorp","david","mata", "norping");
 
         when(authService.findByCredentials("blorp@email.com", "blorp")).thenReturn(Optional.of(mockUser));
@@ -51,7 +53,6 @@ class AuthServiceTest {
 
     @Test
     void registerSuccess() {
-        AuthService authService = new AuthService(userService);
         User mockUser = new User ("blorp@email.com","blorp","david","mata", "norping");
 
         when(authService.register(mockUser)).thenReturn(mockUser);
@@ -64,7 +65,6 @@ class AuthServiceTest {
 
     @Test
     void registerFail() {
-        AuthService authService = new AuthService(userService);
         User mockUser = new User ("blorp@email.com","blorp","david","mata", "norping");
 
         when(authService.register(mockUser)).thenThrow(new IllegalArgumentException());
