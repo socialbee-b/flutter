@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -6,38 +5,24 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { apiLogout } from "../../remote/social-media-api/auth.api";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
-import { useContext } from "react";
-import { UserContext } from "../../context/user.context";
+import { useSelector } from "react-redux";
+import { getUser } from "../store/users.slice";
+
 
 export default function Navbar() {
 	const navigate = useNavigate();
+	const user = useSelector(getUser);
 
-	const { user, setUser } = useContext(UserContext);
-	const [loggedIn, setLoggedIn] = useState(<></>);
-	const [tipTitle, setTipTitle] = useState("");
-
-	useEffect(() => {
-		if (user) {
-			setLoggedIn(<LogoutIcon />);
-			setTipTitle("Logout");
-		} else {
-			setLoggedIn(<LoginIcon />);
-			setTipTitle("Login");
-		}
-	}, [user]);
-
-	function handleAuth() {
-		if (user) {
-			apiLogout();
-			setUser();
+	const handleClick = () => {
+		if (user?.email) {
+			localStorage.setItem("user", "{}");
+			navigate("/welcome");
 		} else {
 			navigate("/login");
 		}
-	}
-
+	};
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static" color="transparent">
@@ -46,16 +31,20 @@ export default function Navbar() {
 						Fluttr
 					</Typography>
 					<div>
-						<Tooltip disableFocusListener disableTouchListener title={tipTitle}>
+						<Tooltip
+							disableFocusListener
+							disableTouchListener
+							title={user?.email ? "Logout" : "Login"}
+						>
 							<IconButton
 								size="large"
 								aria-label="account of current user"
 								aria-controls="menu-appbar"
 								aria-haspopup="true"
-								onClick={() => handleAuth()}
 								color="inherit"
+								onClick={handleClick}
 							>
-								{loggedIn}
+								{user?.email ? <LogoutIcon /> : <LoginIcon />}
 							</IconButton>
 						</Tooltip>
 					</div>
