@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import UploadFile from "../../s3/UploadFile";
 import { PostCard } from "../post-feed/PostCard";
 import "./Profile.css";
 import { Box, Button, Modal, Typography, IconButton, Tooltip} from "@mui/material";
@@ -131,7 +132,8 @@ const Profile: React.FC<any> = () => {
 								</Typography>
 							</Box>
 						</Modal>
-					
+            
+						<UploadFile />
 					</div>
 				</div>
 				<div className="follow-button">
