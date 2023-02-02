@@ -6,12 +6,15 @@ import IconButton from "@mui/material/IconButton";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from '@mui/icons-material/Search';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 import InputBase from '@mui/material/InputBase';
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import { useSelector } from "react-redux";
 import { getUser } from "../store/users.slice"; 
 import { styled, alpha } from '@mui/material/styles';
+import { useEffect, useState } from "react";
 
 const Search = styled('div')(({ theme }) => ({
     position: 'relative',
@@ -59,6 +62,19 @@ const Search = styled('div')(({ theme }) => ({
 export default function SearchBar() {
 	const navigate = useNavigate();
 	const user = useSelector(getUser);
+  const [log, setLog] = useState('Login');
+  const [logButton, setLogButton] = useState(<></>)
+
+  useEffect(() => {
+    if(user?.email) {
+      setLog('Logout');
+      setLogButton(<LogoutIcon/>)
+    }
+    else {
+      setLog('Login');
+      setLogButton(<LoginIcon/>)
+    }
+  }, [user])
 
 	const handleClick = () => {
 		if (user?.email) {
@@ -68,6 +84,16 @@ export default function SearchBar() {
 			navigate("/login");
 		}
 	};
+
+  // Options to be replaced with actual users data from backend
+  const users : any[] = [
+    {
+      title: "tlast"
+    },
+    {
+      title: "test"
+    }
+  ]
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static" color="transparent">
@@ -75,20 +101,39 @@ export default function SearchBar() {
 					<Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
 						Fluttr
 					</Typography>
-                    <Search>
-                        <SearchIconWrapper>
-                            <SearchIcon />
-                        </SearchIconWrapper>
-						<StyledInputBase
-							placeholder="Search…"
-							inputProps={{ 'aria-label': 'search' }}
-						/>
-                     </Search>
+          {/* <Search>
+            <SearchIconWrapper>
+              <SearchIcon/>
+            </SearchIconWrapper>
+            <StyledInputBase
+              placeholder="Search…"
+              inputProps={{ 'aria-label': 'search' }}
+            />
+          </Search> */}
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon/>
+            </SearchIconWrapper>
+            <Autocomplete
+              id="free-solo-demo"
+              freeSolo
+              sx={{ 
+                borderRadius: "16px",
+                width: 200
+              }}
+              options={users.map((option: any) => option.title)}
+              renderInput={(params) => {
+                const {InputLabelProps, InputProps, ...rest} = params;
+                return <StyledInputBase {...params.InputProps} {...rest} placeholder="Search..."/>
+            }}
+            />
+          </Search>
+          
 					<div>
 						<Tooltip
 							disableFocusListener
 							disableTouchListener
-							title={user?.email ? "Logout" : "Login"}
+							title={log}
 						>
 							<IconButton
 								size="large"
@@ -98,7 +143,7 @@ export default function SearchBar() {
 								color="inherit"
 								onClick={handleClick}
 							>
-								{user?.email ? <LogoutIcon /> : <LoginIcon />}
+								{logButton}
 							</IconButton>
                          
 						</Tooltip>
