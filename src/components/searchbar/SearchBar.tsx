@@ -6,7 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from '@mui/icons-material/Search';
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import InputBase from '@mui/material/InputBase';
 import { useNavigate } from "react-router-dom";
@@ -63,7 +63,7 @@ export default function SearchBar() {
 	const navigate = useNavigate();
 	const user = useSelector(getUser);
   const [log, setLog] = useState('Login');
-  const [logButton, setLogButton] = useState(<></>)
+  const [logButton, setLogButton] = useState(<></>);
 
   useEffect(() => {
     if(user?.email) {
@@ -85,15 +85,87 @@ export default function SearchBar() {
 		}
 	};
 
-  // Options to be replaced with actual users data from backend
+  // Options to be replaced with actual users/post data from backend
   const users : any[] = [
     {
-      title: "tlast"
+      username: "tlast"
     },
     {
-      title: "test"
+      username: "test"
+    },
+    {
+      username: "newuser"
+    },
+    {
+      username: "spinner"
     }
   ]
+  // "users" variable should equal to the Axios call to get all users as a list
+  // const user = useSelector(whatever the response list is called here);
+
+  const posts : any[] = [
+    {
+      id: 1,
+      text: "Some Text"
+    },
+    {
+      id: 2,
+      text: "Some text with a few more words for searching and maybe longer text."
+    },
+    {
+      id: 3,
+      text: "This is a sentence with a bunch of letters."
+    },
+    {
+      id: 4,
+      text: "Your post written here is invalid."
+    },
+    {
+      id: 5,
+      text: "I'm new to this platform, how do I make friends?"
+    },
+    {
+      id: 6,
+      text: "Time is being wasted on wars, let's focus on global warming issues."
+    },
+    {
+      id: 7,
+      text: "Will this platform ever implement direct messaging."
+    },
+    {
+      id: 8,
+      text: "New post script just a variety of post messages."
+    }
+  ]
+  // "posts" should be equal to axios request to all posts top level posts
+  // const posts = useSelector(name for getting all posts list)
+
+
+  // This compiles all the users and posts in one list of options that will be searchable through.
+  const options = [
+    ...users.map((option) => {
+      const type = "Users";
+      return {
+        type: type,
+        ...option,
+      }
+    }),
+    ...posts.map((option) => {
+      const type = "Posts";
+      return {
+        type: type,
+        ...option,
+      }
+    })
+  ]
+
+const OPTIONS_LIMIT = 10;
+const defaultFilterOptions = createFilterOptions();
+
+const filterOptions = (options: any, state: any) => {
+  return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
+};
+
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static" color="transparent">
@@ -121,7 +193,17 @@ export default function SearchBar() {
                 borderRadius: "16px",
                 width: 200
               }}
-              options={users.map((option: any) => option.title)}
+              filterOptions = {filterOptions}
+              options={options}
+              groupBy={(option) => option.type}
+              getOptionLabel={(option) => {
+                if (option.type == "Users") {
+                  return option.username;
+                }
+                else {
+                  return option.text;
+                }
+              }}
               renderInput={(params) => {
                 const {InputLabelProps, InputProps, ...rest} = params;
                 return <StyledInputBase {...params.InputProps} {...rest} placeholder="Search..."/>
