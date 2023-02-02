@@ -1,7 +1,97 @@
 import { Box, Container, Switch, TextField, Typography } from "@mui/material";
-import React from "react";
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { changePassword, getUser } from "../store/users.slice";
+import { addToast } from "../toasts/toasts.slice";
 
 const Settings: React.FC<any> = () => {
+	const dispatch = useDispatch<any>();
+	const user = useSelector(getUser);
+
+	//user info
+	const [username, setUsername] = useState(user?.username || "");
+	const [email, setEmail] = useState(user?.email || "");
+	const [currentPwd, setCurrentPwd] = useState(user?.password || "");
+
+	// application settings
+	const [darkMode, setDarkMode] = useState(
+		localStorage.getItem("darkMode") || false
+	);
+
+	// refs for update password section
+	const currentPasswordRef = useRef<HTMLInputElement>(null);
+	const newPasswordRef = useRef<HTMLInputElement>(null);
+	const confirmNewPasswordRef = useRef<HTMLInputElement>(null);
+
+	const handlePasswordChange = (e: any) => {
+		// prevent default form submition
+		e.preventDefault();
+
+		// get values from the password refs
+		const currentPassword = currentPasswordRef.current?.value;
+		const newPassword = newPasswordRef.current?.value;
+		const confirmNewPassword = confirmNewPasswordRef.current?.value;
+
+		// make sure fields aren't empty
+		if (!currentPassword || !newPassword || !confirmNewPassword) {
+			dispatch(
+				addToast({
+					status: "warning",
+					message: "Please provide values for all fields.",
+				})
+			);
+		} else {
+			// make sure new password and confirmation are the same
+			if (newPassword === confirmNewPassword) {
+				// make sure new password doesn't match current password
+				if (newPassword === currentPassword) {
+					dispatch(
+						addToast({
+							status: "warning",
+							message: "New password cannot be your current password.",
+						})
+					);
+				} else {
+					// check if given password == current password
+					if (currentPassword === currentPwd) {
+						const payload = {
+							id: user?.userId,
+							newPassword,
+						};
+						dispatch(changePassword(payload));
+
+						// clear the password fields
+						currentPasswordRef.current.value = "";
+						newPasswordRef.current.value = "";
+						confirmNewPasswordRef.current.value = "";
+
+						dispatch(
+							addToast({
+								status: "success",
+								message: "Password has been updated.",
+							})
+						);
+					} else {
+						dispatch(
+							addToast({
+								status: "error",
+								message:
+									"Cannot update password: your current password is incorrect.",
+							})
+						);
+					}
+				}
+			} else {
+				dispatch(
+					addToast({
+						status: "warning",
+						message: "Passwords do not match.",
+					})
+				);
+			}
+		}
+	};
+
 	return (
 		<Container sx={{ width: 1 }}>
 			<Typography variant="h3">Settings</Typography>
