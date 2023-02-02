@@ -36,10 +36,11 @@ class UserServiceTest {
     private User mockedUserObject;
     @Mock
     private Post mockedPostObject;
+    @InjectMocks
+    private UserService userService;
 
     @Test
     void findByCredentialsSuccessTest() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         when(userRepository.findByEmailAndPassword("test.com", "password")).thenReturn(Optional.of(mockUser));
         Optional<User> resultUser = userService.findByCredentials("test.com","password");
@@ -49,7 +50,6 @@ class UserServiceTest {
     }
     @Test
     void findByCredentialsSuccessFail() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         when(userRepository.findByEmailAndPassword("test.com", "password")).thenReturn(Optional.of(mockUser));
         Optional<User> resultUser = userService.findByCredentials("test.com","password");
@@ -63,7 +63,6 @@ class UserServiceTest {
 
     @Test
     void findByIdTestSuccess() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         mockUser.setId(1);
         when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
@@ -73,7 +72,6 @@ class UserServiceTest {
 
     @Test
     void findByIdTestFail() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         mockUser.setId(1);
         when(userRepository.findById(1)).thenReturn(Optional.of(mockUser));
@@ -85,17 +83,14 @@ class UserServiceTest {
 
 
     @Test
-    void saveTestSuccess() {
-        UserService userService = new UserService(userRepository,postService);
-        //User mockUser = new User("test.com","password","John","Doe", "JDoe");
+    void saveUserTestSuccess() {
         when(userRepository.save(mockedUserObject)).thenReturn(mockedUserObject);
         User resultUser = userService.save(mockedUserObject);
         verify(userRepository, times(1)).save(mockedUserObject);
         assertEquals(mockedUserObject, resultUser);
     }
     @Test
-    void saveTestFail() {
-        UserService userService = new UserService(userRepository,postService);
+    void saveUserTestFail() {
         //mockUser object intentionally has a null username field in order to fail test and trigger exception
         User mockUser = new User("test.com","password","John","Doe", null);
         //using Exceptions for failing methods that don't return an object when succeeding
@@ -111,8 +106,6 @@ class UserServiceTest {
 
     @Test
     void getAllUsersTestSuccess() {
-        //instantiating a UserService object to use it's methods
-        UserService userService = new UserService(userRepository,postService);
         //creating empty ArrayList
         List<User> expectedList = new ArrayList<User>();
         //adding mockedUserObject to the list of users
@@ -129,8 +122,6 @@ class UserServiceTest {
     }
     @Test
     void getAllUsersTestFail() {
-        //instantiating a UserService object to use it's methods
-        UserService userService = new UserService(userRepository,postService);
         //creating empty ArrayList
         List<User> expectedList = new ArrayList<User>();
         //adding mockedUserObject to the list of users
@@ -152,7 +143,6 @@ class UserServiceTest {
 
     @Test
     void findByUsernameTestSuccess() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         when(userRepository.findByUsername("JDoe")).thenReturn(Optional.of(mockUser));
         Optional<User> resultUser = userService.findByUsername("JDoe");
@@ -160,7 +150,6 @@ class UserServiceTest {
     }
     @Test
     void findByUsernameTestFail() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         when(userRepository.findByUsername("JDoe")).thenReturn(Optional.of(mockUser));
         Optional<User> resultUser = userService.findByUsername("JDoe");
@@ -170,7 +159,6 @@ class UserServiceTest {
 
     @Test
     void findByEmailTestSuccess() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         when(userRepository.findByEmail("test.com")).thenReturn(Optional.of(mockUser));
         Optional<User> resultUser = userService.findByEmail("test.com");
@@ -178,7 +166,6 @@ class UserServiceTest {
     }
     @Test
     void findByEmailTestFail() {
-        UserService userService = new UserService(userRepository,postService);
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         when(userRepository.findByEmail("test.com")).thenReturn(Optional.of(mockUser));
         Optional<User> resultUser = userService.findByEmail("test.com");
@@ -187,8 +174,7 @@ class UserServiceTest {
     }
 
     @Test
-    void addUserToFollowingTestSuccess() {
-        UserService userService = new UserService(userRepository,postService);
+    void addUserToFollowingListTestSuccess() {
         //creating arrayLists when get methods are mocked on our mock user objects
         when(testFollowedUser.getFollowers()).thenReturn(new ArrayList<>());
         when(testFollowerUser.getFollowing()).thenReturn(new ArrayList<>());
@@ -214,7 +200,6 @@ class UserServiceTest {
     }
     @Test
     void addUserToFollowingListTestFail() {
-        UserService userService = new UserService(userRepository,postService);
         //when takes in testFollowedUser mock object, tries to get followers and is expected to throw a runtime
         // exception when trying to add followers.
         when(testFollowedUser.getFollowers()).thenThrow(new RuntimeException("Error adding followed user"));
@@ -229,8 +214,6 @@ class UserServiceTest {
 
     @Test
     void removeFollowerTestSuccess() {
-        UserService userService = new UserService(userRepository,postService);
-
         List<User> testFollowers = new ArrayList<>();
         testFollowers.add(testFollowerUser);
         when(testFollowedUser.getFollowers()).thenReturn(testFollowers);
@@ -249,12 +232,9 @@ class UserServiceTest {
         List<User> expectedFollowing = new ArrayList<>();
         verify(testFollowerUser).setFollowing(expectedFollowing);
     }
-    //something is off about this one. We need to double-check the code in the service class
-    //to make sure it is doing exactly what we need
+    //something is off about this one. setFollowers and setFollowing are both running.
     @Test
     void removeFollowerTestFailure() {
-        UserService userService = new UserService(userRepository, postService);
-
         List<User> testFollowers = new ArrayList<>();
         when(testFollowedUser.getFollowers()).thenReturn(testFollowers);
 
@@ -270,7 +250,6 @@ class UserServiceTest {
 
     @Test
     void getFeedForUserTestSuccess() {
-        UserService userService = new UserService(userRepository, postService);
         List<User> following = new ArrayList<>();
         following.add(testFollowedUser);
         when(mockedUserObject.getFollowing()).thenReturn(following);
@@ -284,7 +263,6 @@ class UserServiceTest {
     }
     @Test
     void getFeedForUserTestFail(){
-        UserService userService = new UserService(userRepository, postService);
         List<User> following = new ArrayList<>();
         following.add(testFollowedUser);
         when(mockedUserObject.getFollowing()).thenReturn(following);

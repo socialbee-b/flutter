@@ -7,6 +7,7 @@ import com.revature.repositories.PostRepository;
 import com.revature.repositories.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -25,19 +26,21 @@ public class PostServiceTest {
     private PostRepository postRepository;
     @Mock
     private UserRepository userRepository;
+    @InjectMocks
+    private PostService postService;
+    @InjectMocks
+    private UserService userService;
+    @Mock
+    private User mockedUserObject;
+    @Mock
+    private Post mockedPostObject;
 
     @Test
     void testGetAllPostsSuccess() {
-        //creating test user
-        User mockUser = new User("test.com","password","John","Doe", "JDoe");
         //creating empty ArrayList
         List<Post> expectedList = new ArrayList<Post>();
-        //creating test post for ArrayList
-        Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), mockUser, PostType.Top, 1);
-        //adding post to array
-        expectedList.add(expectedPost);
-        //instantiating a postService
-        PostService postService = new PostService(postRepository);
+        //adding mockedPostObject to array
+        expectedList.add(mockedPostObject);
         //testing Repository method, when findAll is mocked it should return our expectedList
         when(postRepository.findAll()).thenReturn(expectedList);
         //using the post Service method and saving the result as an ArrayList
@@ -46,7 +49,7 @@ public class PostServiceTest {
         assertEquals(1, resultList.size());
         //using assertEquals to compare the expectedPost from our expectedList to the 1st post returned from
         //our actual result list
-        assertEquals(expectedPost, resultList.get(0));
+        assertEquals(mockedPostObject, resultList.get(0));
     }
 
 
@@ -56,15 +59,12 @@ public class PostServiceTest {
 
     @Test
     void getAllTopPostsSuccess() {
-        User mockUser = new User("test.com","password","John","Doe", "JDoe");
         //creating empty ArrayList
         List<Post> expectedList = new ArrayList<Post>();
         //creating test post for ArrayList
-        Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), mockUser, PostType.Top, 1);
+        Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), mockedUserObject, PostType.Top, 1);
         //adding post to array
         expectedList.add(expectedPost);
-        //instantiating a postService
-        PostService postService = new PostService(postRepository);
         when(postRepository.findAllByPostType(PostType.Top)).thenReturn(expectedList);
         //using the post Service method and saving the result as an ArrayList
         List<Post> resultList = postService.getAllTop();
@@ -77,15 +77,12 @@ public class PostServiceTest {
     }
     @Test
     void getAllTopFail() {
-        User mockUser = new User("test.com", "password", "John", "Doe", "JDoe");
         //creating empty ArrayList
         List<Post> expectedList = new ArrayList<Post>();
         //creating test post for ArrayList
-        Post expectedPost = new Post(1, "This is a test post", "image.com", new ArrayList<>(), mockUser, PostType.Top, 1);
+        Post expectedPost = new Post(1, "This is a test post", "image.com", new ArrayList<>(), mockedUserObject, PostType.Top, 1);
         //adding post to array
         expectedList.add(expectedPost);
-        //instantiating a postService
-        PostService postService = new PostService(postRepository);
         when(postRepository.findAllByPostType(PostType.Top)).thenReturn(expectedList);
         //using the post Service method and saving the result as an ArrayList
         List<Post> resultList = postService.getAllTop();
