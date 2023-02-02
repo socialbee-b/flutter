@@ -1,3 +1,4 @@
+import {Button, Box} from '@mui/material';
 import axios from 'axios';
 import React , {useState} from 'react';
 import { useSelector } from 'react-redux';
@@ -31,13 +32,42 @@ const UploadFile: React.FC<any> = () => {
         console.log(imageUrl);
     }
     return ( 
+        // <div>
+        //     <div>
+        //         React S3 File Upload
+        //     </div>
+        //     <input type="file" onChange={handleFileInput}/>
+        //     <br></br>
+        //     <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+        // </div>
+        // https://stackoverflow.com/questions/40589302/how-to-enable-file-upload-on-reacts-material-ui-simple-input
+        //https://kiranvj.com/blog/blog/file-upload-in-material-ui/
         <div>
-            <div>
-                React S3 File Upload
-            </div>
-            <input type="file" onChange={handleFileInput}/>
-            <br></br>
-            <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+            <label htmlFor='file-button'>
+                <input
+                    style={{ display: 'none' }}
+                    id="file-button"
+                    name="file-button"
+                    type="file"
+                    // ref={fileName}
+                    // hidden
+                    onChange={handleFileInput}
+                />
+                <Button 
+                    variant="outlined"
+                    component="span"
+                    fullWidth
+                    sx={{ mt: 4, mb: 1 }}  
+                >Choose File 
+                </Button>
+                <Button
+                    onClick={() => uploadFile(selectedFile)}
+                    fullWidth
+                    sx={{ mt: 4, mb: 1 }}
+                >Upload Image
+                </Button>
+            </label>
+
         </div>
     );
 }

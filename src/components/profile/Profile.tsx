@@ -70,8 +70,9 @@ const Profile: React.FC<any> = () => {
 							</Typography>
 							<Typography id="modal-uploadpfp-desc" sx={{ mt: 2 }}>
 								Select an image
+								<UploadFile />
 							</Typography>
-							<input
+							{/* <input
 								accept="image/*"
 								className="classes.input"
 								style={{ display: 'none' }}
@@ -86,7 +87,7 @@ const Profile: React.FC<any> = () => {
 									sx={{ mt: 4, mb: 1 }}
 								> Upload Image
 								</Button>							
-							</label>
+							</label> */}
 							
 						</Box>
 					</Modal>
@@ -133,7 +134,7 @@ const Profile: React.FC<any> = () => {
 							</Box>
 						</Modal>
             
-						<UploadFile />
+						
 					</div>
 				</div>
 				<div className="follow-button">
