@@ -85,7 +85,8 @@ export const PostFeed = () => {
 				maxWidth="xl"
 				sx={{
 					// backgroundColor: "#fff",
-					mx: 18, //set both margin sizes equal
+					ml:12,
+					mr:22,
 					border: 2, //define border
 					borderRadius: '16px', //round the corners, sharp boxes are...fed-esque
 					height: "auto",

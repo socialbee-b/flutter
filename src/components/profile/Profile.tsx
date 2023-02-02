@@ -3,8 +3,7 @@ import { PostCard } from "../post-feed/PostCard";
 import "./Profile.css";
 import { Box, Button, Modal, Typography, IconButton, Tooltip} from "@mui/material";
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
-//imports I need are react useState, useEffect
-//probably useParam and useNavigate
+
 const Profile: React.FC<any> = () => {
 	//handles the toggle of the following modal
 	const [open, setOpen] = useState(false);
@@ -21,11 +20,6 @@ const Profile: React.FC<any> = () => {
 	const handleOpen3 = () => setOpen3(true);
 	const handleClose3 = () => setOpen3(false);
 
-	//handles file submission - store?? am struggle here, too sleepy
-	const [file, setFile] = useState("");
-	const handleSubmit = () => setFile("");
-	
-
 	const profilestyle = {
 		position: 'absolute' as 'absolute',
 		transform: 'translate(200%, 240%)',
@@ -41,47 +35,60 @@ const Profile: React.FC<any> = () => {
 		p: 4,
 	};
 
+	// fake card so that I had something to work from while there are no posts from any users
+	const item = {
+		id: 2,
+		text: "some text",
+		imageUrl: "",
+		comments: [],
+		author: {
+			firstName: "Charlotte",
+		},
+		postType: "Top"
+	}
 	
 	return (
 		<div>
 			<div className="profile-header">
 				<div className="profile-picture">
 					<Tooltip title="Change profile picture" placement="right-end">
-					<IconButton type = "submit" sx={profilestyle}>
-						<input 
-							accept = "image/*"
-							className="classes.input"
-							style={{display: 'none'}}
-							id="raised-button-file"
-							multiple
-							type="file"
-						 	hidden/>
-						<label htmlFor="raised-button-file">
+						<IconButton onClick={handleOpen3} sx={profilestyle}>
 							<AddCircleOutlinedIcon></AddCircleOutlinedIcon>
-						</label>
-					</IconButton>
+						</IconButton>
 					</Tooltip>
 					{/* if we want to add a sort of preview portion, need to finish out this modal below*/}
-					{/* <Modal
+					<Modal
 						open={open3}
 						onClose={handleClose3}
 						aria-labelledby="modal-uploadpfp-title"
 						aria-describedby="modal-uploadpfp-desc"
 					>
-						<Box component="form" noValidate onSubmit={handleSubmit} sx={style}>
+						<Box sx={style}>
 							<Typography id="modal-uploadpfp-title" variant="h6" component="h2">
 								Upload Picture
 							</Typography>
 							<Typography id="modal-uploadpfp-desc" sx={{ mt: 2 }}>
 								Select an image
 							</Typography>
-							<Button
-								type="submit"
-								fullWidth
-								sx={{ mt: 4, mb: 1 }}
-							> Upload Image </Button>
+							<input
+								accept="image/*"
+								className="classes.input"
+								style={{ display: 'none' }}
+								id="raised-button-file"
+								multiple
+								type="file"
+							/>
+							<label htmlFor="raised-button-file">
+								<Button
+									type="submit"
+									fullWidth
+									sx={{ mt: 4, mb: 1 }}
+								> Upload Image
+								</Button>							
+							</label>
+							
 						</Box>
-					</Modal> */}
+					</Modal>
 					{/* <Button sx={profilestyle}> </Button> */}
 				</div>
 				<div className="flex-column">
@@ -128,8 +135,11 @@ const Profile: React.FC<any> = () => {
 					</div>
 				</div>
 				<div className="follow-button">
-					<Button onClick={() => {alert('user followed')}} variant="outlined"  sx={{ml:35}}>Follow</Button>
+					<Button onClick={() => { alert('user followed') }} variant="outlined" sx={{ ml: 55 }}>Follow</Button>
 				</div>
+			</div>
+			<div>
+				<PostCard post={item} key={item.id} />
 			</div>
 		</div>
 	);
