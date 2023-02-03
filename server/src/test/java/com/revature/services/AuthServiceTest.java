@@ -24,19 +24,15 @@ class AuthServiceTest {
 
 
     @Test
-<<<<<<< Updated upstream
     void findByCredentialsSuccess() {
-        User mockUser = new User ("blorp@email.com","blorp","david","mata", "norping");
+        User mockUser = new User("blorp@email.com", "blorp", "david", "mata", "norping");
 
         when(authService.findByCredentials("blorp@email.com", "blorp")).thenReturn(Optional.of(mockUser));
 
         Optional<User> resultUser = authService.findByCredentials("blorp@email.com", "blorp");
 
-        assertEquals(resultUser.get().getEmail(),mockUser.getEmail());
-        assertEquals(resultUser.get().getPassword(),mockUser.getPassword());
-=======
-    void findByCredentials() {
->>>>>>> Stashed changes
+        assertEquals(resultUser.get().getEmail(), mockUser.getEmail());
+        assertEquals(resultUser.get().getPassword(), mockUser.getPassword());
     }
 
     @Test
