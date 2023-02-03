@@ -96,4 +96,16 @@ public class PostController {
         return ResponseEntity.ok(this.postService.upsert(newPost));
     }
 
+    @PutMapping("editPost/{id}/image")
+    public ResponseEntity<Post> editPostByUrl(@PathVariable int id, @RequestBody String editString) {
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        Post newPost = postOptional.get();
+        newPost.setImageUrl(editString);
+
+        return ResponseEntity.ok(this.postService.upsert(newPost));
+    }
+
 }
