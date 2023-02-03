@@ -1,7 +1,9 @@
 import { Box, Button, Container, Grid, Typography } from "@mui/material";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Landing: React.FC<any> = () => {
+	const navigate = useNavigate();
 	return (
 		<Box>
 			<Container
@@ -28,6 +30,7 @@ const Landing: React.FC<any> = () => {
 						adipisicing elit.
 					</Typography>
 					<Button
+						onClick={() => navigate("/register")}
 						variant="contained"
 						sx={{
 							fontSize: "18px",

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React , {useState} from 'react';
-import { useSelector } from 'react-redux';
-import { getUser } from '../components/store/users.slice';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeProfilePic, getUser } from '../components/store/users.slice';
 import { generateUploadURL } from './s3Config';
 
 
@@ -15,6 +15,7 @@ const UploadFile: React.FC<any> = () => {
 
     const user = useSelector(getUser);
     const [selectedFile, setSelectedFile] = useState(null);
+    const dispatch = useDispatch<any>();
 
 
     const handleFileInput = (e: any) => {
@@ -29,6 +30,10 @@ const UploadFile: React.FC<any> = () => {
         const response = await axios.put(url, file);
         const imageUrl = url.split('?')[0];
         console.log(imageUrl);
+        dispatch(changeProfilePic({
+            id: user?.id,
+            imageUrl: imageUrl
+        }))
     }
     return ( 
         <div>

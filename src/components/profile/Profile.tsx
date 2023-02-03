@@ -1,11 +1,14 @@
+import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import UploadFile from "../../s3/UploadFile";
 import { PostCard } from "../post-feed/PostCard";
+import { getUser } from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography, IconButton, Tooltip} from "@mui/material";
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 
 const Profile: React.FC<any> = () => {
+	const user = useSelector(getUser);
 	//handles the toggle of the following modal
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
@@ -47,11 +50,11 @@ const Profile: React.FC<any> = () => {
 		},
 		postType: "Top"
 	}
-	
 	return (
 		<div>
 			<div className="profile-header">
 				<div className="profile-picture">
+					<img className="profile-picture" src={user?.imageUrl.split("\"")[1]} alt="Profile Image Here"/>
 					<Tooltip title="Change profile picture" placement="right-end">
 						<IconButton onClick={handleOpen3} sx={profilestyle}>
 							<AddCircleOutlinedIcon></AddCircleOutlinedIcon>

@@ -1,0 +1,16 @@
+.settingsGrid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	grid-gap: 1rem;
+}
+
+.settingsSection {
+	display: flex;
+	flex-direction: column;
+	row-gap: 1rem;
+	padding: 0 1rem;
+}
+
+.settingsSection h3 {
+	text-decoration: underline;
+}

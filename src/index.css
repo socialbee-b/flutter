@@ -8,6 +8,10 @@
 	position: relative;
 }
 
+:root {
+	--primary-blue: #0b3948;
+}
+
 html,
 body,
 #root {
@@ -15,6 +19,14 @@ body,
 	height: 100%;
 	transition: all 0.25s;
 	background-color: #a8e5ff;
+}
+
+h1 {
+	font-size: 40px;
+}
+
+.full-width {
+	width: 100%;
 }
 
 .flex-row {
@@ -29,9 +41,22 @@ body,
 	row-gap: 1rem;
 }
 
+.space-between {
+	justify-content: space-between;
+}
+
 .p-1 {
 	padding: 1rem;
 }
+
+.p-2 {
+	padding: 2rem;
+}
+
+.p-3 {
+	padding: 3rem;
+}
+
 .pl-1 {
 	padding-left: 1rem;
 }
@@ -40,15 +65,19 @@ body,
 	padding-bottom: 1rem;
 }
 
-.center-content {
-	display: flex;
-	justify-content: center;
+.pt-1 {
+	padding-top: 1rem;
 }
 
-.p-3 {
-	padding: 3rem;
+.gap-0 {
+	gap: 0;
 }
 
 .gap-3 {
 	gap: 3rem;
+}
+
+.center-content {
+	display: flex;
+	justify-content: center;
 }
