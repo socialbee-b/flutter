@@ -9,6 +9,7 @@
 	height: 150px;
 	background-color: rgb(163, 203, 238);
 	border-radius: 50%;
+	object-fit: cover;
 }
 
 .prompt-container{
