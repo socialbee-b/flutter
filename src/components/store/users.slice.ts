@@ -91,19 +91,14 @@ export const changePassword = createAsyncThunk(
 	}
 );
 
-export const getAllUsers = createAsyncThunk(
-	"users/getAllUsers",
-	async () => {
-		try {
-			const response = await axios.get(
-				`${BASE_URL}/users`
-			);
-			return response.data;
-		} catch (err: any) {
-			return new Error(err.message);
-		}
+export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
+	try {
+		const response = await axios.get(`${BASE_URL}/users`);
+		return response.data;
+	} catch (err: any) {
+		return new Error(err.message);
 	}
-);
+});
 
 export const changeProfilePic = createAsyncThunk(
 	"users/changeProfilePic",
@@ -113,7 +108,7 @@ export const changeProfilePic = createAsyncThunk(
 				`${BASE_URL}/users/${payload?.id}/profileImage`,
 				payload.imageUrl,
 				{
-					headers: { "Content-type": "application/json" }
+					headers: { "Content-type": "application/json" },
 				}
 			);
 			return response.data;
@@ -175,8 +170,8 @@ const usersSlice = createSlice({
 				state.status = "success";
 			})
 			.addCase(changeUsername.rejected, (state, action) => {
-        state.status = "rejected;
-      })
+				state.status = "rejected";
+			})
 			.addCase(getAllUsers.pending, (state, action) => {
 				state.status = "loading";
 			})
