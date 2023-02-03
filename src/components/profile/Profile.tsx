@@ -54,7 +54,7 @@ const Profile: React.FC<any> = () => {
 		<div>
 			<div className="profile-header">
 				<div className="profile-picture">
-					<img className="profile-picture" src={user?.imageUrl.split("\"")[1]} alt="Profile Image Here"/>
+					<img className="profile-picture" src={user?.imageUrl} alt="Profile Image Here"/>
 					<Tooltip title="Change profile picture" placement="right-end">
 						<IconButton onClick={handleOpen3} sx={profilestyle}>
 							<AddCircleOutlinedIcon></AddCircleOutlinedIcon>
@@ -73,6 +73,7 @@ const Profile: React.FC<any> = () => {
 							</Typography>
 							<Typography id="modal-uploadpfp-desc" sx={{ mt: 2 }}>
 								Select an image
+								<UploadFile/>
 							</Typography>
 							<input
 								accept="image/*"
@@ -136,7 +137,7 @@ const Profile: React.FC<any> = () => {
 							</Box>
 						</Modal>
             
-						<UploadFile />
+						{/* <UploadFile /> */}
 					</div>
 				</div>
 				<div className="follow-button">
