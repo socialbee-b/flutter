@@ -80,36 +80,36 @@ export const PostFeed = () => {
 		);
 	}
 
-const PostFeed: React.FC<any> = () => {
-	return (
-		// <div className="flex-column">
-		//	<NewPostForm />
-		// </div>
-		<>
-			<Container
-				maxWidth="xl"
-				sx={{
-					// backgroundColor: "#fff",
-					ml:12,
-					mr:22,
-					border: 2, //define border
-					borderRadius: '16px', //round the corners, sharp boxes are...fed-esque
-					height: "auto",
-				}}
-			>
-				<h2 style={{ textAlign: "center" }}>{welcomeText}</h2>
-				{postForm}
-			</Container>
-			<Grid container justifyContent={"center"}>
-				<Grid item sx={{ width: "60%", mb: "20px" }}>
-					{post.map((item) => (
-						<PostCard post={item} key={item.id} />
-					))}
+	const PostFeed: React.FC<any> = () => {
+		return (
+			// <div className="flex-column">
+			//	<NewPostForm />
+			// </div>
+			<>
+				<Container
+					maxWidth="xl"
+					sx={{
+						// backgroundColor: "#fff",
+						ml: 12,
+						mr: 22,
+						border: 2, //define border
+						borderRadius: "16px", //round the corners, sharp boxes are...fed-esque
+						height: "auto",
+					}}
+				>
+					<h2 style={{ textAlign: "center" }}>{welcomeText}</h2>
+					{postForm}
+				</Container>
+				<Grid container justifyContent={"center"}>
+					<Grid item sx={{ width: "60%", mb: "20px" }}>
+						{post.map((item) => (
+							<PostCard post={item} key={item.id} />
+						))}
+					</Grid>
 				</Grid>
-			</Grid>
-			{noPostsText}
-		</>
-	);
+				{noPostsText}
+			</>
+		);
+	};
 };
-
 export default PostFeed;
