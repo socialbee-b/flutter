@@ -1,26 +1,38 @@
-import React from "react";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import { Route, Routes } from "react-router-dom";
 import Landing from "../components/landing/Landing";
 import Layout from "../components/Layout/Layout";
 import Login from "../components/login/Login";
-import { PostFeed } from "../components/post-feed/PostFeed";
+import PostFeed from "../components/post-feed/PostFeed";
 import Profile from "../components/profile/Profile";
 import Register from "../components/register/Register";
 import Settings from "../components/settings-page/Settings";
 import SideNavLayout from "../components/SideNavLayout/SideNavLayout";
+import { getUserFromLocal } from "../components/store/users.slice";
 
-export const AppRoutes: React.FC<unknown> = () => (
-	<Routes>
-		<Route path="/" element={<Layout />}>
-			<Route element={<SideNavLayout />}>
-				<Route path="/settings" element={<Settings />} />
-				<Route index element={<PostFeed />} />
-				<Route path="/profile" element={<Profile />} />
+const AppRoutes: React.FC<unknown> = () => {
+	const dispatch = useDispatch<any>();
+
+	useEffect(() => {
+		dispatch(getUserFromLocal());
+	}, []); // eslint-disable-line
+
+	return (
+		<Routes>
+			<Route path="/" element={<Layout />}>
+				<Route index element={<Landing />} />
+				<Route path="/login" element={<Login />} />
+				<Route path="/register" element={<Register />} />
+
+				<Route element={<SideNavLayout />}>
+					<Route path="/settings" element={<Settings />} />
+					<Route path="/feed" element={<PostFeed />} />
+					<Route path="/profile" element={<Profile />} />
+				</Route>
 			</Route>
+		</Routes>
+	);
+};
 
-			<Route path="/login" element={<Login />} />
-			<Route path="/register" element={<Register />} />
-			<Route path="/welcome" element={<Landing />} />
-		</Route>
-	</Routes>
-);
+export default AppRoutes;

@@ -1,20 +1,50 @@
 .sidenav {
-	background-color: #0b3948;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	padding: 1rem 2rem;
 	row-gap: 1rem;
-	width: 200px;
+	background-color: #0b3948;
 	height: 100%;
-	left: 0;
+	border-top-right-radius: 5px;
+	border-bottom-right-radius: 5px;
+	padding: 1rem;
 }
 
-.sidenav a {
-	color: rgb(233, 233, 233);
+.sidenav h3 {
+	color: white;
+	font-weight: 400;
+}
+
+.sidenav nav {
+	display: flex;
+	flex-direction: column;
+	row-gap: 0.5rem;
+}
+
+.sidenav nav a {
 	text-decoration: none;
 	font-size: 1.25rem;
+	white-space: nowrap;
+	color: white;
+	min-width: 200px;
+	font-size: 1rem;
+	padding: 0.5rem 1rem;
+	border-radius: 5px;
+	display: flex;
+	flex-direction: row;
+	column-gap: 0.75rem;
+	align-items: center;
+	transition: all 0.25s;
 }
-.sidenav a:hover {
-	text-decoration: underline;
+
+.sidenav nav a p {
+	font-size: 1rem;
+}
+
+.sidenav nav a svg {
+	width: 1.2rem;
+	height: 1.2rem;
+}
+
+.sidenav nav a:hover {
+	background: rgba(255, 255, 255, 0.1);
 }
