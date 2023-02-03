@@ -17,39 +17,20 @@ export const createPost = createAsyncThunk(
 	"posts/createPosts",
 	async (body: any) => {
 		try {
-			console.log(body);
-			// const response = await axios.post(`${BASE_URL}/posts`, {
-			// 	text: body?.text,
-			// 	imageUrl: body?.imageUrl,
-			// 	comments: body?.comments,
-			// 	author: body?.author,
-			// 	postType: body?.postType,
-			// });
-			// return response.data;
+			const response = await axios.post(`${BASE_URL}/posts`, {
+				text: body?.text,
+				imageUrl: body?.imageUrl,
+				comments: body?.comments,
+				author: body?.author,
+				postType: body?.postType,
+			});
+			return response.data;
 		} catch (err: any) {
 			return err.message;
 		}
 	}
 );
-//delete post ?
-export const deletePost = createAsyncThunk(
-	"posts/createPosts",
-	async (body: any) => {
-		try {
-			//
-			// const response = await axios.post(`${BASE_URL}/posts`, {
-			// 	text: body?.text,
-			// 	imageUrl: body?.imageUrl,
-			// 	comments: body?.comments,
-			// 	author: body?.author,
-			// 	postType: body?.postType,
-			// });
-			// return response.data;
-		} catch (err: any) {
-			return err.message;
-		}
-	}
-);
+
 //get post by post id
 //get posts by user id
 

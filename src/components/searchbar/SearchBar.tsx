@@ -5,81 +5,82 @@ import Typography from "@mui/material/Typography";
 import IconButton from "@mui/material/IconButton";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
-import SearchIcon from '@mui/icons-material/Search';
+import SearchIcon from "@mui/icons-material/Search";
 import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import InputBase from '@mui/material/InputBase';
+import InputBase from "@mui/material/InputBase";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers, getUser } from "../store/users.slice"; 
-import { styled, alpha } from '@mui/material/styles';
+import { getAllUsers, getUser, handleLogout } from "../store/users.slice";
+import { styled, alpha } from "@mui/material/styles";
 import { useEffect, useState } from "react";
 
-const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.15),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.25),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-  }));
+const Search = styled("div")(({ theme }) => ({
+	position: "relative",
+	borderRadius: theme.shape.borderRadius,
+	backgroundColor: alpha(theme.palette.common.white, 0.15),
+	"&:hover": {
+		backgroundColor: alpha(theme.palette.common.white, 0.25),
+	},
+	marginLeft: 0,
+	width: "100%",
+	[theme.breakpoints.up("sm")]: {
+		marginLeft: theme.spacing(1),
+		width: "auto",
+	},
+}));
 
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(0, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }));
-  
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: '12ch',
-        '&:focus': {
-          width: '20ch',
-        },
-      },
-    },
-  }));
+const SearchIconWrapper = styled("div")(({ theme }) => ({
+	padding: theme.spacing(0, 2),
+	height: "100%",
+	position: "absolute",
+	pointerEvents: "none",
+	display: "flex",
+	alignItems: "center",
+	justifyContent: "center",
+}));
 
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+	color: "inherit",
+	"& .MuiInputBase-input": {
+		padding: theme.spacing(1, 1, 1, 0),
+		// vertical padding + font size from searchIcon
+		paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+		transition: theme.transitions.create("width"),
+		width: "100%",
+		[theme.breakpoints.up("sm")]: {
+			width: "12ch",
+			"&:focus": {
+				width: "20ch",
+			},
+		},
+	},
+}));
 
 export default function SearchBar() {
+	// const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const user = useSelector(getUser);
-  const [log, setLog] = useState('Login');
-  const [logButton, setLogButton] = useState(<></>);
+	const [log, setLog] = useState("Login");
+	const [logButton, setLogButton] = useState(<></>);
   const dispatch = useDispatch<any>();
-  useEffect(() => {
-    if(user?.email) {
-      setLog('Logout');
-      setLogButton(<LogoutIcon/>)
-    }
+
+	useEffect(() => {
+		if (user?.email) {
+			setLog("Logout");
+			setLogButton(<LogoutIcon />);
+		} 
     else {
-      setLog('Login');
-      setLogButton(<LoginIcon/>)
-    }
-  }, [user])
+			setLog("Login");
+			setLogButton(<LoginIcon />);
+		}
+	}, [user]);
 
 	const handleClick = () => {
 		if (user?.email) {
-			localStorage.setItem("user", "{}");
-			navigate("/welcome");
+			navigate("/");
+			dispatch(handleLogout());
 		} else {
 			navigate("/login");
 		}
@@ -230,16 +231,11 @@ const filterOptions = (options: any, state: any) => {
 								onClick={handleClick}
 							>
 								{logButton}
-							</IconButton>
-                         
+							</IconButton>     
 						</Tooltip>
-
-                       
 					</div>
 				</Toolbar>
 			</AppBar>
 		</Box>
 	);
-
-    
 }

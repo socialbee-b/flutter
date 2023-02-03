@@ -7,22 +7,25 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
-import { useSelector } from "react-redux";
-import { getUser } from "../store/users.slice";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser, handleLogout } from "../store/users.slice";
+import { useEffect } from "react";
 
 
 export default function Navbar() {
+	const dispatch = useDispatch<any>();
 	const navigate = useNavigate();
 	const user = useSelector(getUser);
 
 	const handleClick = () => {
 		if (user?.email) {
-			localStorage.setItem("user", "{}");
 			navigate("/welcome");
 		} else {
+			dispatch(handleLogout());
 			navigate("/login");
 		}
 	};
+
 	return (
 		<Box sx={{ flexGrow: 1 }}>
 			<AppBar position="static" color="transparent">

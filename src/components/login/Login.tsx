@@ -12,7 +12,12 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getStatus, login, setStatus } from "../store/users.slice";
+import {
+	getStatus,
+	getUserFromLocal,
+	login,
+	setStatus,
+} from "../store/users.slice";
 import { addToast } from "../toasts/toasts.slice";
 
 const theme = createTheme();
@@ -39,7 +44,9 @@ export default function Login() {
 			setEmail("");
 			setPassword("");
 
-			navigate("/");
+			dispatch(getUserFromLocal());
+
+			navigate("/feed");
 
 			dispatch(
 				addToast({
@@ -49,7 +56,7 @@ export default function Login() {
 			);
 		}
 		dispatch(setStatus("idle"));
-	}, [status]);
+	}, [status]); // eslint-disable-line
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();

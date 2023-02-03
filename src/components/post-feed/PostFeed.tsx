@@ -1,3 +1,4 @@
+// import NewPostForm from "./NewPostForm/NewPostForm";
 import React, { useEffect, useState } from "react";
 import { Box, Container, Grid, Button } from "@mui/material";
 import { PostCard } from "./PostCard";
@@ -79,7 +80,11 @@ export const PostFeed = () => {
 		);
 	}
 
+const PostFeed: React.FC<any> = () => {
 	return (
+		// <div className="flex-column">
+		//	<NewPostForm />
+		// </div>
 		<>
 			<Container
 				maxWidth="xl"
@@ -106,3 +111,5 @@ export const PostFeed = () => {
 		</>
 	);
 };
+
+export default PostFeed;

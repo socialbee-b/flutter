@@ -1,0 +1,13 @@
+.layoutContainer {
+	display: flex;
+	flex-flow: column;
+	height: 100%;
+}
+
+.layoutHeader {
+	flex: 0 1 auto;
+}
+
+.layoutBody {
+	flex: 1 1 auto;
+}
