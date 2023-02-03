@@ -5,7 +5,7 @@ import { PostCard } from "../post-feed/PostCard";
 import { getUser } from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography, IconButton, Tooltip} from "@mui/material";
-import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
+import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
 
 const Profile: React.FC<any> = () => {
 	const user = useSelector(getUser);
@@ -26,7 +26,7 @@ const Profile: React.FC<any> = () => {
 
 	const profilestyle = {
 		position: 'absolute' as 'absolute',
-		transform: 'translate(200%, 240%)',
+		transform: 'translate(-80%, 250%)',
 		width: 50
 	};
 	const style = {
@@ -57,10 +57,9 @@ const Profile: React.FC<any> = () => {
 					<img className="profile-picture" src={user?.imageUrl} alt="Profile Image Here"/>
 					<Tooltip title="Change profile picture" placement="right-end">
 						<IconButton onClick={handleOpen3} sx={profilestyle}>
-							<AddCircleOutlinedIcon></AddCircleOutlinedIcon>
+							<AddCircleSharpIcon sx={{ fontSize: 25, color: '#0b3948'}}></AddCircleSharpIcon>
 						</IconButton>
 					</Tooltip>
-					{/* if we want to add a sort of preview portion, need to finish out this modal below*/}
 					<Modal
 						open={open3}
 						onClose={handleClose3}
@@ -68,41 +67,21 @@ const Profile: React.FC<any> = () => {
 						aria-describedby="modal-uploadpfp-desc"
 					>
 						<Box sx={style}>
-							<Typography id="modal-uploadpfp-title" variant="h6" component="h2">
+							<Typography className='prompt-container' id="modal-uploadpfp-title" variant="h6" component="h2">
 								Upload Picture
 							</Typography>
-							<Typography id="modal-uploadpfp-desc" sx={{ mt: 2 }}>
+							<Typography className='prompt-container' id="modal-uploadpfp-desc" sx={{ mt: 2 }}>
 								Select an image
 								<UploadFile/>
 							</Typography>
-							<input
-								accept="image/*"
-								className="classes.input"
-								style={{ display: 'none' }}
-								id="raised-button-file"
-								multiple
-								type="file"
-							/>
-							<label htmlFor="raised-button-file">
-								<Button
-									type="submit"
-									fullWidth
-									sx={{ mt: 4, mb: 1 }}
-								> Upload Image
-								</Button>							
-							</label>
-							
 						</Box>
 					</Modal>
-					{/* <Button sx={profilestyle}> </Button> */}
 				</div>
 				<div className="flex-column">
-					<h2>Name Template Literal</h2>
-					<p className="username">@'$username template literal'</p>
+					<h2>{user?.firstName} {user?.lastName}</h2>
+					<p className="username">@{user?.username}</p>
 					
 					<div className="flex-row">
-						{/* <p className="followers">'$number tl' Followers</p>
-						<p className="following">'$number tl' Following</p> */}
 						<Button onClick={handleOpen}>321 Following</Button>
 						<Modal
 							open={open}
@@ -136,12 +115,7 @@ const Profile: React.FC<any> = () => {
 								</Typography>
 							</Box>
 						</Modal>
-            
-						{/* <UploadFile /> */}
 					</div>
-				</div>
-				<div className="follow-button">
-					<Button onClick={() => { alert('user followed') }} variant="outlined" sx={{ ml: 55 }}>Follow</Button>
 				</div>
 			</div>
 			<div>

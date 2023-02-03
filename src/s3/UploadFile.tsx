@@ -1,8 +1,11 @@
+import {Button, Box} from '@mui/material';
+import TextField from '@mui/material/TextField';
 import axios from 'axios';
 import React , {useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeProfilePic, getUser } from '../components/store/users.slice';
 import { generateUploadURL } from './s3Config';
+import './UploadFile.css';
 
 
 // installed using npm install buffer --save
@@ -36,13 +39,44 @@ const UploadFile: React.FC<any> = () => {
         }))
     }
     return ( 
+        // <div>
+        //         <div>
+        //             React S3 File Upload
+        //         </div>
+        //         <input type="file" onChange={handleFileInput} />
+        //         <br></br>
+        //         <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+        //     </div>
+        // https://stackoverflow.com/questions/40589302/how-to-enable-file-upload-on-reacts-material-ui-simple-input
+        //https://kiranvj.com/blog/blog/file-upload-in-material-ui/
         <div>
-            <div>
-                React S3 File Upload
-            </div>
-            <input type="file" onChange={handleFileInput}/>
-            <br></br>
-            <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
+            <label htmlFor='file-button'>
+                <input
+                    style={{ display: 'none' }}
+                    id="file-button"
+                    name="file-button"
+                    type="file"
+                    hidden
+                    onChange={handleFileInput}
+                />
+                <Button 
+                    // variant="outlined"
+                    component="span"
+                    fullWidth
+                    sx={{ mt: 4, mb: 1 }}  
+                >Choose File 
+                </Button>
+                <div className='fileName-center'>
+                    {(selectedFile as any)?.name}
+                </div>
+                <Button
+                    onClick={() => uploadFile(selectedFile)}
+                    fullWidth
+                    sx={{ mt: 4, mb: 1 }}
+                >Upload Image
+                </Button>
+            </label>
+
         </div>
     );
 }

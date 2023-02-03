@@ -10,3 +10,8 @@
 	background-color: rgb(163, 203, 238);
 	border-radius: 50%;
 }
+
+.prompt-container{
+	text-align: center;
+	align-items: center;
+}
