@@ -1,0 +1,23 @@
+.styledButton {
+	white-space: nowrap;
+	font-size: 1rem;
+	outline: none;
+	border: 2px solid var(--primary-blue);
+	color: var(--primary-blue);
+	font-weight: 500;
+	text-transform: uppercase;
+	letter-spacing: 0.1px;
+	cursor: pointer;
+	width: min-content;
+	margin: 0 auto;
+	padding: 0.5rem 1rem;
+	border-radius: 5px;
+	background: none;
+	transition: 0.25s all;
+}
+
+.styledButton:hover,
+.styledButton:focus {
+	background: var(--primary-blue);
+	color: white;
+}

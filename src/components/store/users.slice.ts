@@ -6,6 +6,8 @@ const BASE_URL = "http://localhost:8080";
 // define our initial state
 const initialState = {
 	status: "idle",
+	user: {},
+	users: [],
 };
 
 export const register = createAsyncThunk("auth/register", async (body: any) => {
@@ -39,8 +41,11 @@ export const changeUsername = createAsyncThunk(
 	async (payload: any) => {
 		try {
 			const response = await axios.put(
-				`${BASE_URL}/editUser/username/${payload?.id}`,
-				{ password: payload?.newPassword }
+				`${BASE_URL}/users/${payload?.id}/username`,
+				payload?.username,
+				{
+					headers: { "Content-type": "text/plain" },
+				}
 			);
 			return response.data;
 		} catch (err: any) {
@@ -53,8 +58,11 @@ export const changeEmail = createAsyncThunk(
 	async (payload: any) => {
 		try {
 			const response = await axios.put(
-				`${BASE_URL}/editUser/email/${payload?.id}`,
-				{ password: payload?.newPassword }
+				`${BASE_URL}/users/${payload?.id}/email`,
+				payload?.email,
+				{
+					headers: { "Content-type": "text/plain" },
+				}
 			);
 			return response.data;
 		} catch (err: any) {
@@ -68,8 +76,27 @@ export const changePassword = createAsyncThunk(
 	async (payload: any) => {
 		try {
 			const response = await axios.put(
-				`${BASE_URL}/editUser/password/${payload?.id}`,
-				{ password: payload?.newPassword }
+				`${BASE_URL}/users/${payload?.id}/password`,
+				payload?.password,
+				{
+					headers: { "Content-type": "text/plain" },
+				}
+			);
+			console.log(response.data);
+			return response.data;
+		} catch (err: any) {
+			console.log(err);
+			return new Error(err.message);
+		}
+	}
+);
+
+export const getAllUsers = createAsyncThunk(
+	"users/getAllUsers",
+	async () => {
+		try {
+			const response = await axios.get(
+				`${BASE_URL}/users`
 			);
 			return response.data;
 		} catch (err: any) {
@@ -78,13 +105,46 @@ export const changePassword = createAsyncThunk(
 	}
 );
 
+export const changeProfilePic = createAsyncThunk(
+	"users/changeProfilePic",
+	async (payload: any) => {
+		try {
+			const response = await axios.put(
+				`${BASE_URL}/users/${payload?.id}/profileImage`,
+				payload.imageUrl,
+				{
+					headers: { "Content-type": "text/plain" }
+				}
+			);
+			return response.data;
+		} catch (err: any) {
+			return new Error(err.message);
+		}
+	}
+);
+// export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
+// 	try {
+// 		const response = await axios.get(`${BASE_URL}/users`);
+// 		return response.data;
+// 	} catch (err: any) {
+// 		return err.message;
+// 	}
+// });
+
 // create the user slice
 const usersSlice = createSlice({
 	name: "users",
 	initialState,
 	reducers: {
+		getUserFromLocal(state) {
+			state.user = JSON.parse(localStorage.getItem("user") || "{}");
+		},
 		setStatus(state, action) {
 			state.status = action.payload;
+		},
+		handleLogout(state) {
+			state.user = {};
+			localStorage.setItem("user", "{}");
 		},
 	},
 	extraReducers(builder) {
@@ -107,16 +167,46 @@ const usersSlice = createSlice({
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.status = "rejected";
+			})
+			.addCase(changeUsername.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(changeUsername.fulfilled, (state, action) => {
+				state.status = "success";
+			})
+			.addCase(changeUsername.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(getAllUsers.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(getAllUsers.fulfilled, (state, action) => {
+				state.status = "success";
+				state.users = action.payload;
+			})
+			.addCase(getAllUsers.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(changeProfilePic.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(changeProfilePic.fulfilled, (state, action) => {
+				state.status = "success";
+				localStorage.setItem("user", JSON.stringify(action.payload));
+			})
+			.addCase(changeProfilePic.rejected, (state, action) => {
+				state.status = "rejected";
 			});
 	},
 });
 
 // export functions you want to use in the app
-export const getUser = () => JSON.parse(localStorage.getItem("user") || "{}");
+export const getUser = (state: any) => state.users.user;
+// () => JSON.parse(localStorage.getItem("user") || "{}");
 export const getStatus = (state: any) => state.users.status;
 
 // export actions
-export const { setStatus } = usersSlice.actions; // eslint-disable-line
+export const { getUserFromLocal, setStatus, handleLogout } = usersSlice.actions; // eslint-disable-line
 
 // export reducer
 export default usersSlice.reducer;
