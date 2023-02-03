@@ -91,14 +91,19 @@ export const changePassword = createAsyncThunk(
 	}
 );
 
-export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
-	try {
-		const response = await axios.get(`${BASE_URL}/users`);
-		return response.data;
-	} catch (err: any) {
-		return new Error(err.message);
+export const getAllUsers = createAsyncThunk(
+	"users/getAllUsers",
+	async () => {
+		try {
+			const response = await axios.get(
+				`${BASE_URL}/users`
+			);
+			return response.data;
+		} catch (err: any) {
+			return new Error(err.message);
+		}
 	}
-});
+);
 
 export const changeProfilePic = createAsyncThunk(
 	"users/changeProfilePic",
@@ -108,7 +113,7 @@ export const changeProfilePic = createAsyncThunk(
 				`${BASE_URL}/users/${payload?.id}/profileImage`,
 				payload.imageUrl,
 				{
-					headers: { "Content-type": "application/json" },
+					headers: { "Content-type": "text/plain" }
 				}
 			);
 			return response.data;
@@ -197,6 +202,7 @@ const usersSlice = createSlice({
 
 // export functions you want to use in the app
 export const getUser = (state: any) => state.users.user;
+// () => JSON.parse(localStorage.getItem("user") || "{}");
 export const getStatus = (state: any) => state.users.status;
 
 // export actions
