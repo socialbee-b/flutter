@@ -24,6 +24,7 @@ class AuthServiceTest {
 
 
     @Test
+<<<<<<< Updated upstream
     void findByCredentialsSuccess() {
         User mockUser = new User ("blorp@email.com","blorp","david","mata", "norping");
 
@@ -33,6 +34,9 @@ class AuthServiceTest {
 
         assertEquals(resultUser.get().getEmail(),mockUser.getEmail());
         assertEquals(resultUser.get().getPassword(),mockUser.getPassword());
+=======
+    void findByCredentials() {
+>>>>>>> Stashed changes
     }
 
     @Test
