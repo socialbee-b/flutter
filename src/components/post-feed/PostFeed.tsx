@@ -1,10 +1,114 @@
-import NewPostForm from "./NewPostForm/NewPostForm";
+// import NewPostForm from "./NewPostForm/NewPostForm";
+import React, { useEffect, useState } from "react";
+import { Box, Container, Grid, Button } from "@mui/material";
+import { PostCard } from "./PostCard";
+import Post from "../../models/Post";
+import { apiGetAllPosts } from "../../remote/social-media-api/postFeed.api";
+import TextField from "@mui/material/TextField";
+import { apiUpsertPost } from "../../remote/social-media-api/post.api";
+import { getUser } from "../store/users.slice";
+import { useSelector } from "react-redux";
+
+export const PostFeed = () => {
+	const [post, setPosts] = useState<Post[]>([]);
+	const user = useSelector(getUser);
+	let welcomeText = "Welcome!";
+	let postForm = <></>;
+
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+		const data = new FormData(event.currentTarget);
+		let payload = new Post(
+			0,
+			data.get("postText")?.toString() || "",
+			data.get("postImage")?.toString() || "",
+			[],
+			user,
+			"Top"
+		);
+		await apiUpsertPost(payload);
+		fetchData();
+	};
+
+	if (user) {
+		postForm = (
+			<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+				<TextField
+					required
+					id="postText"
+					name="postText"
+					label="Thoughts You Would Like to Share?"
+					fullWidth
+				/>
+				<TextField
+					id="postImage"
+					name="postImage"
+					label="Add an Image or Diagram?"
+					fullWidth
+					variant="standard"
+				/>
+				<Button
+					type="submit"
+					variant="contained"
+					sx={{ my: 3, ml: 1 }}
+					// none of the following work: , textAlign: 'center', alignItems: 'center', justifyContent: 'center'
+					// color="warning" //make the color not override the theme
+				>
+					Create Post
+				</Button>
+			</Box>
+		);
+
+		welcomeText = `Welcome, ${user.firstName}!`;
+	}
+	const fetchData = async () => {
+		const result = await apiGetAllPosts();
+		setPosts(result.payload.reverse());
+	};
+
+	useEffect(() => {
+		fetchData();
+	}, []);
+
+	let noPostsText = <></>;
+
+	if (post.length === 0) {
+		noPostsText = (
+			<h2 style={{ textAlign: "center", marginTop: "3%", color: "gray" }}>
+				There are no posts, share your thoughts!
+			</h2>
+		);
+	}
 
 const PostFeed: React.FC<any> = () => {
 	return (
-		<div className="flex-column">
-			<NewPostForm />
-		</div>
+		// <div className="flex-column">
+		//	<NewPostForm />
+		// </div>
+		<>
+			<Container
+				maxWidth="xl"
+				sx={{
+					// backgroundColor: "#fff",
+					ml:12,
+					mr:22,
+					border: 2, //define border
+					borderRadius: '16px', //round the corners, sharp boxes are...fed-esque
+					height: "auto",
+				}}
+			>
+				<h2 style={{ textAlign: "center" }}>{welcomeText}</h2>
+				{postForm}
+			</Container>
+			<Grid container justifyContent={"center"}>
+				<Grid item sx={{ width: "60%", mb: "20px" }}>
+					{post.map((item) => (
+						<PostCard post={item} key={item.id} />
+					))}
+				</Grid>
+			</Grid>
+			{noPostsText}
+		</>
 	);
 };
 

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser, handleLogout } from "../store/users.slice";
 import { useEffect } from "react";
 
+
 export default function Navbar() {
 	const dispatch = useDispatch<any>();
 	const navigate = useNavigate();

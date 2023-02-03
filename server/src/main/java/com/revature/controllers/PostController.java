@@ -3,7 +3,9 @@ package com.revature.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.revature.models.PostType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import com.revature.annotations.Authorized;
@@ -54,6 +56,44 @@ public class PostController {
         }
 
         return ResponseEntity.ok(postOptional.get());
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable Integer id) {
+        postService.deletePost(id);
+        return ResponseEntity.ok("this post was deleted");
+    }
+
+    @PutMapping("/{id}/like")
+    public ResponseEntity<Post> addPostLikes(@PathVariable int id) {
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Post post = postOptional.get();
+        post.setLikes(post.getLikes() + 1);
+        return ResponseEntity.ok(postService.upsert(post));
+    }
+
+    @PutMapping("/{id}/unlike")
+    public ResponseEntity<Post> removePostLikes(@PathVariable int id) {
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        Post post = postOptional.get();
+        post.setLikes(post.getLikes() - 1);
+        return ResponseEntity.ok(postService.upsert(post));
+    }
+    @PostMapping("editPost/{id}")
+    public ResponseEntity<Post> editPost(@PathVariable int id, @RequestBody String editString) {
+        Optional<Post> postOptional = postService.findById(id);
+        if(!postOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        Post newPost = postOptional.get();
+        newPost.setText(editString);
+
+        return ResponseEntity.ok(this.postService.upsert(newPost));
     }
 
 }

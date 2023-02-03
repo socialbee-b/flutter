@@ -1,9 +1,12 @@
 package com.revature.controllers;
 
+import com.revature.models.Post;
+import com.revature.models.PostType;
 import com.revature.models.User;
 import com.revature.services.PostService;
 import com.revature.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +18,7 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -58,4 +62,108 @@ public class UserController {
 //        return ResponseEntity.ok(userOptional.get());
 //    }
 
+    @PutMapping("/{id}/password")
+    public ResponseEntity<User> editPassword(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userOptional = userService.findById(id);
+        if(!userOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = userOptional.get();
+        newUser.setPassword(editString);
+
+        return ResponseEntity.ok(this.userService.save(newUser));
+    }
+
+    @PutMapping("/{id}/email")
+    public ResponseEntity<User> editEmail(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByEmail(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<User> userOptional = userService.findById(id);
+        if(!userOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = userOptional.get();
+        newUser.setEmail(editString);
+
+        return ResponseEntity.ok(this.userService.save(newUser));
+    }
+
+    @PutMapping("/{id}/username")
+    public ResponseEntity<User> editUsername(@PathVariable int id, @RequestBody String editString) {
+        Optional<User> userExist = userService.findByUsername(editString);
+
+        if(userExist.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        if(!(this.userService.findByUsername(editString)).isEmpty()){
+            return ResponseEntity.badRequest().build();
+        }
+
+        Optional<User> userOptional = userService.findById(id);
+        if(!userOptional.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = userOptional.get();
+        newUser.setUsername(editString);
+
+
+        return ResponseEntity.ok(this.userService.save(newUser));
+    }
+
+    @PutMapping("/{id}/profileImage")
+    @Transactional
+    public ResponseEntity<User> updateImageUrl(@PathVariable int id, @RequestBody String imageUrl) {
+        Optional<User> userOptional = userService.findById(id);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+        User newUser = userOptional.get();
+        newUser.setImageUrl(imageUrl);
+        return ResponseEntity.ok(newUser);
+    }
+
+    @PutMapping("/{id}/follow")
+    public ResponseEntity<List<User>> addFollower(@PathVariable int id, @RequestBody int followerId) {
+        Optional<User> followedUserOpt = userService.findById(id);
+        if (!followedUserOpt.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<User> followerOpt = userService.findById(followerId);
+        if (!followerOpt.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(userService.addFollower(followedUserOpt.get(), followerOpt.get()));
+    }
+
+    @PutMapping("/{id}/unfollow")
+    public ResponseEntity<List<User>> removeFollower(@PathVariable int id, @RequestBody int followerId) {
+        Optional<User> followedUserOpt = userService.findById(id);
+        if (!followedUserOpt.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<User> followerOpt = userService.findById(followerId);
+        if (!followerOpt.isPresent()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(userService.removeFollower(followedUserOpt.get(), followerOpt.get()));
+    }
+    @GetMapping("/{id}/feed")
+    public ResponseEntity<List<Post>> getFeedForUser(@PathVariable int id){
+        Optional<User> optionalUser = userService.findById(id);
+        if(!optionalUser.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        List<Post> feed = userService.getFeedForUser(optionalUser.get());
+        if(feed == null) {
+           return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(feed);
+    }
 }

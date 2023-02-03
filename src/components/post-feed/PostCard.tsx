@@ -136,7 +136,7 @@ export const PostCard = (props: postProps) => {
 	}
 
 	return (
-		<Card sx={{ maxWidth: "100%", marginTop: "3%" }}>
+		<Card sx={{ maxWidth: "100%", marginTop: "5%", borderRadius:'16px'}}>
 			<CardHeader
 				title={props.post.author.firstName}
 				avatar={
