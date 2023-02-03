@@ -46,4 +46,8 @@ public class PostService {
 		Optional<List<Post>> feed = postRepository.findByAuthorInAndPostType(following, PostType.Top);
 		return feed;
 	}
+
+	public Optional<List<Post>> getAllPostsByUser(User user) {
+		return postRepository.findAllByAuthorAndPostType(user, PostType.Top);
+	}
 }

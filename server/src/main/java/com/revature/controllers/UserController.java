@@ -166,4 +166,17 @@ public class UserController {
         }
         return ResponseEntity.ok(feed);
     }
+
+    @GetMapping("/{id}/posts")
+    public ResponseEntity<List<Post>> getAllPostsByAUser(@PathVariable int id) {
+        Optional<User> optionalUser = userService.findById(id);
+        if(!optionalUser.isPresent()){
+            return ResponseEntity.badRequest().build();
+        }
+        Optional<List<Post>> postList = userService.getAllPostsByAUser(optionalUser.get());
+        if (!postList.isPresent()) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.ok(postList.get());
+    }
 }
