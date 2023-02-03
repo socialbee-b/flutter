@@ -88,5 +88,9 @@ public class UserService {
         }
         return feedOptional.get();
     }
+
+    public Optional<List<Post>> getAllPostsByAUser(User user) {
+        return postService.getAllPostsByUser(user);
+    }
 }
 
