@@ -42,7 +42,10 @@ export const changeUsername = createAsyncThunk(
 		try {
 			const response = await axios.put(
 				`${BASE_URL}/users/${payload?.id}/username`,
-				{ password: payload?.newPassword }
+				payload?.username,
+				{
+					headers: { "Content-type": "text/plain" },
+				}
 			);
 			return response.data;
 		} catch (err: any) {
