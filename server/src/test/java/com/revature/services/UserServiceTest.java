@@ -273,4 +273,25 @@ class UserServiceTest {
         assertNull(actualFeed);
 
     }
+    @Test
+    void getAllPostsByAUserTestSuccess() {
+        User mockedUser = new User("test.com", "somepassword", "First", "Last", "username");
+        mockedUser.setId(1);
+        when(userRepository.findById(mockedUser.getId())).thenReturn(Optional.of(mockedUser));
+        Optional<User> userOptional = userRepository.findById(mockedUser.getId());
+        assertEquals(userOptional, Optional.of(mockedUser));
+        List<Post> userPosts = new ArrayList<>();
+        userPosts.add(mockedPostObject);
+        when(postService.getAllPostsByUser(mockedUser)).thenReturn(Optional.of(userPosts));
+        Optional<List<Post>> allUserPostsOptional = postService.getAllPostsByUser(mockedUser);
+        assertEquals(allUserPostsOptional, Optional.of(userPosts));
+    }
+    @Test
+    void getAllPostsByAUserTestFail() {
+        User mockedUser = new User("test.com", "somepassword", "First", "Last", "username");
+        mockedUser.setId(1);
+        when(postService.getAllPostsByUser(mockedUser)).thenReturn(Optional.empty());
+        Optional<List<Post>> allUserPostsOptional = postService.getAllPostsByUser(mockedUser);
+        assertEquals(Optional.empty(), allUserPostsOptional);
+    }
 }
