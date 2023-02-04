@@ -1,0 +1,64 @@
+.styledPost {
+	background: rgb(233, 233, 233);
+	width: 100%;
+	border-radius: 10px;
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1.5rem;
+}
+
+.postHeader {
+	display: flex;
+	align-items: center;
+	column-gap: 2rem;
+}
+
+.postHeader img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 50%;
+}
+
+.postUsername {
+	display: flex;
+	align-items: baseline;
+	column-gap: 0.25rem;
+}
+
+.postUsername p {
+	color: gray;
+	font-weight: 500;
+}
+
+.postBody {
+	font-size: 18px;
+	display: flex;
+	flex-direction: column;
+	row-gap: 1rem;
+}
+
+.postFooter {
+	display: flex;
+	align-items: center;
+	column-gap: 2rem;
+}
+
+.footerIcon {
+	display: flex;
+	align-items: center;
+	column-gap: 0.5rem;
+}
+
+.footerIcon svg {
+	width: 30px;
+	height: 30px;
+	cursor: pointer;
+	color: var(--primary-blue);
+	transition: all 0.25s;
+}
+
+.footerIcon svg:hover {
+	color: #ff4757;
+}

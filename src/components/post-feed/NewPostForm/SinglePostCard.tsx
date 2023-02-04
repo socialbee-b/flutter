@@ -1,17 +1,12 @@
-import "./Posts.css";
 import { AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
-import { useNavigate } from "react-router";
 
-const PostCard: React.FC<any> = ({ post }) => {
-	const navigate = useNavigate();
-
+const SinglePostCard: React.FC<any> = ({ post }) => {
+	console.log(post);
 	const handleLikeClick = async () => {
 		alert("Add like to post");
 	};
 
-	const handleCommentClick = async () => {
-		navigate(`/posts/${post?.id}`);
-	};
+	const handleCommentClick = async () => {};
 
 	return (
 		<div className="styledPost">
@@ -33,11 +28,11 @@ const PostCard: React.FC<any> = ({ post }) => {
 				</div>
 				<div className="footerIcon">
 					<AiOutlineComment onClick={handleCommentClick} />
-					<p>{post?.comments.length || 0} Comments</p>
+					<p>{post?.comments?.length || 0} Comments</p>
 				</div>
 			</div>
 		</div>
 	);
 };
 
-export default PostCard;
+export default SinglePostCard;

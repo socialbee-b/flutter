@@ -1,11 +1,18 @@
 import { useSelector } from "react-redux";
 import React, { useState } from "react";
 import UploadFile from "../../s3/UploadFile";
-import { PostCard } from "../post-feed/PostCard";
+// import { PostCard } from "../post-feed/PostCard";
 import { getUser } from "../store/users.slice";
 import "./Profile.css";
-import { Box, Button, Modal, Typography, IconButton, Tooltip} from "@mui/material";
-import AddCircleSharpIcon from '@mui/icons-material/AddCircleSharp';
+import {
+	Box,
+	Button,
+	Modal,
+	Typography,
+	IconButton,
+	Tooltip,
+} from "@mui/material";
+import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
 
 const Profile: React.FC<any> = () => {
 	const user = useSelector(getUser);
@@ -25,17 +32,17 @@ const Profile: React.FC<any> = () => {
 	const handleClose3 = () => setOpen3(false);
 
 	const profilestyle = {
-		position: 'absolute' as 'absolute',
-		transform: 'translate(-80%, 250%)',
-		width: 50
+		position: "absolute" as "absolute",
+		transform: "translate(-80%, 250%)",
+		width: 50,
 	};
 	const style = {
-		position: 'absolute' as 'absolute',
-		top: '50%',
-		left: '50%',
-		transform: 'translate(-50%, -50%)', //left-right, up-down
+		position: "absolute" as "absolute",
+		top: "50%",
+		left: "50%",
+		transform: "translate(-50%, -50%)", //left-right, up-down
 		width: 400, //box size
-		bgcolor: 'background.paper', //background within the box
+		bgcolor: "background.paper", //background within the box
 		p: 4,
 	};
 
@@ -48,16 +55,22 @@ const Profile: React.FC<any> = () => {
 		author: {
 			firstName: "Charlotte",
 		},
-		postType: "Top"
-	}
+		postType: "Top",
+	};
 	return (
 		<div>
 			<div className="profile-header">
 				<div className="profile-picture">
-					<img className="profile-picture" src={user?.imageUrl} alt="Profile Image Here"/>
+					<img
+						className="profile-picture"
+						src={user?.imageUrl}
+						alt="Profile Image Here"
+					/>
 					<Tooltip title="Change profile picture" placement="right-end">
 						<IconButton onClick={handleOpen3} sx={profilestyle}>
-							<AddCircleSharpIcon sx={{ fontSize: 25, color: '#0b3948'}}></AddCircleSharpIcon>
+							<AddCircleSharpIcon
+								sx={{ fontSize: 25, color: "#0b3948" }}
+							></AddCircleSharpIcon>
 						</IconButton>
 					</Tooltip>
 					<Modal
@@ -67,20 +80,31 @@ const Profile: React.FC<any> = () => {
 						aria-describedby="modal-uploadpfp-desc"
 					>
 						<Box sx={style}>
-							<Typography className='prompt-container' id="modal-uploadpfp-title" variant="h6" component="h2">
+							<Typography
+								className="prompt-container"
+								id="modal-uploadpfp-title"
+								variant="h6"
+								component="h2"
+							>
 								Upload Picture
 							</Typography>
-							<Typography className='prompt-container' id="modal-uploadpfp-desc" sx={{ mt: 2 }}>
+							<Typography
+								className="prompt-container"
+								id="modal-uploadpfp-desc"
+								sx={{ mt: 2 }}
+							>
 								Select an image
-								<UploadFile/>
+								<UploadFile />
 							</Typography>
 						</Box>
 					</Modal>
 				</div>
 				<div className="flex-column">
-					<h2>{user?.firstName} {user?.lastName}</h2>
+					<h2>
+						{user?.firstName} {user?.lastName}
+					</h2>
 					<p className="username">@{user?.username}</p>
-					
+
 					<div className="flex-row">
 						<Button onClick={handleOpen}>321 Following</Button>
 						<Modal
@@ -118,9 +142,7 @@ const Profile: React.FC<any> = () => {
 					</div>
 				</div>
 			</div>
-			<div>
-				<PostCard post={item} key={item.id} />
-			</div>
+			<div>{/* <PostCard post={item} key={item.id} /> */}</div>
 		</div>
 	);
 };

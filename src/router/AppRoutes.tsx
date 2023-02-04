@@ -5,6 +5,7 @@ import Landing from "../components/landing/Landing";
 import Layout from "../components/Layout/Layout";
 import Login from "../components/login/Login";
 import PostFeed from "../components/post-feed/PostFeed";
+import PostPage from "../components/PostPage/PostPage";
 import Profile from "../components/profile/Profile";
 import Register from "../components/register/Register";
 import Settings from "../components/settings-page/Settings";
@@ -29,6 +30,7 @@ const AppRoutes: React.FC<unknown> = () => {
 					<Route path="/settings" element={<Settings />} />
 					<Route path="/feed" element={<PostFeed />} />
 					<Route path="/profile" element={<Profile />} />
+					<Route path="/posts/:id" element={<PostPage />} />
 				</Route>
 			</Route>
 		</Routes>
