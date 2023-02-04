@@ -19,6 +19,9 @@ const PostPage: React.FC<any> = () => {
 		if (status === "rejected") {
 			navigate(-1);
 		}
+		// if (status === "success") {
+		// 	dispatch(fetchPostById(id));
+		// }
 	}, [status]);
 
 	return (

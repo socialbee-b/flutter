@@ -1,12 +1,31 @@
 import "./Posts.css";
 import { AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from "react-router";
+import { useDispatch } from "react-redux";
+import { likePost } from "../store/posts.slice";
+import { addToast } from "../toasts/toasts.slice";
 
 const PostCard: React.FC<any> = ({ post }) => {
+	const dispatch = useDispatch<any>();
 	const navigate = useNavigate();
 
 	const handleLikeClick = async () => {
-		alert("Add like to post");
+		try {
+			dispatch(likePost(post?.id));
+			dispatch(
+				addToast({
+					status: "success",
+					message: "Liked post.",
+				})
+			);
+		} catch (err: any) {
+			dispatch(
+				addToast({
+					status: "error",
+					message: "Unable to like post.",
+				})
+			);
+		}
 	};
 
 	const handleCommentClick = async () => {
