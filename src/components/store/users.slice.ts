@@ -15,7 +15,7 @@ export const register = createAsyncThunk("auth/register", async (body: any) => {
 		const response = await axios.post(`${BASE_URL}/auth/register`, body);
 		return response.data;
 	} catch (err: any) {
-		return err.message;
+		throw new Error(err);
 	}
 });
 export const login = createAsyncThunk("auth/login", async (body: any) => {
@@ -23,7 +23,7 @@ export const login = createAsyncThunk("auth/login", async (body: any) => {
 		const response = await axios.post(`${BASE_URL}/auth/login`, body);
 		return response.data;
 	} catch (err: any) {
-		throw new Error(err.message);
+		throw new Error(err);
 	}
 });
 
@@ -32,7 +32,7 @@ export const logout = createAsyncThunk("auth/logout", async (body: any) => {
 		const response = await axios.post(`${BASE_URL}/auth/logout`, body);
 		return response.data;
 	} catch (err: any) {
-		throw new Error(err.message);
+		throw new Error(err);
 	}
 });
 
@@ -49,7 +49,7 @@ export const changeUsername = createAsyncThunk(
 			);
 			return response.data;
 		} catch (err: any) {
-			return new Error(err.message);
+			throw new Error(err);
 		}
 	}
 );
@@ -66,7 +66,7 @@ export const changeEmail = createAsyncThunk(
 			);
 			return response.data;
 		} catch (err: any) {
-			return new Error(err.message);
+			throw new Error(err);
 		}
 	}
 );
@@ -82,28 +82,21 @@ export const changePassword = createAsyncThunk(
 					headers: { "Content-type": "text/plain" },
 				}
 			);
-			console.log(response.data);
 			return response.data;
 		} catch (err: any) {
-			console.log(err);
-			return new Error(err.message);
+			throw new Error(err);
 		}
 	}
 );
 
-export const getAllUsers = createAsyncThunk(
-	"users/getAllUsers",
-	async () => {
-		try {
-			const response = await axios.get(
-				`${BASE_URL}/users`
-			);
-			return response.data;
-		} catch (err: any) {
-			return new Error(err.message);
-		}
+export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
+	try {
+		const response = await axios.get(`${BASE_URL}/users`);
+		return response.data;
+	} catch (err: any) {
+		throw new Error(err);
 	}
-);
+});
 
 export const changeProfilePic = createAsyncThunk(
 	"users/changeProfilePic",
@@ -113,23 +106,15 @@ export const changeProfilePic = createAsyncThunk(
 				`${BASE_URL}/users/${payload?.id}/profileImage`,
 				payload.imageUrl,
 				{
-					headers: { "Content-type": "text/plain" }
+					headers: { "Content-type": "text/plain" },
 				}
 			);
 			return response.data;
 		} catch (err: any) {
-			return new Error(err.message);
+			throw new Error(err);
 		}
 	}
 );
-// export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
-// 	try {
-// 		const response = await axios.get(`${BASE_URL}/users`);
-// 		return response.data;
-// 	} catch (err: any) {
-// 		return err.message;
-// 	}
-// });
 
 // create the user slice
 const usersSlice = createSlice({
