@@ -50,4 +50,20 @@ public class PostService {
 	public Optional<List<Post>> getAllPostsByUser(User user) {
 		return postRepository.findAllByAuthorAndPostType(user, PostType.Top);
 	}
+	@Transactional
+	public Post addComment(Post post, Post comment) {
+		List<Post> commentList = post.getComments();
+		commentList.add(comment);
+		post.setComments(commentList);
+		return post;
+	}
+
+	@Transactional
+	public Post deleteComment(Post post, Post comment) {
+		List<Post> commentList = post.getComments();
+		commentList.remove(comment);
+		post.setComments(commentList);
+		deletePost(comment.getId());
+		return post;
+	}
 }
