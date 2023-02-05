@@ -13,16 +13,13 @@ const PostPage: React.FC<any> = () => {
 
 	useEffect(() => {
 		dispatch(fetchPostById(id));
-	}, []);
+	}, []); // eslint-disable-line
 
 	useEffect(() => {
 		if (status === "rejected") {
 			navigate(-1);
 		}
-		// if (status === "success") {
-		// 	dispatch(fetchPostById(id));
-		// }
-	}, [status]);
+	}, [status]); // eslint-disable-line
 
 	return (
 		<>

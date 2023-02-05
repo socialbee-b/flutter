@@ -1,7 +1,6 @@
-import { useSelector } from "react-redux";
-import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 import UploadFile from "../../s3/UploadFile";
-// import { PostCard } from "../post-feed/PostCard";
 import { getUser } from "../store/users.slice";
 import "./Profile.css";
 import {
@@ -13,9 +12,14 @@ import {
 	Tooltip,
 } from "@mui/material";
 import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
+import { fetchPosts, getPosts, getStatus } from "../store/posts.slice";
+import PostCard from "../post-feed/PostCard";
 
 const Profile: React.FC<any> = () => {
 	const user = useSelector(getUser);
+	const dispatch = useDispatch<any>();
+	const status = useSelector(getStatus);
+
 	//handles the toggle of the following modal
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
@@ -30,6 +34,15 @@ const Profile: React.FC<any> = () => {
 	const [open3, setOpen3] = useState(false);
 	const handleOpen3 = () => setOpen3(true);
 	const handleClose3 = () => setOpen3(false);
+
+	// posts stuff
+	const posts = useSelector(getPosts);
+
+	useEffect(() => {
+		if (status === "success") {
+			dispatch(fetchPosts());
+		}
+	}, [status]); // eslint-disable-line
 
 	const profilestyle = {
 		position: "absolute" as "absolute",
@@ -46,26 +59,11 @@ const Profile: React.FC<any> = () => {
 		p: 4,
 	};
 
-	// fake card so that I had something to work from while there are no posts from any users
-	const item = {
-		id: 2,
-		text: "some text",
-		imageUrl: "",
-		comments: [],
-		author: {
-			firstName: "Charlotte",
-		},
-		postType: "Top",
-	};
 	return (
-		<div>
+		<div className="flex-column">
 			<div className="profile-header">
 				<div className="profile-picture">
-					<img
-						className="profile-picture"
-						src={user?.imageUrl}
-						alt="Profile Image Here"
-					/>
+					<img className="profile-picture" src={user?.imageUrl} alt="" />
 					<Tooltip title="Change profile picture" placement="right-end">
 						<IconButton onClick={handleOpen3} sx={profilestyle}>
 							<AddCircleSharpIcon
@@ -142,7 +140,14 @@ const Profile: React.FC<any> = () => {
 					</div>
 				</div>
 			</div>
-			<div>{/* <PostCard post={item} key={item.id} /> */}</div>
+			<div className="flex-column column-reverse">
+				{posts.map(
+					(post: any) =>
+						post?.author?.id === user?.id && (
+							<PostCard key={post?.id} post={post} />
+						)
+				)}
+			</div>
 		</div>
 	);
 };

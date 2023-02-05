@@ -6,8 +6,7 @@ import IconButton from "@mui/material/IconButton";
 import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import SearchIcon from "@mui/icons-material/Search";
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
 import InputBase from "@mui/material/InputBase";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
@@ -64,14 +63,13 @@ export default function SearchBar() {
 	const user = useSelector(getUser);
 	const [log, setLog] = useState("Login");
 	const [logButton, setLogButton] = useState(<></>);
-  const dispatch = useDispatch<any>();
+	const dispatch = useDispatch<any>();
 
 	useEffect(() => {
 		if (user?.email) {
 			setLog("Logout");
 			setLogButton(<LogoutIcon />);
-		} 
-    else {
+		} else {
 			setLog("Login");
 			setLogButton(<LoginIcon />);
 		}
@@ -86,87 +84,86 @@ export default function SearchBar() {
 		}
 	};
 
-  // Options to be replaced with actual users/post data from backend
-  // const users : any[] = [
-  //   {
-  //     username: "tlast"
-  //   },
-  //   {
-  //     username: "test"
-  //   },
-  //   {
-  //     username: "newuser"
-  //   },
-  //   {
-  //     username: "spinner"
-  //   }
-  // ]
-  // "users" variable should equal to the Axios call to get all users as a list
-  // const user = useSelector(whatever the response list is called here);
-  const users = useSelector((state: any) => state.users.users);
+	// Options to be replaced with actual users/post data from backend
+	// const users : any[] = [
+	//   {
+	//     username: "tlast"
+	//   },
+	//   {
+	//     username: "test"
+	//   },
+	//   {
+	//     username: "newuser"
+	//   },
+	//   {
+	//     username: "spinner"
+	//   }
+	// ]
+	// "users" variable should equal to the Axios call to get all users as a list
+	// const user = useSelector(whatever the response list is called here);
+	const users = useSelector((state: any) => state.users.users);
 
-  const posts : any[] = [
-    {
-      id: 1,
-      text: "Some Text"
-    },
-    {
-      id: 2,
-      text: "Some text with a few more words for searching and maybe longer text."
-    },
-    {
-      id: 3,
-      text: "This is a sentence with a bunch of letters."
-    },
-    {
-      id: 4,
-      text: "Your post written here is invalid."
-    },
-    {
-      id: 5,
-      text: "I'm new to this platform, how do I make friends?"
-    },
-    {
-      id: 6,
-      text: "Time is being wasted on wars, let's focus on global warming issues."
-    },
-    {
-      id: 7,
-      text: "Will this platform ever implement direct messaging."
-    },
-    {
-      id: 8,
-      text: "New post script just a variety of post messages."
-    }
-  ]
-  // "posts" should be equal to axios request to all posts top level posts
-  // const posts = useSelector(name for getting all posts list)
+	const posts: any[] = [
+		{
+			id: 1,
+			text: "Some Text",
+		},
+		{
+			id: 2,
+			text: "Some text with a few more words for searching and maybe longer text.",
+		},
+		{
+			id: 3,
+			text: "This is a sentence with a bunch of letters.",
+		},
+		{
+			id: 4,
+			text: "Your post written here is invalid.",
+		},
+		{
+			id: 5,
+			text: "I'm new to this platform, how do I make friends?",
+		},
+		{
+			id: 6,
+			text: "Time is being wasted on wars, let's focus on global warming issues.",
+		},
+		{
+			id: 7,
+			text: "Will this platform ever implement direct messaging.",
+		},
+		{
+			id: 8,
+			text: "New post script just a variety of post messages.",
+		},
+	];
+	// "posts" should be equal to axios request to all posts top level posts
+	// const posts = useSelector(name for getting all posts list)
 
+	// This compiles all the users and posts in one list of options that will be searchable through.
+	const options = [
+		...users.map((option: any) => {
+			const type = "Users";
+			return {
+				type: type,
+				...option,
+			};
+		}),
+		...posts.map((option) => {
+			const type = "Posts";
+			return {
+				type: type,
+				...option,
+			};
+		}),
+	];
 
-  // This compiles all the users and posts in one list of options that will be searchable through.
-  const options = [
-    ...users.map((option: any) => {
-      const type = "Users";
-      return {
-        type: type,
-        ...option,
-      }
-    }),
-    ...posts.map((option) => {
-      const type = "Posts";
-      return {
-        type: type,
-        ...option,
-      }
-    })
-  ]
+	const OPTIONS_LIMIT = 10;
+	const defaultFilterOptions = createFilterOptions();
 
-const OPTIONS_LIMIT = 10;
-const defaultFilterOptions = createFilterOptions();
-
-const filterOptions = (options: any, state: any) => {
-  return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
-};
+	const filterOptions = (options: any, state: any) => {
+		return defaultFilterOptions(options, state).slice(0, OPTIONS_LIMIT);
+	};
 
 	return (
 		<Box sx={{ flexGrow: 1 }}>
@@ -175,7 +172,7 @@ const filterOptions = (options: any, state: any) => {
 					<Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
 						Fluttr
 					</Typography>
-          {/* <Search>
+					{/* <Search>
             <SearchIconWrapper>
               <SearchIcon/>
             </SearchIconWrapper>
@@ -184,44 +181,45 @@ const filterOptions = (options: any, state: any) => {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search> */}
-          <Search>
-            <SearchIconWrapper>
-              <SearchIcon/>
-            </SearchIconWrapper>
-            <Autocomplete
-              onFocus={(event) => {
-                dispatch(getAllUsers());
-              }}
-              id="free-solo-demo"
-              freeSolo
-              sx={{ 
-                borderRadius: "16px",
-                width: 200
-              }}
-              filterOptions = {filterOptions}
-              options={options}
-              groupBy={(option) => option.type}
-              getOptionLabel={(option) => {
-                if (option.type == "Users") {
-                  return option.username;
-                }
-                else {
-                  return option.text;
-                }
-              }}
-              renderInput={(params) => {
-                const {InputLabelProps, InputProps, ...rest} = params;
-                return <StyledInputBase {...params.InputProps} {...rest} placeholder="Search..."/>
-            }}
-            />
-          </Search>
-          
+					<Search>
+						<SearchIconWrapper>
+							<SearchIcon />
+						</SearchIconWrapper>
+						<Autocomplete
+							onFocus={(event) => {
+								dispatch(getAllUsers());
+							}}
+							id="free-solo-demo"
+							freeSolo
+							sx={{
+								borderRadius: "16px",
+								width: 200,
+							}}
+							filterOptions={filterOptions}
+							options={options}
+							groupBy={(option) => option.type}
+							getOptionLabel={(option) => {
+								if (option.type === "Users") {
+									return option.username;
+								} else {
+									return option.text;
+								}
+							}}
+							renderInput={(params) => {
+								const { InputLabelProps, InputProps, ...rest } = params;
+								return (
+									<StyledInputBase
+										{...params.InputProps}
+										{...rest}
+										placeholder="Search..."
+									/>
+								);
+							}}
+						/>
+					</Search>
+
 					<div>
-						<Tooltip
-							disableFocusListener
-							disableTouchListener
-							title={log}
-						>
+						<Tooltip disableFocusListener disableTouchListener title={log}>
 							<IconButton
 								size="large"
 								aria-label="account of current user"
@@ -231,7 +229,7 @@ const filterOptions = (options: any, state: any) => {
 								onClick={handleClick}
 							>
 								{logButton}
-							</IconButton>     
+							</IconButton>
 						</Tooltip>
 					</div>
 				</Toolbar>

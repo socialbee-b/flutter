@@ -1,15 +1,26 @@
-import { AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
+import {
+	AiOutlineComment,
+	AiOutlineEdit,
+	AiOutlineHeart,
+} from "react-icons/ai";
 import Button from "../../Button/Button";
 import { useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../store/users.slice";
-import { createPost, likePost } from "../../store/posts.slice";
+import {
+	createPost,
+	deletePost,
+	editPostText,
+	likePost,
+} from "../../store/posts.slice";
 import { addToast } from "../../toasts/toasts.slice";
 
 const SinglePostCard: React.FC<any> = ({ post }) => {
 	const user = useSelector(getUser);
 	const dispatch = useDispatch<any>();
 	const formRef = useRef<HTMLFormElement>(null);
+	const [editText, setEditText] = useState(false);
+	const [text, setText] = useState("");
 
 	const handleLikeClick = async () => {
 		try {
@@ -75,6 +86,61 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 		}
 	};
 
+	const handleDeleteComment = async (id: any) => {
+		try {
+			dispatch(deletePost(id));
+			addToast({
+				status: "success",
+				message: "Your comment has been deleted.",
+			});
+		} catch (err: any) {
+			addToast({
+				status: "error",
+				message: "Unable to delete comment.",
+			});
+		}
+	};
+
+	const handleEditPost = () => {
+		setEditText(!editText);
+		setText(post?.text);
+	};
+
+	const handleEditPostSubmit = async (e: any) => {
+		e.preventDefault();
+
+		if (!text) {
+			dispatch(
+				addToast({
+					status: "warning",
+					message: "Please enter text to edit post.",
+				})
+			);
+		} else {
+			const body = {
+				id: post?.id,
+				text,
+			};
+			try {
+				dispatch(editPostText(body));
+				dispatch(
+					addToast({
+						status: "success",
+						message: "Post has been edited.",
+					})
+				);
+				setEditText(false);
+			} catch (err) {
+				dispatch(
+					addToast({
+						status: "error",
+						message: "Unable to edit post.",
+					})
+				);
+			}
+		}
+	};
+
 	return (
 		<div className="styledPost">
 			<div className="postHeader">
@@ -85,8 +151,18 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 				</div>
 			</div>
 			<div className="postBody">
-				<p>{post?.text}</p>
-				{post?.imageUrl && <img src={post?.imageUrl} />}
+				{editText ? (
+					<form onSubmit={handleEditPostSubmit}>
+						<textarea
+							value={text}
+							onChange={(e) => setText(e.target.value)}
+						></textarea>
+						<Button>Edit Post</Button>
+					</form>
+				) : (
+					<p>{post?.text}</p>
+				)}
+				{post?.imageUrl && <img src={post?.imageUrl} alt="" />}
 			</div>
 			<div className="postFooter">
 				<div className="footerIcon">
@@ -97,6 +173,12 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 					<AiOutlineComment onClick={handleCommentClick} />
 					<p>{post?.comments?.length || 0} Comments</p>
 				</div>
+				{user?.id === post?.author?.id && (
+					<div className="footerIcon">
+						<AiOutlineEdit onClick={handleEditPost} />
+						<p>Edit Post</p>
+					</div>
+				)}
 			</div>
 			{showCommentInput && (
 				<div className="createComment">
@@ -115,8 +197,14 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 				{post?.comments?.map((comment: any) => (
 					<div key={comment?.id} className="postComment">
 						<div className="commentHeader">
-							<img src={comment?.author?.imageUrl} />
+							<img src={comment?.author?.imageUrl} alt="" />
 							<h4>{`${comment?.author?.firstName} ${comment?.author?.lastName}`}</h4>
+							<p
+								onClick={() => handleDeleteComment(comment?.id)}
+								className="deleteComment"
+							>
+								Delete Comment
+							</p>
 						</div>
 						<p>{comment?.text}</p>
 					</div>

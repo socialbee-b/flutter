@@ -10,13 +10,13 @@ const Posts: React.FC<any> = () => {
 
 	useEffect(() => {
 		dispatch(fetchPosts());
-	}, []);
+	}, []); // eslint-disable-line
 
 	useEffect(() => {
 		if (status === "success") {
 			dispatch(fetchPosts());
 		}
-	}, [status]);
+	}, [status]); // eslint-disable-line
 
 	return (
 		<div className="reversedPosts">

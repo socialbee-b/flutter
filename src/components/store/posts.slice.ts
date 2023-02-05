@@ -34,11 +34,12 @@ export const createPost = createAsyncThunk(
 //delete post
 export const deletePost = createAsyncThunk(
 	"posts/deletePost",
-	async (body: any) => {
+	async (id: any) => {
 		try {
-			const response = await axios.delete(`${BASE_URL}/posts/${body?.id}`);
+			const response = await axios.delete(`${BASE_URL}/posts/${id}`);
 			return response.data;
 		} catch (err: any) {
+			console.log(err);
 			throw new Error(err);
 		}
 	}
@@ -69,6 +70,23 @@ export const fetchPostById = createAsyncThunk(
 //get posts by user id
 
 //edit post text
+export const editPostText = createAsyncThunk(
+	"posts/editPostText",
+	async (body: any) => {
+		try {
+			const response = await axios.post(
+				`${BASE_URL}/posts/editPost/${body?.id}`,
+				body?.text,
+				{
+					headers: { "Content-type": "text/plain" },
+				}
+			);
+			return response.data;
+		} catch (err: any) {
+			throw new Error(err);
+		}
+	}
+);
 
 //edit post by image
 
@@ -124,6 +142,24 @@ const postsSlice = createSlice({
 				state.currentPost = action.payload;
 			})
 			.addCase(likePost.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(deletePost.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(deletePost.fulfilled, (state, action) => {
+				state.status = "success";
+			})
+			.addCase(deletePost.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(editPostText.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(editPostText.fulfilled, (state, action) => {
+				state.status = "success";
+			})
+			.addCase(editPostText.rejected, (state, action) => {
 				state.status = "rejected";
 			});
 	},
