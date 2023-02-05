@@ -37,7 +37,7 @@ class PostControllerTest {
     @Mock
     private User mockedUserObject;
     @Test
-    void getAllPostsTestsSuccess() throws Exception {
+    void getAllPostsTestSuccess() throws Exception {
         User testUser1 = new User("test.com", "password", "John", "Doe", "JDoe");
         List<Post> expectedList = new ArrayList<>();
         Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), testUser1, PostType.Top, 1);
@@ -49,6 +49,7 @@ class PostControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(expectedList.size())));
     }
+
 
     @Test
     void upsertPostTestSuccess() throws Exception {
