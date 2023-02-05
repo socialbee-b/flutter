@@ -290,8 +290,11 @@ class UserServiceTest {
     void getAllPostsByAUserTestFail() {
         User mockedUser = new User("test.com", "somepassword", "First", "Last", "username");
         mockedUser.setId(1);
+        mockedPostObject.setAuthor(mockedUser);
+        List<Post> userPosts = new ArrayList<>();
+        userPosts.add(mockedPostObject);
         when(postService.getAllPostsByUser(mockedUser)).thenReturn(Optional.empty());
         Optional<List<Post>> allUserPostsOptional = postService.getAllPostsByUser(mockedUser);
-        assertEquals(Optional.empty(), allUserPostsOptional);
+        assertFalse(allUserPostsOptional.isPresent());
     }
 }
