@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -43,7 +43,7 @@ const Landing: React.FC<any> = () => {
 				</Box>
 
 				<Box sx={{ flex: "1.25", padding: "1rem" }}>
-					<img src="socialmedia.png" style={{ marginBottom: "2rem" }} />
+					<img src="socialmedia.png" style={{ marginBottom: "2rem" }} alt="" />
 				</Box>
 			</Container>
 		</Box>

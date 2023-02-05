@@ -41,6 +41,10 @@ h1 {
 	row-gap: 1rem;
 }
 
+.column-reverse {
+	flex-direction: column-reverse;
+}
+
 .space-between {
 	justify-content: space-between;
 }

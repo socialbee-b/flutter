@@ -181,6 +181,15 @@ const usersSlice = createSlice({
 			})
 			.addCase(changeProfilePic.rejected, (state, action) => {
 				state.status = "rejected";
+			})
+			.addCase(changeEmail.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(changeEmail.fulfilled, (state, action) => {
+				state.status = "success";
+			})
+			.addCase(changeEmail.rejected, (state, action) => {
+				state.status = "rejected";
 			});
 	},
 });

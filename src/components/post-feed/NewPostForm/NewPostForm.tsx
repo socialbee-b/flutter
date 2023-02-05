@@ -17,52 +17,63 @@ const NewPostForm: React.FC<any> = () => {
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
-		let imageUrl = "";
 
-		// if there is a file
-		if (fileRef?.current?.files && fileRef?.current?.files?.length > 0) {
-			const fileName = fileRef.current?.files[0]?.name;
-			const url = await generateUploadURL(user?.id, fileName);
-			await axios.put(url, fileRef.current.files[0]);
-			imageUrl = url.split("?")[0];
-		}
+		if (!textRef.current?.value || textRef.current?.value?.length === 0) {
+			dispatch(
+				addToast({
+					status: "warning",
+					message: "Please add a message to submit post.",
+				})
+			);
+			textRef.current?.focus();
+		} else {
+			let imageUrl = "";
 
-		// create body from create-post endpoint
-		const body = {
-			author: { id: user?.id },
-			text: textRef.current?.value,
-			imageUrl,
-			comments: [],
-			postType: "Top",
-		};
-
-		try {
-			// hit create-post endpoint
-			dispatch(createPost(body));
-
-			// on success, clear the form
-			if (formRef.current !== null) {
-				formRef.current.reset();
+			// if there is a file
+			if (fileRef?.current?.files && fileRef?.current?.files?.length > 0) {
+				const fileName = fileRef.current?.files[0]?.name;
+				const url = await generateUploadURL(user?.id, fileName);
+				await axios.put(url, fileRef.current.files[0]);
+				imageUrl = url.split("?")[0];
 			}
 
-			// send message to user
-			dispatch(
-				addToast({
-					status: "success",
-					message: "Your post has been created!",
-				})
-			);
+			// create body from create-post endpoint
+			const body = {
+				author: { id: user?.id },
+				text: textRef.current?.value,
+				imageUrl,
+				comments: [],
+				postType: "Top",
+			};
 
-			// update posts
-			dispatch(fetchPosts());
-		} catch (err: any) {
-			// on failure notify user
-			dispatch(
-				addToast({
-					status: "error",
-					message: "Unable to create a post.",
-				})
-			);
+			try {
+				// hit create-post endpoint
+				dispatch(createPost(body));
+
+				// on success, clear the form
+				if (formRef.current !== null) {
+					formRef.current.reset();
+				}
+
+				// send message to user
+				dispatch(
+					addToast({
+						status: "success",
+						message: "Your post has been created!",
+					})
+				);
+
+				// update posts
+				dispatch(fetchPosts());
+			} catch (err: any) {
+				// on failure notify user
+				dispatch(
+					addToast({
+						status: "error",
+						message: "Unable to create a post.",
+					})
+				);
+			}
 		}
 	};
 
