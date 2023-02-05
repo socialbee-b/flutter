@@ -72,6 +72,7 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.username", is(testUser2.getUsername())))
                 .andExpect(jsonPath("$.imageUrl", is(testUser2.getImageUrl())));
     }
+    //currently failing
     @Test
     void createNewUserWithoutEmailFail() throws Exception {
         User testUser2 = new User(2, null, "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
