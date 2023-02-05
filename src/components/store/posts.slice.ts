@@ -21,7 +21,7 @@ export const createPost = createAsyncThunk(
 				text: body?.text,
 				imageUrl: body?.imageUrl,
 				comments: body?.comments,
-				author: body?.author?.id,
+				author: body?.author,
 				postType: body?.postType,
 			});
 			return response.data;
@@ -73,6 +73,15 @@ export const fetchPostById = createAsyncThunk(
 //edit post by image
 
 //add a like
+export const likePost = createAsyncThunk("posts/likePost", async (id: any) => {
+	try {
+		const response = await axios.put(`${BASE_URL}/posts/${id}/like`);
+		return response.data;
+	} catch (err: any) {
+		console.log(err);
+		throw new Error(err);
+	}
+});
 
 //delete a like
 
@@ -80,7 +89,11 @@ export const fetchPostById = createAsyncThunk(
 const postsSlice = createSlice({
 	name: "posts",
 	initialState,
-	reducers: {},
+	reducers: {
+		setStatus(state, action) {
+			state.status = action.payload;
+		},
+	},
 	extraReducers(builder) {
 		builder
 			.addCase(fetchPosts.pending, (state, action) => {
@@ -102,9 +115,21 @@ const postsSlice = createSlice({
 			})
 			.addCase(fetchPostById.rejected, (state, action) => {
 				state.status = "rejected";
+			})
+			.addCase(likePost.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(likePost.fulfilled, (state, action) => {
+				state.status = "success";
+				state.currentPost = action.payload;
+			})
+			.addCase(likePost.rejected, (state, action) => {
+				state.status = "rejected";
 			});
 	},
 });
+
+export const { setStatus } = postsSlice.actions;
 
 export const getPosts = (state: any) => state.posts.posts;
 export const getCurrentPost = (state: any) => state.posts.currentPost;
