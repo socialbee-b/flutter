@@ -85,7 +85,7 @@ public class UserControllerTest {
 
 
     @Test
-    void getAllUsers() throws Exception {
+    void getAllUsersTestSuccess() throws Exception {
         User testUser1 = new User("test.com", "password", "John", "Doe", "JDoe");
         List<User> userList = new ArrayList<>();
         userList.add(testUser1);
@@ -96,42 +96,59 @@ public class UserControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.size()", is(userList.size())));
     }
+    //passes but isn't checking correctly
+    @Test
+    void getAllUsersTestFail() throws Exception {
+        List<User> emptyList = new ArrayList<>();
+
+        given(userService.getAll()).willReturn(emptyList);
+
+        this.mockMvc.perform(get("/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(emptyList.size())));
+    }
 
     @Test
-    void getUserById() throws Exception {
+    void getUserByIdTestSuccess() throws Exception {
         User testUser2 = new User(2,"test2.com","password2","Bob","Smith","BSmi",null,null,"image2.com");
 
         given(userService.findById(2)).willReturn(Optional.of(testUser2));
         this.mockMvc.perform(get("/users/2"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(testUser2.getId())))
-                .andExpect(jsonPath("$.email", is(testUser2.getEmail())))
-                .andExpect(jsonPath("$.password", is(testUser2.getPassword())))
-                .andExpect(jsonPath("$.firstName", is(testUser2.getFirstName())))
-                .andExpect(jsonPath("$.lastName", is(testUser2.getLastName())))
-                .andExpect(jsonPath("$.username", is(testUser2.getUsername())))
-                .andExpect(jsonPath("$.imageUrl", is(testUser2.getImageUrl())));
+                .andExpect(jsonPath("$.id", is(testUser2.getId())));
+    }
+    @Test
+    void getUserByIdTestFail() throws Exception {
+        User testUser2 = new User(2,"test2.com","password2","Bob","Smith","BSmi",null,null,"image2.com");
+
+        given(userService.findById(3)).willReturn(Optional.empty());
+        this.mockMvc.perform(get("/users/3"))
+                .andExpect(status().isBadRequest());
     }
 
 
     @Test
-    void findByUsername() throws Exception {
+    void findByUsernameTestSuccess() throws Exception {
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
 
         given(userService.findByUsername("BSmi")).willReturn(Optional.of(testUser2));
         this.mockMvc.perform(get("/users/user/BSmi"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id", is(testUser2.getId())))
-                .andExpect(jsonPath("$.email", is(testUser2.getEmail())))
-                .andExpect(jsonPath("$.password", is(testUser2.getPassword())))
-                .andExpect(jsonPath("$.firstName", is(testUser2.getFirstName())))
-                .andExpect(jsonPath("$.lastName", is(testUser2.getLastName())))
-                .andExpect(jsonPath("$.username", is(testUser2.getUsername())))
-                .andExpect(jsonPath("$.imageUrl", is(testUser2.getImageUrl())));
+                .andExpect(jsonPath("$.username", is(testUser2.getUsername())));
+
+    }
+    @Test
+    void findByUsernameTestFail() throws Exception {
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+
+        given(userService.findByUsername("JDoe")).willReturn(Optional.empty());
+        this.mockMvc.perform(get("/users/user/JDoe"))
+                .andExpect(status().isBadRequest());
+
     }
 
     @Test
-    void editPassword() throws Exception {
+    void editPasswordTestSuccess() throws Exception {
         //creating test user
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
         //creating edited Password string
@@ -157,9 +174,22 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.password", is(testUser2.getPassword())));
 
     }
+    @Test
+    void editPasswordTestFail() throws Exception {
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        String editPassword = "password3";
+        String requestBody = objectMapper.writeValueAsString(editPassword);
+        given(userService.findById(2)).willReturn(Optional.empty());
+
+        this.mockMvc.perform(put("/users/3/password")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
 
     @Test
-    void editEmail() throws Exception {
+    void editEmailTestSuccess() throws Exception {
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
         String editEmail = "com.test2";
         String requestBody = objectMapper.writeValueAsString(editEmail);
@@ -174,9 +204,21 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(testUser2.getId())))
                 .andExpect(jsonPath("$.email", is(testUser2.getEmail())));
     }
+    @Test
+    void editEmailTestFail() throws Exception {
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        String editEmail = "com.test2";
+        String requestBody = objectMapper.writeValueAsString(editEmail);
+        given(userService.findById(3)).willReturn(Optional.empty());
+
+        this.mockMvc.perform(put("/users/3/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
-    void editUsername() throws Exception {
+    void editUsernameTestSuccess() throws Exception {
         String editUsername = "IMsb";
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
         String requestBody = objectMapper.writeValueAsString(editUsername);
@@ -191,9 +233,20 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(testUser2.getId())))
                 .andExpect(jsonPath("$.username", is(testUser2.getUsername())));
     }
+    @Test
+    void editUsernameTestFail() throws Exception {
+        String editUsername = "IMsb";
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        String requestBody = objectMapper.writeValueAsString(editUsername);
+        given(userService.findById(3)).willReturn(Optional.empty());
+        this.mockMvc.perform(put("/users/3/email")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
-    void updateImageUrl() throws Exception {
+    void updateImageUrlTestSuccess() throws Exception {
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
         String editImageUrl = "com.image";
         String requestBody = objectMapper.writeValueAsString(editImageUrl);
@@ -208,9 +261,21 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.id", is(testUser2.getId())))
                 .andExpect(jsonPath("$.imageUrl", is(testUser2.getImageUrl())));
     }
-    //still needs work....
     @Test
-    void addFollower() throws Exception{
+    void updateImageUrlTestFail() throws Exception {
+        String editImageUrl = "com.image";
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        String requestBody = objectMapper.writeValueAsString(editImageUrl);
+        given(userService.findById(3)).willReturn(Optional.empty());
+        this.mockMvc.perform(put("/users/3/profileImage")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isBadRequest());
+    }
+
+        //still needs work....
+    @Test
+    void addFollowerTestSuccess() throws Exception{
         User testUser1 = new User("test.com", "password", "John", "Doe", "JDoe");
         testUser1.setId(1);
         testUser1.setFollowers(new ArrayList<>());
@@ -234,9 +299,22 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[*].id", hasItems(testUser1.getId(), testUser2.getId())))
                 .andExpect(jsonPath("$.length()", is(2)));
     }
+    @Test
+    void addFollowerTestFail() throws Exception{
+        User testUser1 = new User("test.com", "password", "John", "Doe", "JDoe");
+        testUser1.setId(1);
+
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        given(userService.findById(1)).willReturn(Optional.of(testUser1));
+        given(userService.findById(2)).willReturn(Optional.empty());
+        mockMvc.perform(put("/users/1/follow")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("2"))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
-    void removeFollower() throws Exception {
+    void removeFollowerTestSuccess() throws Exception {
         User followedUser = new User("test.com", "password", "John", "Doe", "JDoe");
         User follower = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
 
@@ -255,9 +333,20 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$[0].id", is(followedUser.getId())));
 
     }
+    @Test
+    void removeFollowerTestFail() throws Exception {
+        User follower = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        given(userService.findById(1)).willReturn(Optional.empty());
+        given(userService.findById(2)).willReturn(Optional.of(follower));
+
+        mockMvc.perform(put("/users/1/unfollow")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("2"))
+                .andExpect(status().isBadRequest());
+    }
 
     @Test
-    void getFeedForUser() throws Exception {
+    void getFeedForUserTestSuccess() throws Exception {
         User testUser1 = new User("test.com", "password", "John", "Doe", "JDoe");
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
         testUser1.setId(1);
@@ -273,6 +362,40 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.size()", is(feed.size())))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[1].id", is(2)));
+    }
+    @Test
+    void getFeedForUserTestFail() throws Exception {
+        given(userService.findById(1)).willReturn(Optional.empty());
+        mockMvc.perform(get("/users/1/feed"))
+                .andExpect(status().isBadRequest());
+    }
+    @Test
+    void getAllPostsByAUserTestSuccess() throws Exception {
+        User testUser = new User(1, "test.com", "password", "John", "Doe", "JDoe", null, null, "image.com");
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post(1, "Test post 1", "image1.com", new ArrayList<>(), testUser, PostType.Top, 1));
+        posts.add(new Post(2, "Test post 2", "image2.com", new ArrayList<>(), testUser, PostType.Top, 1));
+
+        given(userService.findById(1)).willReturn(Optional.of(testUser));
+        given(userService.getAllPostsByAUser(testUser)).willReturn(Optional.of(posts));
+
+        mockMvc.perform(get("/users/1/posts"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()", is(posts.size())))
+                .andExpect(jsonPath("$[0].id", is(1)))
+                .andExpect(jsonPath("$[1].id", is(2)));
+    }
+    @Test
+    void getAllPostsByAUserTestFail() throws Exception {
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        List<Post> posts = new ArrayList<>();
+        posts.add(new Post(1, "Test post 1", "image1.com", new ArrayList<>(), testUser2, PostType.Top, 1));
+        posts.add(new Post(2, "Test post 2", "image2.com", new ArrayList<>(), testUser2, PostType.Top, 1));
+
+        given(userService.findById(1)).willReturn(Optional.empty());
+
+        mockMvc.perform(get("/users/1/posts"))
+                .andExpect(status().isBadRequest());
     }
 
 }

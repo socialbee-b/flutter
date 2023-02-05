@@ -37,7 +37,7 @@ class PostControllerTest {
     @Mock
     private User mockedUserObject;
     @Test
-    void getAllPosts() throws Exception {
+    void getAllPostsTestsSuccess() throws Exception {
         User testUser1 = new User("test.com", "password", "John", "Doe", "JDoe");
         List<Post> expectedList = new ArrayList<>();
         Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), testUser1, PostType.Top, 1);
@@ -51,7 +51,7 @@ class PostControllerTest {
     }
 
     @Test
-    void upsertPost() throws Exception {
+    void upsertPostTestSuccess() throws Exception {
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
         Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), testUser2, PostType.Top, 1);
 
@@ -85,7 +85,7 @@ class PostControllerTest {
     }
 
     @Test
-    void deletePost() throws Exception {
+    void deletePostTestSuccess() throws Exception {
         User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
         Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), testUser2, PostType.Top, 1);
         mockMvc.perform(delete("/posts/1")

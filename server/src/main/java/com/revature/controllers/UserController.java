@@ -32,8 +32,7 @@ public class UserController {
 
     // Testing Method: Get All Users
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        return ResponseEntity.ok(this.userService.getAll());
+    public ResponseEntity<List<User>> getAllUsers() {return ResponseEntity.ok(this.userService.getAll());
     }
 
     @GetMapping("/{id}")
