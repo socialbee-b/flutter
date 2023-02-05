@@ -108,4 +108,27 @@ public class PostController {
         return ResponseEntity.ok(this.postService.upsert(newPost));
     }
 
+    @PostMapping("{id}/comment")
+    public ResponseEntity createComment(@PathVariable int id, @RequestBody Post comment) {
+        Optional<Post> parentPostOpt = postService.findById(id);
+        if (!parentPostOpt.isPresent()) {
+            return ResponseEntity.badRequest().body("The parent post could not be found, please enter a valid parent post ID.");
+        }
+        Post savedComment = postService.upsert(comment);
+        return ResponseEntity.ok(postService.addComment(parentPostOpt.get(), savedComment));
+    }
+
+    @DeleteMapping("{postId}/comments/{commentId}")
+    public ResponseEntity deleteComment(@PathVariable(name="postId") int postId, @PathVariable(name="commentId") int commentId) {
+        Optional<Post> postOptional = postService.findById(postId);
+        Optional<Post> commentOptional = postService.findById(commentId);
+        if (!postOptional.isPresent()) {
+            return ResponseEntity.badRequest().body("The post id provided does not link to an existing post.");
+        }
+        if (!commentOptional.isPresent()) {
+            return ResponseEntity.badRequest().body("The comment id provided does not link to an existing comment.");
+        }
+        return ResponseEntity.ok(postService.deleteComment(postOptional.get(), commentOptional.get()));
+    }
+
 }
