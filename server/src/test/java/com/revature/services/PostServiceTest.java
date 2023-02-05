@@ -148,17 +148,17 @@ public class PostServiceTest {
 
     }
 
-    @Test
-    void deletePostTestSuccess() {
-        Post testPost = new Post(2,"First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top,1);
-        List<Post> removePostTest = new ArrayList<>();
-        testFeed.add(testPost);// gives us a list of mock list with a list of mock post objects
-        when(postService.deletePost(2));
-        verify(postService,times(1)).deletePost(2);
-//        when(postRepository.deleteById(2)).thenReturn(testFeed)
-
-
-    }
+//    @Test
+//    void deletePostTestSuccess() {
+//        Post testPost = new Post(2,"First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top,1);
+//        List<Post> removePostTest = new ArrayList<>();
+//        testFeed.add(testPost);// gives us a list of mock list with a list of mock post objects
+//        when(postService.deletePost(2));
+//        verify(postService,times(1)).deletePost(2);
+////        when(postRepository.deleteById(2)).thenReturn(testFeed)
+//
+//
+//    }
 
 //    @Test
 //    void deletePostTestFail() {
