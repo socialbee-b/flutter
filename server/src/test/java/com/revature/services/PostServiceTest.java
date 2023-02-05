@@ -16,8 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
@@ -26,6 +25,7 @@ public class PostServiceTest {
     private PostRepository postRepository;
     @Mock
     private UserRepository userRepository;
+
     @InjectMocks
     private PostService postService;
     @InjectMocks
@@ -34,6 +34,18 @@ public class PostServiceTest {
     private User mockedUserObject;
     @Mock
     private Post mockedPostObject;
+
+    @Mock
+    private Post testUserFeed;
+
+    @Mock
+    private List<Post> testFeed;
+    @Mock
+    private User testFollowedUser;
+    @Mock
+    private User testFollowerUser;
+
+
 
     @Test
     void testGetAllPostsSuccess() {
@@ -54,7 +66,21 @@ public class PostServiceTest {
 
 
     @Test
-    void upsert() {
+    void upsertSuccessTest() {
+        when(postRepository.save(mockedPostObject)).thenReturn(mockedPostObject);
+        Post resultPost = postService.upsert(mockedPostObject);
+        verify(postRepository, times(1)).save(mockedPostObject);
+        assertEquals(mockedPostObject, resultPost);
+    }
+
+    @Test 
+    void upsertFailTest(){
+        User mockUser = new User("test.com","password","John","Doe", "JDoe");
+        // tried to change to null but what is unique in post to test a null value
+        Post mockPost = new Post(1, "Test text for upsert", "Profile pic",new ArrayList<>(), mockedUserObject, PostType.Top, 21);
+        when(postRepository.save(mockedPostObject)).thenReturn(mockedPostObject);
+        //assertThrows(IllegalAccessError.class, () -> postService.upsert(mockPost));
+        verify(postRepository,never()).save(mockPost);
     }
 
     @Test
@@ -94,14 +120,74 @@ public class PostServiceTest {
     }
 
     @Test
-    void findById() {
+    void findByIdTestSuccess() {
+        List<Post> expectedList = new ArrayList<Post>();
+        Post mockPost = new Post(2,"First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top,1);
+        when(postRepository.findById(2)).thenReturn(Optional.of(mockPost));
+        Optional<Post> resultPost = postService.findById(2);
+        assertEquals(resultPost.get().getId(), mockPost.getId());
+    }
+
+
+    @Test
+    void findByIdTestFail() {
+        List<Post> expectedList = new ArrayList<Post>();
+        Post mockPost = new Post(2,"First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top,1);
+        when(postRepository.findById(2)).thenReturn(Optional.of(mockPost));
+        Optional<Post> resultPost = postService.findById(2);
+        assertNotEquals(resultPost.get(), mockPost.getId());
+
+    }
+    @Test
+    void findByIdTestFail2() {
+        List<Post> expectedList = new ArrayList<Post>();
+        Post mockPost = new Post(2,"First post", "FirstPic", new ArrayList<>(), mockedUserObject, null,1);
+        when(postRepository.findById(2)).thenReturn(Optional.of(mockPost));
+        Optional<Post> resultPost = postService.findById(2);
+        assertNotEquals(resultPost.get(), mockPost.getId());
+
     }
 
     @Test
-    void deletePost() {
+    void deletePostTestSuccess() {
+        Post testPost = new Post(2,"First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top,1);
+        List<Post> removePostTest = new ArrayList<>();
+        testFeed.add(testPost);// gives us a list of mock list with a list of mock post objects
+        when(postService.deletePost(2));
+        verify(postService,times(1)).deletePost(2);
+//        when(postRepository.deleteById(2)).thenReturn(testFeed)
+
+
     }
 
+//    @Test
+//    void deletePostTestFail() {
+//
+//    }
+//
     @Test
-    void getFeedForUser() {
+    void getFeedForUserTestSuccess()
+    {
+        // tried to change to null but what is unique in post to test a null value
+
+        List<Post> testFeed = new ArrayList<>();
+        //Post testPost = new Post(1, "Test text for upsert", "Profile pic",new ArrayList<>(), mockedUserObject, PostType.Top, 21);
+
+        testFeed.add(mockedPostObject);
+        List<User> userTestfollowing = new ArrayList<>();
+        //User testUser = new User("test.com","password","John","Doe", "JDoe");
+
+        userTestfollowing.add((testFollowedUser));
+        //when(mockedUserObject.getFollowing()).thenReturn(userTestfollowing);// should return the users we are following
+        when(postRepository.findByAuthorInAndPostType(userTestfollowing,PostType.Top)).thenReturn(Optional.of(testFeed));// we are finding all of the users we are following by top Post
+        Optional<List<Post>> expectedFeed = postService.getFeedForUser(userTestfollowing);// testing our hard coded userTestFollowing against the expected value
+        assertEquals(expectedFeed,Optional.of(testFeed));// if the expectedFeed and userTestFollowing equal it will return successful
+
+
     }
+//
+//    @Test
+//    void getFeedForUserTestFail() {
+//
+//    }
 }
