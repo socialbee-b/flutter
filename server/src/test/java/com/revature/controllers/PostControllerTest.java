@@ -18,10 +18,9 @@ import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = PostController.class)
 class PostControllerTest {
@@ -86,7 +85,27 @@ class PostControllerTest {
     }
 
     @Test
-    void deletePost() {
+    void deletePost() throws Exception {
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), testUser2, PostType.Top, 1);
+        mockMvc.perform(delete("/posts/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(1)))
+                .andExpect(status().isOk())
+                .andExpect(content().string("this post was deleted"));
+
+        verify(postService, times(1)).deletePost(1);
+    }
+    @Test
+    void deletePostTestFail() throws Exception {
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+        Post expectedPost = new Post(1,"This is a test post","image.com",new ArrayList<>(), testUser2, PostType.Top, 1);
+        mockMvc.perform(delete("/posts/1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(1)))
+                .andExpect(status().isBadRequest());
+
+        verify(postService, never()).deletePost(1);
     }
 
     @Test
