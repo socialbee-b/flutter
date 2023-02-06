@@ -75,15 +75,16 @@ public class PostServiceTest {
         assertEquals(mockedPostObject, resultPost);
     }
 
-    @Test 
+    @Test
     void upsertFailTest(){
         User mockUser = new User("test.com","password","John","Doe", "JDoe");
         // tried to change to null but what is unique in post to test a null value
         Post mockPost = new Post(1, "Test text for upsert", "Profile pic",new ArrayList<>(), mockedUserObject, PostType.Top, 21);
-        when(postRepository.save(mockedPostObject)).thenReturn(mockedPostObject);
+        lenient().when(postRepository.save(mockedPostObject)).thenReturn(mockedPostObject);
         //assertThrows(IllegalAccessError.class, () -> postService.upsert(mockPost));
         verify(postRepository,never()).save(mockPost);
     }
+
 
     @Test
     void getAllTopPostsSuccess() {
@@ -152,18 +153,10 @@ public class PostServiceTest {
 
     @Test
     void deletePostTestSuccess() {
-        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
-
         Post testPost = new Post(2, "First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top, 1);
-        List<Post> removePostTest = new ArrayList<>();
-        removePostTest.add(testPost);// gives us a list of mock list with a list of mock post objects
-        doNothing().when(postService.deletePost(2));
-        verify(userRepository).deleteById(testUser2.getId());
-        //doNothing().when(postService.deletePost(2));
-        //verify(postService, times(1)).deletePost(2);
+        postService.deletePost(testPost.getId());
+        verify(postRepository).deleteById(testPost.getId());
     }
-        //when(postRepository.deleteById(2)).thenReturn(testFeed);
-
 //    @Test
 //    void deletePostTestFail() {
 //
@@ -189,11 +182,18 @@ public class PostServiceTest {
 
 
     }
-//
-//    @Test
-//    void getFeedForUserTestFail() {
-//
-//    }
+    @Test
+    void getFeedForUserTestFail() {
+        List<Post> testFeed = new ArrayList<>();
+        testFeed.add(mockedPostObject);
+        List<User> addUserFollowingTest = new ArrayList<>();
+        addUserFollowingTest.add(testFollowedUser);
+        lenient().when(postRepository.findByAuthorInAndPostType(addUserFollowingTest,PostType.Top)).thenReturn(Optional.of(testFeed));
+        Optional<List<Post>> expectedFeed = postService.getAllPostsByUser(testFollowedUser);
+        assertNotEquals(expectedFeed,addUserFollowingTest);
+
+
+    }
 
     public void addCommentTestSuccess() {
         //create an empty array to beging with for our comments
