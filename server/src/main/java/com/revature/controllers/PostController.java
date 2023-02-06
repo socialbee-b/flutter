@@ -14,7 +14,7 @@ import com.revature.services.PostService;
 
 @RestController
 @RequestMapping("/posts")
-@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000"}, allowCredentials = "true")
+@CrossOrigin(origins = {"http://localhost:4200", "http://localhost:3000", "http://flutterdeployedbucket.s3-website-us-east-1.amazonaws.com"}, allowCredentials = "true")
 public class PostController {
 
 	private final PostService postService;
@@ -84,7 +84,7 @@ public class PostController {
         post.setLikes(post.getLikes() - 1);
         return ResponseEntity.ok(postService.upsert(post));
     }
-    @PostMapping("editPost/{id}")
+    @PutMapping("editPost/{id}")
     public ResponseEntity<Post> editPost(@PathVariable int id, @RequestBody String editString) {
         Optional<Post> postOptional = postService.findById(id);
         if(!postOptional.isPresent()){
