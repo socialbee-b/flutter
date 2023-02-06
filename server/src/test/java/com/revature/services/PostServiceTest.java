@@ -34,6 +34,8 @@ public class PostServiceTest {
     private User mockedUserObject;
     @Mock
     private Post mockedPostObject;
+    @Mock
+    private Post mockedComment;
 
     @Mock
     private Post testUserFeed;
@@ -148,17 +150,19 @@ public class PostServiceTest {
 
     }
 
-//    @Test
-//    void deletePostTestSuccess() {
-//        Post testPost = new Post(2,"First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top,1);
-//        List<Post> removePostTest = new ArrayList<>();
-//        testFeed.add(testPost);// gives us a list of mock list with a list of mock post objects
-//        when(postService.deletePost(2));
-//        verify(postService,times(1)).deletePost(2);
-////        when(postRepository.deleteById(2)).thenReturn(testFeed)
-//
-//
-//    }
+    @Test
+    void deletePostTestSuccess() {
+        User testUser2 = new User(2, "test2.com", "password2", "Bob", "Smith", "BSmi", null, null, "image2.com");
+
+        Post testPost = new Post(2, "First post", "FirstPic", new ArrayList<>(), mockedUserObject, PostType.Top, 1);
+        List<Post> removePostTest = new ArrayList<>();
+        removePostTest.add(testPost);// gives us a list of mock list with a list of mock post objects
+        doNothing().when(postService.deletePost(2));
+        verify(userRepository).deleteById(testUser2.getId());
+        //doNothing().when(postService.deletePost(2));
+        //verify(postService, times(1)).deletePost(2);
+    }
+        //when(postRepository.deleteById(2)).thenReturn(testFeed);
 
 //    @Test
 //    void deletePostTestFail() {
@@ -190,4 +194,40 @@ public class PostServiceTest {
 //    void getFeedForUserTestFail() {
 //
 //    }
+
+    public void addCommentTestSuccess() {
+        //create an empty array to beging with for our comments
+        List<Post> commentList = new ArrayList<>();
+        //using mockedPostObject since we don't need any actual fields, and we're set it's comments to the new array
+        mockedPostObject.setComments(commentList);
+        //when we get the comments from the mockedPost it will return our commmentList
+        when(mockedPostObject.getComments()).thenReturn(commentList);
+        //here we're creating an expected Post that we use our addComment method and pass mockedPost and mockedComment.
+        Post actualPost = postService.addComment(mockedPostObject, mockedComment);
+        //now we're going to compare our mockedPost with our expectedPost
+        assertEquals(mockedPostObject, actualPost);
+        //also compare the size, we're expecting 1 and actual is returning a size of 1 and we compare
+        assertEquals(1, actualPost.getComments().size());
+        //with this last one, we are comparing the mockedComment that got added with our postService to our comment that was added to our actual post
+        assertEquals(mockedComment, actualPost.getComments().get(0));
+    }
+    @Test
+    public void addCommentTestFail() {
+        List<Post> commentList = new ArrayList<>();
+        mockedPostObject.setComments(commentList);
+        when(mockedPostObject.getComments()).thenReturn(commentList);
+        Post expectedPost = postService.addComment(mockedPostObject, mockedComment);
+
+        assertNull(expectedPost);
+    }
+    @Test
+    public void deleteCommentTestSuccess() {
+        List<Post> commentList = new ArrayList<>();
+        commentList.add(mockedComment);
+        mockedPostObject.setComments(commentList);
+        when(mockedPostObject.getComments()).thenReturn(commentList);
+        Post expectedPost = postService.deleteComment(mockedPostObject,mockedComment);
+        assertEquals(mockedPostObject, expectedPost);
+        assertEquals(0,expectedPost.getComments().size());
+    }
 }
