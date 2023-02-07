@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-// import { PostCard } from "../post-feed/PostCard";
 import { getCurrentUser, getUserById } from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
@@ -19,7 +18,7 @@ const NotUserProfile: React.FC<any> = () => {
 	useEffect(() => {
 		dispatch(getUserById(id));
 		dispatch(fetchPosts());
-	}, []);
+	}, []); // eslint-disable-line
 
 	//handles the toggle of the following modal
 	const [open, setOpen] = useState(false);
@@ -48,7 +47,7 @@ const NotUserProfile: React.FC<any> = () => {
 					<img
 						className="profile-picture"
 						src={selectedUser?.imageUrl}
-						alt="Profile Image Here"
+						alt="Profile Pic Here"
 					/>
 				</div>
 				<div className="flex-column">

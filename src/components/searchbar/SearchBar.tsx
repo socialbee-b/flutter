@@ -13,7 +13,7 @@ const SearchBar: React.FC<any> = () => {
 
 	useEffect(() => {
 		dispatch(fetchAllUsers());
-	}, []);
+	}, []); // eslint-disable-line
 
 	const getMatches = (search: any) => {
 		const result = [];

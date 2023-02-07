@@ -1,5 +1,5 @@
-import { Box, FormControlLabel, FormGroup, Switch, useTheme } from "@mui/material";
-import { useState, useRef, useContext } from "react";
+import { Box, useTheme } from "@mui/material";
+import { useRef, useContext } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../Button/Button";
 import Input from "../Input/Input";
@@ -11,20 +11,17 @@ import {
 } from "../store/users.slice";
 import { addToast } from "../toasts/toasts.slice";
 import "./SettingsPage.css";
-import ToggleColorMode from "../dark-mode/Theme";
-
 import { IconButton } from "@mui/material";
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
+import Brightness4Icon from "@mui/icons-material/Brightness4";
+import Brightness7Icon from "@mui/icons-material/Brightness7";
 import { ColorModeContext } from "../../Theme2";
-
-
 
 const Settings: React.FC<any> = () => {
 	const dispatch = useDispatch<any>();
 	const user = useSelector(getUser);
 
 	// username stuff
+	const usernameFormRef = useRef<HTMLFormElement>(null);
 	const currentUsername = user?.username;
 	const newUsernameRef = useRef<HTMLInputElement>(null);
 	const confirmNewUsernameRef = useRef<HTMLInputElement>(null);
@@ -66,12 +63,24 @@ const Settings: React.FC<any> = () => {
 						username: newUsername,
 					};
 					dispatch(changeUsername(body));
+
+					// clear the fields
+					usernameFormRef.current && usernameFormRef.current.reset();
+
+					// display success message
+					dispatch(
+						addToast({
+							status: "success",
+							message: "Username has been updated.",
+						})
+					);
 				}
 			}
 		}
 	};
 
 	// email stuff
+	const emailFormRef = useRef<HTMLFormElement>(null);
 	const currentEmail = user?.email;
 	const newEmailRef = useRef<HTMLInputElement>(null);
 	const confirmNewEmailRef = useRef<HTMLInputElement>(null);
@@ -113,12 +122,23 @@ const Settings: React.FC<any> = () => {
 						email: newEmail,
 					};
 					dispatch(changeEmail(body));
+					// clear the fields
+					emailFormRef.current && emailFormRef.current.reset();
+
+					// display success message
+					dispatch(
+						addToast({
+							status: "success",
+							message: "Email has been updated.",
+						})
+					);
 				}
 			}
 		}
 	};
 
 	// password stuff
+	const passwordFormRef = useRef<HTMLFormElement>(null);
 	const currentPasswordRef = useRef<HTMLInputElement>(null);
 	const newPasswordRef = useRef<HTMLInputElement>(null);
 	const confirmNewPasswordRef = useRef<HTMLInputElement>(null);
@@ -163,6 +183,16 @@ const Settings: React.FC<any> = () => {
 							password: newPassword,
 						};
 						dispatch(changePassword(body));
+						// clear the fields
+						passwordFormRef.current && passwordFormRef.current.reset();
+
+						// display success message
+						dispatch(
+							addToast({
+								status: "success",
+								message: "Password has been updated.",
+							})
+						);
 					}
 				}
 			} else {
@@ -176,14 +206,8 @@ const Settings: React.FC<any> = () => {
 		}
 	};
 
-	// darkmode stuff
-	// const [darkmode, setDarkmode] = useState(false);
-	// const handleChangeDarkmode = async () => {
-	// 	setDarkmode(!darkmode);
-	// 	console.warn("TODO: handle darkmode");
-	// };
 	const theme = useTheme();
-  	const colorMode = useContext(ColorModeContext);
+	const colorMode = useContext(ColorModeContext);
 
 	return (
 		<>
@@ -191,7 +215,11 @@ const Settings: React.FC<any> = () => {
 			<section className="settingsGrid">
 				<div className="settingsSection">
 					<h3>Change Username</h3>
-					<form className="flex-column" onSubmit={handleChangeUsername}>
+					<form
+						ref={usernameFormRef}
+						className="flex-column"
+						onSubmit={handleChangeUsername}
+					>
 						<Input
 							label="Current Username:"
 							placeholder={currentUsername}
@@ -207,7 +235,11 @@ const Settings: React.FC<any> = () => {
 				</div>
 				<div className="settingsSection">
 					<h3>Change Email</h3>
-					<form className="flex-column" onSubmit={handleChangeEmail}>
+					<form
+						ref={emailFormRef}
+						className="flex-column"
+						onSubmit={handleChangeEmail}
+					>
 						<Input label="Current Email:" placeholder={currentEmail} disabled />
 						<Input ref={newEmailRef} label="New Email *:" />
 						<Input ref={confirmNewEmailRef} label="Confirm New Email *:" />
@@ -216,7 +248,11 @@ const Settings: React.FC<any> = () => {
 				</div>
 				<div className="settingsSection">
 					<h3>Change Password</h3>
-					<form className="flex-column" onSubmit={handleChangePassword}>
+					<form
+						ref={passwordFormRef}
+						className="flex-column"
+						onSubmit={handleChangePassword}
+					>
 						<Input ref={currentPasswordRef} label="Current Password *:" />
 						<Input ref={newPasswordRef} label="New Password *:" />
 						<Input
@@ -228,35 +264,29 @@ const Settings: React.FC<any> = () => {
 				</div>
 				<div className="settingsSection">
 					<h3>Change Theme</h3>
-					{/* <ToggleColorMode/> */}
-					
-					{/* <FormGroup>
-						<FormControlLabel
-							// control={
-							// 	<Switch checked={darkmode} onChange={handleChangeDarkmode} />
-							// }
-							// label="Darkmode"
-							control={
-								<Switch 
-									<ToggleColorMode>
-							label= {theme.palette.mode} Mode
-						/>
-					</FormGroup> */}
 					<Box
 						sx={{
-							display: 'flex',
-							width: '100%',
-							alignItems: 'center',
-							justifyContent: 'center',
-							bgcolor: 'background.default',
-							color: 'text.primary',
+							display: "flex",
+							width: "100%",
+							alignItems: "center",
+							justifyContent: "center",
+							bgcolor: "background.default",
+							color: "text.primary",
 							borderRadius: 1,
 							p: 3,
 						}}
+					>
+						<span className="capitalize">{theme.palette.mode} Mode</span>
+						<IconButton
+							sx={{ ml: 1 }}
+							onClick={colorMode.toggleColorMode}
+							color="inherit"
 						>
-						{theme.palette.mode} mode
-						<IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
-							{theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
+							{theme.palette.mode === "dark" ? (
+								<Brightness7Icon />
+							) : (
+								<Brightness4Icon />
+							)}
 						</IconButton>
 					</Box>
 				</div>
