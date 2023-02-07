@@ -10,8 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../store/users.slice";
 import {
 	createComment,
-	createPost,
-	deletePost,
+	deleteComment,
 	editPostText,
 	likePost,
 	unlikePost,
@@ -114,16 +113,24 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 
 	const handleDeleteComment = async (id: any) => {
 		try {
-			dispatch(deletePost(id));
-			addToast({
-				status: "success",
-				message: "Your comment has been deleted.",
-			});
+			const payload = {
+				postId: post?.id,
+				commentId: id,
+			};
+			dispatch(deleteComment(payload));
+			dispatch(
+				addToast({
+					status: "success",
+					message: "Your comment has been deleted.",
+				})
+			);
 		} catch (err: any) {
-			addToast({
-				status: "error",
-				message: "Unable to delete comment.",
-			});
+			dispatch(
+				addToast({
+					status: "error",
+					message: "Unable to delete comment.",
+				})
+			);
 		}
 	};
 

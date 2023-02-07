@@ -1,8 +1,8 @@
 import "./Posts.css";
-import { AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
+import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, likePost } from "../store/posts.slice";
+import { deletePost, likePost, unlikePost } from "../store/posts.slice";
 import { addToast } from "../toasts/toasts.slice";
 import { getUser } from "../store/users.slice";
 import { useEffect, useState } from "react";
@@ -14,27 +14,46 @@ const PostCard: React.FC<any> = ({ post }) => {
 	const dispatch = useDispatch<any>();
 	const navigate = useNavigate();
 	const [isLoggedInUser, setIsLoggedInUser] = useState(false);
+	const [postLiked, setPostLiked] = useState(false);
 
 	useEffect(() => {
 		setIsLoggedInUser(post?.author?.id === user?.id);
 	}, []); // eslint-disable-line
 
+	const hasUserLiked = (id: any, likes: any) => {
+		for (const like of likes) {
+			if (like?.id === id) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	useEffect(() => {
+		setPostLiked(hasUserLiked(user?.id, post?.likes));
+	}, [user, post]);
+
 	const handleLikeClick = async () => {
+		const payload = {
+			postId: post?.id,
+			userId: user?.id,
+		};
 		try {
-			dispatch(likePost(post?.id));
-			dispatch(
-				addToast({
-					status: "success",
-					message: "Liked post.",
-				})
-			);
+			dispatch(likePost(payload));
 		} catch (err: any) {
-			dispatch(
-				addToast({
-					status: "error",
-					message: "Unable to like post.",
-				})
-			);
+			console.log(err);
+		}
+	};
+
+	const handleUnlikeClick = async () => {
+		const payload = {
+			postId: post?.id,
+			userId: user?.id,
+		};
+		try {
+			dispatch(unlikePost(payload));
+		} catch (err: any) {
+			console.log(err);
 		}
 	};
 
@@ -81,7 +100,11 @@ const PostCard: React.FC<any> = ({ post }) => {
 			<div className="postFooter space-between">
 				<div className="flex-row">
 					<div className="footerIcon">
-						<AiOutlineHeart onClick={handleLikeClick} />
+						{postLiked ? (
+							<AiFillHeart className="liked" onClick={handleUnlikeClick} />
+						) : (
+							<AiOutlineHeart onClick={handleLikeClick} />
+						)}
 						<p>{post?.likes?.length || 0} Likes</p>
 					</div>
 					<div className="footerIcon">

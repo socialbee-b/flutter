@@ -126,12 +126,28 @@ export const unlikePost = createAsyncThunk(
 
 //create comment
 export const createComment = createAsyncThunk(
-	"posts/creatComments",
+	"posts/createComments",
 	async (payload: any) => {
 		try {
 			const response = await axios.post(
 				`${BASE_URL}/posts/${payload?.postId}/comment`,
 				payload?.body
+			);
+			return response.data;
+		} catch (err: any) {
+			console.log(err);
+			throw new Error(err);
+		}
+	}
+);
+
+//delete comment
+export const deleteComment = createAsyncThunk(
+	"posts/deleteComments",
+	async (payload: any) => {
+		try {
+			const response = await axios.delete(
+				`${BASE_URL}/posts/${payload?.postId}/comments/${payload?.commentId}`
 			);
 			console.log(response.data);
 			return response.data;
@@ -183,6 +199,16 @@ const postsSlice = createSlice({
 			.addCase(likePost.rejected, (state, action) => {
 				state.status = "rejected";
 			})
+			.addCase(unlikePost.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(unlikePost.fulfilled, (state, action) => {
+				state.status = "success";
+				state.currentPost = action.payload;
+			})
+			.addCase(unlikePost.rejected, (state, action) => {
+				state.status = "rejected";
+			})
 			.addCase(deletePost.pending, (state, action) => {
 				state.status = "loading";
 			})
@@ -209,6 +235,16 @@ const postsSlice = createSlice({
 				state.currentPost = action.payload;
 			})
 			.addCase(createComment.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(deleteComment.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(deleteComment.fulfilled, (state, action) => {
+				state.status = "success";
+				state.currentPost = action.payload;
+			})
+			.addCase(deleteComment.rejected, (state, action) => {
 				state.status = "rejected";
 			});
 	},
