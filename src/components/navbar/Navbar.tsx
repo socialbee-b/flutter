@@ -8,20 +8,33 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
-import { getUser, handleLogout } from "../store/users.slice";
-import { useEffect } from "react";
+import { getAllUsers, getUser, handleLogout } from "../store/users.slice";
+import { useEffect, useState } from "react";
+import SearchBar from "../searchbar/SearchBar";
 
-
-export default function Navbar() {
-	const dispatch = useDispatch<any>();
+const Navbar: React.FC<any> = () => {
 	const navigate = useNavigate();
 	const user = useSelector(getUser);
+	const [log, setLog] = useState("Login");
+	const [logButton, setLogButton] = useState(<></>);
+	const dispatch = useDispatch<any>();
+	const users = useSelector(getAllUsers);
+
+	useEffect(() => {
+		if (user?.email) {
+			setLog("Logout");
+			setLogButton(<LogoutIcon />);
+		} else {
+			setLog("Login");
+			setLogButton(<LoginIcon />);
+		}
+	}, [user]);
 
 	const handleClick = () => {
 		if (user?.email) {
-			navigate("/welcome");
-		} else {
+			navigate("/");
 			dispatch(handleLogout());
+		} else {
 			navigate("/login");
 		}
 	};
@@ -33,26 +46,23 @@ export default function Navbar() {
 					<Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
 						Fluttr
 					</Typography>
-					<div>
-						<Tooltip
-							disableFocusListener
-							disableTouchListener
-							title={user?.email ? "Logout" : "Login"}
+					<SearchBar />
+					<Tooltip disableFocusListener disableTouchListener title={log}>
+						<IconButton
+							size="large"
+							aria-label="account of current user"
+							aria-controls="menu-appbar"
+							aria-haspopup="true"
+							color="inherit"
+							onClick={handleClick}
 						>
-							<IconButton
-								size="large"
-								aria-label="account of current user"
-								aria-controls="menu-appbar"
-								aria-haspopup="true"
-								color="inherit"
-								onClick={handleClick}
-							>
-								{user?.email ? <LogoutIcon /> : <LoginIcon />}
-							</IconButton>
-						</Tooltip>
-					</div>
+							{logButton}
+						</IconButton>
+					</Tooltip>
 				</Toolbar>
 			</AppBar>
 		</Box>
 	);
-}
+};
+
+export default Navbar;

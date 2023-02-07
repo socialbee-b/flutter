@@ -8,6 +8,7 @@ const initialState = {
 	status: "idle",
 	user: {},
 	users: [],
+	currentUser: {},
 };
 
 export const register = createAsyncThunk("auth/register", async (body: any) => {
@@ -98,6 +99,18 @@ export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
 	}
 });
 
+export const getUserById = createAsyncThunk(
+	"users/getUserById",
+	async (id: any) => {
+		try {
+			const response = await axios.get(`${BASE_URL}/users/${id}`);
+			return response.data;
+		} catch (err: any) {
+			throw new Error(err);
+		}
+	}
+);
+
 export const changeProfilePic = createAsyncThunk(
 	"users/changeProfilePic",
 	async (payload: any) => {
@@ -172,6 +185,16 @@ const usersSlice = createSlice({
 			.addCase(getAllUsers.rejected, (state, action) => {
 				state.status = "rejected";
 			})
+			.addCase(getUserById.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(getUserById.fulfilled, (state, action) => {
+				state.status = "success";
+				state.currentUser = action.payload;
+			})
+			.addCase(getUserById.rejected, (state, action) => {
+				state.status = "rejected";
+			})
 			.addCase(changeProfilePic.pending, (state, action) => {
 				state.status = "loading";
 			})
@@ -198,6 +221,7 @@ const usersSlice = createSlice({
 export const getUser = (state: any) => state.users.user;
 // () => JSON.parse(localStorage.getItem("user") || "{}");
 export const getStatus = (state: any) => state.users.status;
+export const getCurrentUser = (state: any) => state.users.currentUser;
 
 // export actions
 export const { getUserFromLocal, setStatus, handleLogout } = usersSlice.actions; // eslint-disable-line
