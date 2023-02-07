@@ -80,6 +80,10 @@
 	color: #ff4757;
 }
 
+svg.liked {
+	color: #ff4757;
+}
+
 .createComment input {
 	width: 100%;
 	border: none;

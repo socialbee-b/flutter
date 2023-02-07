@@ -74,7 +74,7 @@ export const editPostText = createAsyncThunk(
 	"posts/editPostText",
 	async (body: any) => {
 		try {
-			const response = await axios.post(
+			const response = await axios.put(
 				`${BASE_URL}/posts/editPost/${body?.id}`,
 				body?.text,
 				{
@@ -91,17 +91,56 @@ export const editPostText = createAsyncThunk(
 //edit post by image
 
 //add a like
-export const likePost = createAsyncThunk("posts/likePost", async (id: any) => {
-	try {
-		const response = await axios.put(`${BASE_URL}/posts/${id}/like`);
-		return response.data;
-	} catch (err: any) {
-		console.log(err);
-		throw new Error(err);
+export const likePost = createAsyncThunk(
+	"posts/likePost",
+	async (payload: any) => {
+		try {
+			const response = await axios.put(
+				`${BASE_URL}/posts/${payload.postId}/like/${payload.userId}`
+			);
+			console.log(response.data);
+			return response.data;
+		} catch (err: any) {
+			console.log(err);
+			throw new Error(err);
+		}
 	}
-});
+);
 
-//delete a like
+//unlike
+export const unlikePost = createAsyncThunk(
+	"posts/unlikePost",
+	async (payload: any) => {
+		try {
+			const response = await axios.put(
+				`${BASE_URL}/posts/${payload.postId}/unlike/${payload.userId}`
+			);
+			console.log(response.data);
+			return response.data;
+		} catch (err: any) {
+			console.log(err);
+			throw new Error(err);
+		}
+	}
+);
+
+//create comment
+export const createComment = createAsyncThunk(
+	"posts/creatComments",
+	async (payload: any) => {
+		try {
+			const response = await axios.post(
+				`${BASE_URL}/posts/${payload?.postId}/comment`,
+				payload?.body
+			);
+			console.log(response.data);
+			return response.data;
+		} catch (err: any) {
+			console.log(err);
+			throw new Error(err);
+		}
+	}
+);
 
 // create the slice
 const postsSlice = createSlice({
@@ -160,6 +199,16 @@ const postsSlice = createSlice({
 				state.status = "success";
 			})
 			.addCase(editPostText.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(createComment.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(createComment.fulfilled, (state, action) => {
+				state.status = "success";
+				state.currentPost = action.payload;
+			})
+			.addCase(createComment.rejected, (state, action) => {
 				state.status = "rejected";
 			});
 	},

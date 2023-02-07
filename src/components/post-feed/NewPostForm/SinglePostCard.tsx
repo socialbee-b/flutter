@@ -1,17 +1,20 @@
 import {
+	AiFillHeart,
 	AiOutlineComment,
 	AiOutlineEdit,
 	AiOutlineHeart,
 } from "react-icons/ai";
 import Button from "../../Button/Button";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "../../store/users.slice";
 import {
+	createComment,
 	createPost,
 	deletePost,
 	editPostText,
 	likePost,
+	unlikePost,
 } from "../../store/posts.slice";
 import { addToast } from "../../toasts/toasts.slice";
 
@@ -19,25 +22,44 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 	const user = useSelector(getUser);
 	const dispatch = useDispatch<any>();
 	const formRef = useRef<HTMLFormElement>(null);
+	const [postLiked, setPostLiked] = useState(false);
 	const [editText, setEditText] = useState(false);
 	const [text, setText] = useState("");
 
+	const hasUserLiked = (id: any, likes: any) => {
+		for (const like of likes) {
+			if (like?.id === id) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	useEffect(() => {
+		setPostLiked(hasUserLiked(user?.id, post?.likes));
+	}, [user, post]);
+
 	const handleLikeClick = async () => {
+		const payload = {
+			postId: post?.id,
+			userId: user?.id,
+		};
 		try {
-			dispatch(likePost(post?.id));
-			dispatch(
-				addToast({
-					status: "success",
-					message: "Liked post.",
-				})
-			);
+			dispatch(likePost(payload));
 		} catch (err: any) {
-			dispatch(
-				addToast({
-					status: "error",
-					message: "Unable to like post.",
-				})
-			);
+			console.log(err);
+		}
+	};
+
+	const handleUnlikeClick = async () => {
+		const payload = {
+			postId: post?.id,
+			userId: user?.id,
+		};
+		try {
+			dispatch(unlikePost(payload));
+		} catch (err: any) {
+			console.log(err);
 		}
 	};
 
@@ -51,17 +73,21 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 		e.preventDefault();
 		const comment = commentRef.current?.value;
 
-		const body = {
-			author: { id: user?.id },
-			text: comment,
-			imageUrl: "",
-			comments: [],
-			postType: "Comment",
+		const payload = {
+			postId: post?.id,
+			body: {
+				text: comment,
+				imageUrl: "",
+				comments: [],
+				author: {
+					id: user?.id,
+				},
+				postType: "Comment",
+			},
 		};
-
 		try {
 			// hit api
-			dispatch(createPost(body));
+			dispatch(createComment(payload));
 
 			// clear form
 			if (formRef.current !== null) {
@@ -166,7 +192,11 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 			</div>
 			<div className="postFooter">
 				<div className="footerIcon">
-					<AiOutlineHeart onClick={handleLikeClick} />
+					{postLiked ? (
+						<AiFillHeart className="liked" onClick={handleUnlikeClick} />
+					) : (
+						<AiOutlineHeart onClick={handleLikeClick} />
+					)}
 					<p>{post?.likes?.length || 0} Likes</p>
 				</div>
 				<div className="footerIcon">
@@ -194,21 +224,23 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 			)}
 			<div className="postComments">
 				<h3>Comments</h3>
-				{post?.comments?.map((comment: any) => (
-					<div key={comment?.id} className="postComment">
-						<div className="commentHeader">
-							<img src={comment?.author?.imageUrl} alt="" />
-							<h4>{`${comment?.author?.firstName} ${comment?.author?.lastName}`}</h4>
-							<p
-								onClick={() => handleDeleteComment(comment?.id)}
-								className="deleteComment"
-							>
-								Delete Comment
-							</p>
+				<div className="flex-column gap-0 column-reverse">
+					{post?.comments?.map((comment: any) => (
+						<div key={comment?.id} className="postComment">
+							<div className="commentHeader">
+								<img src={comment?.author?.imageUrl} alt="" />
+								<h4>{`${comment?.author?.firstName} ${comment?.author?.lastName}`}</h4>
+								<p
+									onClick={() => handleDeleteComment(comment?.id)}
+									className="deleteComment"
+								>
+									Delete Comment
+								</p>
+							</div>
+							<p>{comment?.text}</p>
 						</div>
-						<p>{comment?.text}</p>
-					</div>
-				))}
+					))}
+				</div>
 			</div>
 		</div>
 	);
