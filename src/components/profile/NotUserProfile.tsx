@@ -6,6 +6,7 @@ import "./Profile.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import FollowingList from "./FollowingList";
 import FollowersList from "./FollowersList";
+import PostCard from "../post-feed/PostCard";
 
 const NotUserProfile: React.FC<any> = () => {
 	const user = useSelector(getUser);
@@ -107,7 +108,7 @@ const NotUserProfile: React.FC<any> = () => {
 					</Button>
 				</div>
 			</div>
-			<div>{/* <PostCard post={item} key={item.id} /> */}</div>
+			<div><PostCard post={item} key={item.id} /></div>
 		</div>
 	);
 };

@@ -4,6 +4,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import { amber, deepOrange, grey } from "@mui/material/colors";
 import { createContext, useContext, useMemo, useState } from "react";
 import App from "../../App";
+import CssBaseline from '@mui/material/CssBaseline';
 
 
 export const ColorModeContext = createContext({toggleColorMode: () => {}});
@@ -65,6 +66,7 @@ export default function ToggleColorMode() {
     return (
         <ColorModeContext.Provider value={colorMode}>
             <ThemeProvider theme={theme}>
+                <CssBaseline/>
                 <App/>
                 <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
                     {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
