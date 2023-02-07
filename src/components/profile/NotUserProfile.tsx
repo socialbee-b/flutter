@@ -1,15 +1,26 @@
-import { useSelector } from "react-redux";
-import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
 // import { PostCard } from "../post-feed/PostCard";
-import { getUser } from "../store/users.slice";
+import { getCurrentUser, getUserById } from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import FollowingList from "./FollowingList";
 import FollowersList from "./FollowersList";
 import PostCard from "../post-feed/PostCard";
+import { useParams } from "react-router";
+import { fetchPosts, getPosts } from "../store/posts.slice";
 
 const NotUserProfile: React.FC<any> = () => {
-	const user = useSelector(getUser);
+	const { id } = useParams();
+	const selectedUser = useSelector(getCurrentUser);
+	const posts = useSelector(getPosts);
+	const dispatch = useDispatch<any>();
+
+	useEffect(() => {
+		dispatch(getUserById(id));
+		dispatch(fetchPosts());
+	}, []);
+
 	//handles the toggle of the following modal
 	const [open, setOpen] = useState(false);
 	const handleOpen = () => setOpen(true);
@@ -30,36 +41,26 @@ const NotUserProfile: React.FC<any> = () => {
 		p: 4,
 	};
 
-	// fake card so that I had something to work from while there are no posts from any users
-	const item = {
-		id: 2,
-		text: "some text",
-		imageUrl: "",
-		comments: [],
-		author: {
-			firstName: "Charlotte",
-		},
-		postType: "Top",
-	};
-
 	return (
 		<div>
 			<div className="profile-header">
 				<div className="profile-picture">
 					<img
 						className="profile-picture"
-						src={user?.imageUrl}
+						src={selectedUser?.imageUrl}
 						alt="Profile Image Here"
 					/>
 				</div>
 				<div className="flex-column">
 					<h2>
-						{user?.firstName} {user?.lastName}
+						{selectedUser?.firstName} {selectedUser?.lastName}
 					</h2>
-					<p className="username">@{user?.username}</p>
+					<p className="username">@{selectedUser?.username}</p>
 
 					<div className="flex-row">
-						<Button onClick={handleOpen}>{user?.following.length} Following</Button>
+						<Button onClick={handleOpen}>
+							{selectedUser?.following?.length} Following
+						</Button>
 						<Modal
 							open={open}
 							onClose={handleClose}
@@ -77,7 +78,9 @@ const NotUserProfile: React.FC<any> = () => {
 							</Box>
 						</Modal>
 
-						<Button onClick={handleOpen2}>{user?.followers.length}  Followers</Button>
+						<Button onClick={handleOpen2}>
+							{selectedUser?.followers?.length} Followers
+						</Button>
 						<Modal
 							open={open2}
 							onClose={handleClose2}
@@ -108,7 +111,14 @@ const NotUserProfile: React.FC<any> = () => {
 					</Button>
 				</div>
 			</div>
-			<div><PostCard post={item} key={item.id} /></div>
+			<div className="flex-column column-reverse">
+				{posts?.map(
+					(post: any) =>
+						post?.author?.id === selectedUser?.id && (
+							<PostCard key={post?.id} post={post} />
+						)
+				)}
+			</div>
 		</div>
 	);
 };

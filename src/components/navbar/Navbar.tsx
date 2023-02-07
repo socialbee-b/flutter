@@ -8,7 +8,7 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import { useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
 import { useDispatch, useSelector } from "react-redux";
-import { getAllUsers, getUser, handleLogout } from "../store/users.slice";
+import { getUser, handleLogout } from "../store/users.slice";
 import { useEffect, useState } from "react";
 import SearchBar from "../searchbar/SearchBar";
 
@@ -18,7 +18,6 @@ const Navbar: React.FC<any> = () => {
 	const [log, setLog] = useState("Login");
 	const [logButton, setLogButton] = useState(<></>);
 	const dispatch = useDispatch<any>();
-	const users = useSelector(getAllUsers);
 
 	useEffect(() => {
 		if (user?.email) {

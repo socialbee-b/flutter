@@ -30,7 +30,7 @@ const PostCard: React.FC<any> = ({ post }) => {
 	};
 
 	useEffect(() => {
-		setPostLiked(hasUserLiked(user?.id, post?.likes));
+		setPostLiked(hasUserLiked(user?.id, post?.likes || []));
 	}, [user, post]);
 
 	const handleLikeClick = async () => {

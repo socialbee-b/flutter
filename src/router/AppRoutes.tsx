@@ -26,13 +26,13 @@ const AppRoutes: React.FC<unknown> = () => {
 				<Route index element={<Landing />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
-				<Route path="/profile/:id" element={<NotUserProfile />} />
 
 				<Route element={<SideNavLayout />}>
 					<Route path="/settings" element={<Settings />} />
 					<Route path="/feed" element={<PostFeed />} />
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/posts/:id" element={<PostPage />} />
+					<Route path="/profile/:id" element={<NotUserProfile />} />
 				</Route>
 			</Route>
 		</Routes>
