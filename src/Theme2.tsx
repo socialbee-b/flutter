@@ -1,40 +1,58 @@
-import * as React from 'react';
-import IconButton from '@mui/material/IconButton';
-import Box from '@mui/material/Box';
-import { useTheme, ThemeProvider, createTheme } from '@mui/material/styles';
-import Brightness4Icon from '@mui/icons-material/Brightness4';
-import Brightness7Icon from '@mui/icons-material/Brightness7';
-import { CssBaseline } from '@mui/material';
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import { CssBaseline } from "@mui/material";
+import { createContext, useEffect, useMemo, useState } from "react";
 
-export const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
+export const ColorModeContext = createContext({
+	toggleColorMode: () => {},
+});
 
 export default function ToggleColorMode(props: any) {
-  const [mode, setMode] = React.useState<'light' | 'dark'>('light');
-  const colorMode = React.useMemo(
-    () => ({
-      toggleColorMode: () => {
-        setMode((prevMode) => (prevMode === 'light' ? 'dark' : 'light'));
-      },
-    }),
-    [],
-  );
+	const [mode, setMode] = useState<"light" | "dark">("light");
 
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode,
-        },
-      }),
-    [mode],
-  );
+	useEffect(() => {
+		// create darkmode in localstorage
+		if (!localStorage.getItem("darkmode")) {
+			localStorage.setItem("darkmode", mode);
+		}
+		const darkmode = localStorage.getItem("darkmode");
+		setMode(darkmode === "light" ? "light" : "dark");
+	}, []); // eslint-disable-line
 
-  return (
-    <ColorModeContext.Provider value={colorMode}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline/>
-        {props.children}
-      </ThemeProvider>
-    </ColorModeContext.Provider>
-  );
+	const colorMode = useMemo(
+		() => ({
+			toggleColorMode: () => {
+				// get darkmode from localstorage
+				const darkmode = localStorage.getItem("darkmode");
+
+				// toggle darkmode in localstorage
+				localStorage.setItem(
+					"darkmode",
+					darkmode === "light" ? "dark" : "light"
+				);
+
+				// toggle our state
+				setMode(darkmode === "light" ? "dark" : "light");
+			},
+		}),
+		[]
+	);
+
+	const theme = useMemo(
+		() =>
+			createTheme({
+				palette: {
+					mode,
+				},
+			}),
+		[mode]
+	);
+
+	return (
+		<ColorModeContext.Provider value={colorMode}>
+			<ThemeProvider theme={theme}>
+				<CssBaseline />
+				{props.children}
+			</ThemeProvider>
+		</ColorModeContext.Provider>
+	);
 }

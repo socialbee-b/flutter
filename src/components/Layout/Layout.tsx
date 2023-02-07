@@ -1,7 +1,6 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../navbar/Navbar";
-import SearchBar from "../searchbar/SearchBar";
 import Toasts from "../toasts/Toasts";
 import "./Layout.css";
 

@@ -174,6 +174,7 @@ const usersSlice = createSlice({
 			})
 			.addCase(changeUsername.fulfilled, (state, action) => {
 				state.status = "success";
+				state.user = action.payload;
 			})
 			.addCase(changeUsername.rejected, (state, action) => {
 				state.status = "rejected";
@@ -213,8 +214,19 @@ const usersSlice = createSlice({
 			})
 			.addCase(changeEmail.fulfilled, (state, action) => {
 				state.status = "success";
+				state.user = action.payload;
 			})
 			.addCase(changeEmail.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(changePassword.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(changePassword.fulfilled, (state, action) => {
+				state.status = "success";
+				state.user = action.payload;
+			})
+			.addCase(changePassword.rejected, (state, action) => {
 				state.status = "rejected";
 			});
 	},
