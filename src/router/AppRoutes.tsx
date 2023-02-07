@@ -6,6 +6,7 @@ import Layout from "../components/Layout/Layout";
 import Login from "../components/login/Login";
 import PostFeed from "../components/post-feed/PostFeed";
 import PostPage from "../components/PostPage/PostPage";
+import NotUserProfile from "../components/profile/NotUserProfile";
 import Profile from "../components/profile/Profile";
 import Register from "../components/register/Register";
 import Settings from "../components/settings-page/Settings";
@@ -25,6 +26,7 @@ const AppRoutes: React.FC<unknown> = () => {
 				<Route index element={<Landing />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
+				<Route path="/profile/:id" element={<NotUserProfile />} />
 
 				<Route element={<SideNavLayout />}>
 					<Route path="/settings" element={<Settings />} />
