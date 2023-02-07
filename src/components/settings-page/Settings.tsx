@@ -11,6 +11,13 @@ import {
 } from "../store/users.slice";
 import { addToast } from "../toasts/toasts.slice";
 import "./SettingsPage.css";
+import ToggleColorMode from "../dark-mode/Theme";
+
+import { IconButton } from "@mui/material";
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
+
+
 
 const Settings: React.FC<any> = () => {
 	const dispatch = useDispatch<any>();
@@ -169,11 +176,11 @@ const Settings: React.FC<any> = () => {
 	};
 
 	// darkmode stuff
-	const [darkmode, setDarkmode] = useState(false);
-	const handleChangeDarkmode = async () => {
-		setDarkmode(!darkmode);
-		console.warn("TODO: handle darkmode");
-	};
+	// const [darkmode, setDarkmode] = useState(false);
+	// const handleChangeDarkmode = async () => {
+	// 	setDarkmode(!darkmode);
+	// 	console.warn("TODO: handle darkmode");
+	// };
 
 	return (
 		<>
@@ -218,14 +225,20 @@ const Settings: React.FC<any> = () => {
 				</div>
 				<div className="settingsSection">
 					<h3>Change Theme</h3>
-					<FormGroup>
+					{/* <ToggleColorMode/> */}
+					
+					{/* <FormGroup>
 						<FormControlLabel
+							// control={
+							// 	<Switch checked={darkmode} onChange={handleChangeDarkmode} />
+							// }
+							// label="Darkmode"
 							control={
-								<Switch checked={darkmode} onChange={handleChangeDarkmode} />
-							}
-							label="Darkmode"
+								<Switch 
+									<ToggleColorMode>
+							label= {theme.palette.mode} Mode
 						/>
-					</FormGroup>
+					</FormGroup> */}
 				</div>
 			</section>
 		</>

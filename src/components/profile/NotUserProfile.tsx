@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { getUser } from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
+import FollowingList from "./FollowingList";
+import FollowersList from "./FollowersList";
 
 const NotUserProfile: React.FC<any> = () => {
 	const user = useSelector(getUser);
@@ -56,7 +58,7 @@ const NotUserProfile: React.FC<any> = () => {
 					<p className="username">@{user?.username}</p>
 
 					<div className="flex-row">
-						<Button onClick={handleOpen}>321 Following</Button>
+						<Button onClick={handleOpen}>{user?.following.length} Following</Button>
 						<Modal
 							open={open}
 							onClose={handleClose}
@@ -68,12 +70,13 @@ const NotUserProfile: React.FC<any> = () => {
 									Following
 								</Typography>
 								<Typography id="modal-modal-description" sx={{ mt: 2 }}>
-									list of following goes here!
+									{/* list of following goes here! */}
+									<FollowingList />
 								</Typography>
 							</Box>
 						</Modal>
 
-						<Button onClick={handleOpen2}>123 Followers</Button>
+						<Button onClick={handleOpen2}>{user?.followers.length}  Followers</Button>
 						<Modal
 							open={open2}
 							onClose={handleClose2}
@@ -85,7 +88,8 @@ const NotUserProfile: React.FC<any> = () => {
 									Followers
 								</Typography>
 								<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
-									list of followers goes here!
+									{/* list of followers goes here! */}
+									<FollowersList />
 								</Typography>
 							</Box>
 						</Modal>
