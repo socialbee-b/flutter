@@ -1,0 +1,39 @@
+.styledSearchBar {
+	width: 300px;
+	position: relative;
+}
+
+.styledSearchBar input {
+	width: 100%;
+	outline: none;
+	border: 1px solid gray;
+	border-radius: 5px;
+	padding: 0.5rem 1rem;
+	font-size: 1rem;
+}
+
+.styledSearchBar input:focus,
+.styledSearchBar input:active {
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
+}
+
+.styledSearchResults {
+	position: absolute;
+	z-index: 100;
+	width: 300px;
+	background: white;
+}
+
+.styledSearchResults li {
+	list-style: none;
+	padding: 0.5rem;
+	font-size: 16px;
+	transition: all 0.25s;
+	cursor: pointer;
+}
+
+.styledSearchResults li:hover {
+	background: var(--primary-blue);
+	color: white;
+}

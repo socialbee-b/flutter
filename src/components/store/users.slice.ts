@@ -90,14 +90,17 @@ export const changePassword = createAsyncThunk(
 	}
 );
 
-export const getAllUsers = createAsyncThunk("users/getAllUsers", async () => {
-	try {
-		const response = await axios.get(`${BASE_URL}/users`);
-		return response.data;
-	} catch (err: any) {
-		throw new Error(err);
+export const fetchAllUsers = createAsyncThunk(
+	"users/fetchAllUsers",
+	async () => {
+		try {
+			const response = await axios.get(`${BASE_URL}/users`);
+			return response.data;
+		} catch (err: any) {
+			throw new Error(err);
+		}
 	}
-});
+);
 
 export const getUserById = createAsyncThunk(
 	"users/getUserById",
@@ -175,14 +178,14 @@ const usersSlice = createSlice({
 			.addCase(changeUsername.rejected, (state, action) => {
 				state.status = "rejected";
 			})
-			.addCase(getAllUsers.pending, (state, action) => {
+			.addCase(fetchAllUsers.pending, (state, action) => {
 				state.status = "loading";
 			})
-			.addCase(getAllUsers.fulfilled, (state, action) => {
+			.addCase(fetchAllUsers.fulfilled, (state, action) => {
 				state.status = "success";
 				state.users = action.payload;
 			})
-			.addCase(getAllUsers.rejected, (state, action) => {
+			.addCase(fetchAllUsers.rejected, (state, action) => {
 				state.status = "rejected";
 			})
 			.addCase(getUserById.pending, (state, action) => {
@@ -219,9 +222,9 @@ const usersSlice = createSlice({
 
 // export functions you want to use in the app
 export const getUser = (state: any) => state.users.user;
-// () => JSON.parse(localStorage.getItem("user") || "{}");
 export const getStatus = (state: any) => state.users.status;
 export const getCurrentUser = (state: any) => state.users.currentUser;
+export const getAllUsers = (state: any) => state.users.users;
 
 // export actions
 export const { getUserFromLocal, setStatus, handleLogout } = usersSlice.actions; // eslint-disable-line

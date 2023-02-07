@@ -16,7 +16,7 @@ import { fetchPosts, getPosts, getStatus } from "../store/posts.slice";
 import PostCard from "../post-feed/PostCard";
 import FollowingList from "./FollowingList";
 import FollowersList from "./FollowersList";
-import { FixedSizeList } from 'react-window';
+// import { FixedSizeList } from 'react-window';
 
 const Profile: React.FC<any> = () => {
 	const user = useSelector(getUser);
@@ -66,9 +66,6 @@ const Profile: React.FC<any> = () => {
 		p: 4,
 	};
 
-	
-
-
 	return (
 		<div className="flex-column">
 			<div className="profile-header">
@@ -114,7 +111,9 @@ const Profile: React.FC<any> = () => {
 					<p className="username">@{user?.username}</p>
 
 					<div className="flex-row">
-						<Button onClick={handleOpen}>{user?.following.length} Following</Button>
+						<Button onClick={handleOpen}>
+							{user?.following?.length} Following
+						</Button>
 						<Modal
 							open={open}
 							onClose={handleClose}
@@ -127,12 +126,14 @@ const Profile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description" sx={{ mt: 2 }}>
 									{/* list of following goes here! */}
-									<FollowingList/>
+									<FollowingList />
 								</Typography>
 							</Box>
 						</Modal>
 
-						<Button onClick={handleOpen2}>{user?.followers.length} Followers</Button>
+						<Button onClick={handleOpen2}>
+							{user?.followers?.length} Followers
+						</Button>
 						<Modal
 							open={open2}
 							onClose={handleClose2}
@@ -145,7 +146,7 @@ const Profile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
 									{/* list of followers goes here! */}
-									<FollowersList/>
+									<FollowersList />
 								</Typography>
 							</Box>
 						</Modal>
