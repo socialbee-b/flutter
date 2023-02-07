@@ -167,7 +167,7 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 			<div className="postFooter">
 				<div className="footerIcon">
 					<AiOutlineHeart onClick={handleLikeClick} />
-					<p>{post?.likes} Likes</p>
+					<p>{post?.likes?.length || 0} Likes</p>
 				</div>
 				<div className="footerIcon">
 					<AiOutlineComment onClick={handleCommentClick} />
