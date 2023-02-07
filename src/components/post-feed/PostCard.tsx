@@ -82,11 +82,11 @@ const PostCard: React.FC<any> = ({ post }) => {
 				<div className="flex-row">
 					<div className="footerIcon">
 						<AiOutlineHeart onClick={handleLikeClick} />
-						<p>{post?.likes} Likes</p>
+						<p>{post?.likes?.length || 0} Likes</p>
 					</div>
 					<div className="footerIcon">
 						<AiOutlineComment onClick={handleCommentClick} />
-						<p>{post?.comments.length || 0} Comments</p>
+						<p>{post?.comments?.length || 0} Comments</p>
 					</div>
 				</div>
 				<div className="flex-row">

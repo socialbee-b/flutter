@@ -39,6 +39,10 @@ const Profile: React.FC<any> = () => {
 	const posts = useSelector(getPosts);
 
 	useEffect(() => {
+		dispatch(fetchPosts());
+	}, []); // eslint-disable-line
+
+	useEffect(() => {
 		if (status === "success") {
 			dispatch(fetchPosts());
 		}
@@ -141,7 +145,7 @@ const Profile: React.FC<any> = () => {
 				</div>
 			</div>
 			<div className="flex-column column-reverse">
-				{posts.map(
+				{posts?.map(
 					(post: any) =>
 						post?.author?.id === user?.id && (
 							<PostCard key={post?.id} post={post} />
