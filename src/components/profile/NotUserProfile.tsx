@@ -47,7 +47,7 @@ const NotUserProfile: React.FC<any> = () => {
 					<img
 						className="profile-picture"
 						src={selectedUser?.imageUrl}
-						alt="Profile Pic Here"
+						alt="profile pic"
 					/>
 				</div>
 				<div className="flex-column">
@@ -72,7 +72,7 @@ const NotUserProfile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description" sx={{ mt: 2 }}>
 									{/* list of following goes here! */}
-									<FollowingList />
+									<FollowingList user={selectedUser} />
 								</Typography>
 							</Box>
 						</Modal>
@@ -92,7 +92,7 @@ const NotUserProfile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
 									{/* list of followers goes here! */}
-									<FollowersList />
+									<FollowersList user={selectedUser}/>
 								</Typography>
 							</Box>
 						</Modal>

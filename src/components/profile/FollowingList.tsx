@@ -9,8 +9,10 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { Paper } from "@mui/material";
 
-const FollowingList: React.FC<any> = () => {
-	const user = useSelector(getUser);
+const FollowingList: React.FC<any> = (props: any) => {
+	// const user = useSelector(getUser);
+	// const [followers, setFollowers] = useState([]);
+	const user = props.user;
 	useEffect(() => console.log(user?.following), [user]);
 	return (
 		<Paper style={{ maxHeight: 320, overflow: "auto" }}>
