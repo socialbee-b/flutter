@@ -1,6 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, getUser, getUserById } from "../store/users.slice";
+import {
+	followUser,
+	getCurrentUser,
+	getUser,
+	getUserById,
+	setUser,
+	unfollowUser,
+} from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import FollowingList from "./FollowingList";
@@ -41,7 +48,36 @@ const NotUserProfile: React.FC<any> = () => {
 		p: 4,
 	};
 
-	const handleFollowClick = async () => {};
+	const [isFollowing, setIsFollowing] = useState(false);
+
+	useEffect(() => {
+		user?.id && dispatch(setUser(user?.id));
+	}, [isFollowing]); // eslint-disable-line
+
+	const hasUserFollowed = () => {
+		for (const follow of user?.following || []) {
+			if (selectedUser?.id === follow?.id) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	useEffect(() => {
+		setIsFollowing(hasUserFollowed());
+	}, [user, selectedUser]); // eslint-disable-line
+
+	const handleFollowClick = async () => {
+		const payload = {
+			id: user?.id,
+			otherId: selectedUser?.id,
+		};
+		if (isFollowing) {
+			dispatch(unfollowUser(payload));
+		} else {
+			dispatch(followUser(payload));
+		}
+	};
 
 	return (
 		<div>
@@ -108,7 +144,7 @@ const NotUserProfile: React.FC<any> = () => {
 							variant="outlined"
 							sx={{ ml: 55 }}
 						>
-							Follow
+							{isFollowing ? "Unfollow" : "Follow"}
 						</Button>
 					</div>
 				)}
