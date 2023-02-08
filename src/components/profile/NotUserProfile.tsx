@@ -86,7 +86,7 @@ const NotUserProfile: React.FC<any> = () => {
 					<img
 						className="profile-picture"
 						src={selectedUser?.imageUrl}
-						alt="Profile Pic Here"
+						alt="profile pic"
 					/>
 				</div>
 				<div className="flex-column">
