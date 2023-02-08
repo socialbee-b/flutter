@@ -21,9 +21,11 @@ const PostCard: React.FC<any> = ({ post }) => {
 	}, []); // eslint-disable-line
 
 	const hasUserLiked = (id: any, likes: any) => {
-		for (const like of likes) {
-			if (like?.id === id) {
-				return true;
+		if (likes?.length > 0) {
+			for (const like of likes) {
+				if (like?.id === id) {
+					return true;
+				}
 			}
 		}
 		return false;

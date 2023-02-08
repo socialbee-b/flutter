@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import UploadFile from "../../s3/UploadFile";
-import { getUser, getUserById } from "../store/users.slice";
+import { getCurrentUser, getUser, getUserById } from "../store/users.slice";
 import "./Profile.css";
 import {
 	Box,
@@ -18,6 +18,7 @@ import FollowingList from "./FollowingList";
 import FollowersList from "./FollowersList";
 
 const Profile: React.FC<any> = () => {
+	const currentUser = useSelector(getCurrentUser);
 	const user = useSelector(getUser);
 	const dispatch = useDispatch<any>();
 	const status = useSelector(getStatus);
@@ -42,8 +43,13 @@ const Profile: React.FC<any> = () => {
 
 	useEffect(() => {
 		dispatch(fetchPosts());
-		dispatch(getUserById(user?.id));
 	}, []); // eslint-disable-line
+
+	useEffect(() => {
+		if (user?.id) {
+			dispatch(getUserById(user?.id));
+		}
+	}, [user]); // eslint-disable-line
 
 	useEffect(() => {
 		if (status === "success") {
@@ -112,7 +118,7 @@ const Profile: React.FC<any> = () => {
 
 					<div className="flex-row">
 						<Button onClick={handleOpen}>
-							{user?.following?.length} Following
+							{currentUser?.following?.length} Following
 						</Button>
 						<Modal
 							open={open}
@@ -132,7 +138,7 @@ const Profile: React.FC<any> = () => {
 						</Modal>
 
 						<Button onClick={handleOpen2}>
-							{user?.followers?.length} Followers
+							{currentUser?.followers?.length} Followers
 						</Button>
 						<Modal
 							open={open2}
