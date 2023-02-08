@@ -31,9 +31,10 @@
 	font-size: 16px;
 	transition: all 0.25s;
 	cursor: pointer;
+	color: black;
 }
 
 .styledSearchResults li:hover {
 	background: var(--primary-blue);
-	color: white;
+	color: white !important;
 }

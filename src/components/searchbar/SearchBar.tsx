@@ -40,7 +40,7 @@ const SearchBar: React.FC<any> = () => {
 		if (searchRef.current?.value) {
 			searchRef.current.value = "";
 		}
-		navigate(`/profile/${id}`);
+		navigate(`/users/${id}`);
 	};
 
 	return (
