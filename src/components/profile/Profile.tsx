@@ -132,7 +132,7 @@ const Profile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description" sx={{ mt: 2 }}>
 									{/* list of following goes here! */}
-									<FollowingList/>
+									<FollowingList />
 								</Typography>
 							</Box>
 						</Modal>
@@ -152,7 +152,7 @@ const Profile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
 									{/* list of followers goes here! */}
-									<FollowersList/>
+									<FollowersList />
 								</Typography>
 							</Box>
 						</Modal>
