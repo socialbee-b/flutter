@@ -36,16 +36,6 @@ const UploadFile: React.FC<any> = () => {
 		);
 	};
 	return (
-		// <div>
-		//         <div>
-		//             React S3 File Upload
-		//         </div>
-		//         <input type="file" onChange={handleFileInput} />
-		//         <br></br>
-		//         <button onClick={() => uploadFile(selectedFile)}> Upload to S3</button>
-		//     </div>
-		// https://stackoverflow.com/questions/40589302/how-to-enable-file-upload-on-reacts-material-ui-simple-input
-		//https://kiranvj.com/blog/blog/file-upload-in-material-ui/
 		<div>
 			<label htmlFor="file-button">
 				<input
@@ -57,10 +47,9 @@ const UploadFile: React.FC<any> = () => {
 					onChange={handleFileInput}
 				/>
 				<Button
-					// variant="outlined"
 					component="span"
 					fullWidth
-					sx={{ mt: 4, mb: 1 }}
+					sx={{ mt: 1, mb: 1 }}
 				>
 					Choose File
 				</Button>
@@ -68,7 +57,7 @@ const UploadFile: React.FC<any> = () => {
 				<Button
 					onClick={() => uploadFile(selectedFile)}
 					fullWidth
-					sx={{ mt: 4, mb: 1 }}
+					sx={{ mt: 1, mb: 1 }}
 				>
 					Upload Image
 				</Button>
