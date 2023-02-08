@@ -8,6 +8,7 @@ import { getUser } from "../store/users.slice";
 import { useEffect, useState } from "react";
 import Button from "../Button/Button";
 import { FiEdit, FiTrash } from "react-icons/fi";
+import "./PostCard.css";
 
 const PostCard: React.FC<any> = ({ post }) => {
 	const user = useSelector(getUser);
@@ -97,7 +98,7 @@ const PostCard: React.FC<any> = ({ post }) => {
 			</div>
 			<div className="postBody">
 				<p>{post?.text}</p>
-				{post?.imageUrl && <img src={post?.imageUrl} alt="" />}
+				{post?.imageUrl && <img className="pictures" src={post?.imageUrl} alt="" />}
 			</div>
 			<div className="postFooter space-between">
 				<div className="flex-row">
