@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, getUserById } from "../store/users.slice";
+import { getCurrentUser, getUser, getUserById } from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import FollowingList from "./FollowingList";
@@ -11,6 +11,7 @@ import { fetchPosts, getPosts } from "../store/posts.slice";
 
 const NotUserProfile: React.FC<any> = () => {
 	const { id } = useParams();
+	const user = useSelector(getUser);
 	const selectedUser = useSelector(getCurrentUser);
 	const posts = useSelector(getPosts);
 	const dispatch = useDispatch<any>();
@@ -18,7 +19,7 @@ const NotUserProfile: React.FC<any> = () => {
 	useEffect(() => {
 		dispatch(getUserById(id));
 		dispatch(fetchPosts());
-	}, []); // eslint-disable-line
+	}, [id]); // eslint-disable-line
 
 	//handles the toggle of the following modal
 	const [open, setOpen] = useState(false);
@@ -98,17 +99,19 @@ const NotUserProfile: React.FC<any> = () => {
 						</Modal>
 					</div>
 				</div>
-				<div className="follow-button">
-					<Button
-						onClick={() => {
-							alert("user followed");
-						}}
-						variant="outlined"
-						sx={{ ml: 55 }}
-					>
-						Follow
-					</Button>
-				</div>
+				{user?.id !== Number(id) && (
+					<div className="follow-button">
+						<Button
+							onClick={() => {
+								alert("user followed");
+							}}
+							variant="outlined"
+							sx={{ ml: 55 }}
+						>
+							Follow
+						</Button>
+					</div>
+				)}
 			</div>
 			<div className="flex-column column-reverse">
 				{posts?.map(
