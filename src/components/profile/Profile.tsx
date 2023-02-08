@@ -10,6 +10,10 @@ import {
 	Typography,
 	IconButton,
 	Tooltip,
+	Dialog,
+	DialogTitle,
+	DialogContent,
+	DialogContentText,
 } from "@mui/material";
 import AddCircleSharpIcon from "@mui/icons-material/AddCircleSharp";
 import { fetchPosts, getPosts, getStatus } from "../store/posts.slice";
@@ -84,31 +88,33 @@ const Profile: React.FC<any> = () => {
 							></AddCircleSharpIcon>
 						</IconButton>
 					</Tooltip>
-					<Modal
+					<Dialog
 						open={open3}
 						onClose={handleClose3}
 						aria-labelledby="modal-uploadpfp-title"
 						aria-describedby="modal-uploadpfp-desc"
 					>
-						<Box sx={style}>
-							<Typography
-								className="prompt-container"
-								id="modal-uploadpfp-title"
-								variant="h6"
-								component="h2"
-							>
-								Upload Picture
-							</Typography>
+						<DialogTitle style={{textAlign: "center"}}>
+							Upload Picture
+						</DialogTitle>
+						<DialogContent>
+							<DialogContentText style={{textAlign: "center"}}>
+								Select an image.
+							</DialogContentText>
 							<Typography
 								className="prompt-container"
 								id="modal-uploadpfp-desc"
-								sx={{ mt: 2 }}
 							>
-								Select an image
 								<UploadFile />
+								<Button onClick={handleClose3}
+									fullWidth
+									sx={{ mt: 1 }}
+								>
+									Close
+								</Button>
 							</Typography>
-						</Box>
-					</Modal>
+						</DialogContent>
+					</Dialog>
 				</div>
 				<div className="flex-column">
 					<h2>
