@@ -16,6 +16,7 @@ import {
 	unlikePost,
 } from "../../store/posts.slice";
 import { addToast } from "../../toasts/toasts.slice";
+import "../PostCard.css";
 
 const SinglePostCard: React.FC<any> = ({ post }) => {
 	const user = useSelector(getUser);
@@ -195,7 +196,7 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 				) : (
 					<p>{post?.text}</p>
 				)}
-				{post?.imageUrl && <img src={post?.imageUrl} alt="" />}
+				{post?.imageUrl && <img className="pictures" src={post?.imageUrl} alt="" />}
 			</div>
 			<div className="postFooter">
 				<div className="footerIcon">
