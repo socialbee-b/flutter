@@ -1,6 +1,6 @@
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { useSelector } from "react-redux";
-import { getUser } from "../store/users.slice";
+import { getCurrentUser } from "../store/users.slice";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -9,15 +9,14 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { Paper } from "@mui/material";
 
-const FollowingList: React.FC<any> = (props: any) => {
-	// const user = useSelector(getUser);
-	// const [followers, setFollowers] = useState([]);
-	const user = props.user;
-	useEffect(() => console.log(user?.following), [user]);
+const FollowingList: React.FC<any> = () => {
+	const selectedUser = useSelector(getCurrentUser);
+
 	return (
 		<Paper style={{ maxHeight: 320, overflow: "auto" }}>
 			<List sx={{ width: "100%", maxWidth: 360 }}>
-				{user?.following?.map((person: any, id: any) => (
+				{selectedUser?.following?.length === 0 && <p>No users found</p>}
+				{selectedUser?.following?.map((person: any, id: any) => (
 					<ListItem alignItems="flex-start" key={id}>
 						<ListItemAvatar>
 							<Avatar

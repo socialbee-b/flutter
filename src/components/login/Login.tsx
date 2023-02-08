@@ -39,22 +39,6 @@ export default function Login() {
 				})
 			);
 		}
-		if (status === "success") {
-			// reset form
-			setEmail("");
-			setPassword("");
-
-			dispatch(getUserFromLocal());
-
-			navigate("/feed");
-
-			dispatch(
-				addToast({
-					status: "success",
-					message: "You have been logged in.",
-				})
-			);
-		}
 		dispatch(setStatus("idle"));
 	}, [status]); // eslint-disable-line
 
@@ -69,7 +53,30 @@ export default function Login() {
 			);
 		} else {
 			const payload = { email, password };
-			dispatch(login(payload));
+			try {
+				dispatch(login(payload));
+				// reset form
+				setEmail("");
+				setPassword("");
+
+				dispatch(getUserFromLocal());
+
+				navigate("/feed");
+
+				dispatch(
+					addToast({
+						status: "success",
+						message: "You have been logged in.",
+					})
+				);
+			} catch (err: any) {
+				dispatch(
+					addToast({
+						status: "error",
+						message: "Unable to login.",
+					})
+				);
+			}
 		}
 	};
 

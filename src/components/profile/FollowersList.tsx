@@ -1,6 +1,6 @@
-import { Fragment, useEffect } from "react";
+import { Fragment } from "react";
 import { useSelector } from "react-redux";
-import { getUser } from "../store/users.slice";
+import { getCurrentUser } from "../store/users.slice";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
@@ -9,41 +9,41 @@ import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
 import { Paper } from "@mui/material";
 
-const FollowersList: React.FC<any> = (props: any) => {
-    // const user = useSelector(getUser);
-    // const [followers, setFollowers] = useState([]);
-    const user = props.user;
-    useEffect (()=> console.log(user?.followers), [user])
-    return (
-        <Paper style={{ maxHeight: 320, overflow: 'auto' }}>
-        <List sx={{ width: '100%', maxWidth: 360}}>
-            {/* sx = {{width: '100%', maxWidth: 360, bgcolor: 'background.paper' }} */}
-            {user?.followers.map((person: any) => (
-                <><ListItem alignItems="flex-start">
-                    <ListItemAvatar>
-                        <Avatar alt="user profile picture" src={person?.imageUrl} aria-labelledby="profile picture" />
-                    </ListItemAvatar>
-                    <ListItemText
-                        primary={`${person?.firstName} ${person?.lastName}`}
-                        secondary={<Fragment>
-                            <Typography
-                                sx={{ display: 'inline' }}
-                                component="span"
-                                variant="body2"
-                                color="text.primary"
-                            >
-                            </Typography>
-                            {person?.username}
-                        </Fragment>} />
-                </ListItem>
-                {/* <Divider variant="inset" component="li" /> */}
-                </>
+const FollowersList: React.FC<any> = () => {
+	const selectedUser = useSelector(getCurrentUser);
 
-            ))}
-
-        </List>
-        </Paper>
-    );
+	return (
+		<Paper style={{ maxHeight: 320, overflow: "auto" }}>
+			<List sx={{ width: "100%", maxWidth: 360 }}>
+				{selectedUser?.followers?.length === 0 && <p>No users found</p>}
+				{selectedUser?.followers.map((person: any) => (
+					<ListItem alignItems="flex-start">
+						<ListItemAvatar>
+							<Avatar
+								alt="user profile picture"
+								src={person?.imageUrl}
+								aria-labelledby="profile picture"
+							/>
+						</ListItemAvatar>
+						<ListItemText
+							primary={`${person?.firstName} ${person?.lastName}`}
+							secondary={
+								<Fragment>
+									<Typography
+										sx={{ display: "inline" }}
+										component="span"
+										variant="body2"
+										color="text.primary"
+									></Typography>
+									{person?.username}
+								</Fragment>
+							}
+						/>
+					</ListItem>
+				))}
+			</List>
+		</Paper>
+	);
 };
 
 export default FollowersList;

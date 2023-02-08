@@ -30,7 +30,6 @@ export default function ToggleColorMode(props: any) {
 					darkmode === "light" ? "dark" : "light"
 				);
 
-				// toggle our state
 				setMode(darkmode === "light" ? "dark" : "light");
 			},
 		}),

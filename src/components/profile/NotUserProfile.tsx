@@ -1,6 +1,13 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
-import { getCurrentUser, getUserById } from "../store/users.slice";
+import {
+	followUser,
+	getCurrentUser,
+	getUser,
+	getUserById,
+	setUser,
+	unfollowUser,
+} from "../store/users.slice";
 import "./Profile.css";
 import { Box, Button, Modal, Typography } from "@mui/material";
 import FollowingList from "./FollowingList";
@@ -11,6 +18,7 @@ import { fetchPosts, getPosts } from "../store/posts.slice";
 
 const NotUserProfile: React.FC<any> = () => {
 	const { id } = useParams();
+	const user = useSelector(getUser);
 	const selectedUser = useSelector(getCurrentUser);
 	const posts = useSelector(getPosts);
 	const dispatch = useDispatch<any>();
@@ -18,7 +26,7 @@ const NotUserProfile: React.FC<any> = () => {
 	useEffect(() => {
 		dispatch(getUserById(id));
 		dispatch(fetchPosts());
-	}, []); // eslint-disable-line
+	}, [id]); // eslint-disable-line
 
 	//handles the toggle of the following modal
 	const [open, setOpen] = useState(false);
@@ -38,6 +46,37 @@ const NotUserProfile: React.FC<any> = () => {
 		width: 400, //box size
 		bgcolor: "background.paper", //background within the box
 		p: 4,
+	};
+
+	const [isFollowing, setIsFollowing] = useState(false);
+
+	useEffect(() => {
+		user?.id && dispatch(setUser(user?.id));
+	}, [isFollowing]); // eslint-disable-line
+
+	const hasUserFollowed = () => {
+		for (const follow of user?.following || []) {
+			if (selectedUser?.id === follow?.id) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	useEffect(() => {
+		setIsFollowing(hasUserFollowed());
+	}, [user, selectedUser]); // eslint-disable-line
+
+	const handleFollowClick = async () => {
+		const payload = {
+			id: user?.id,
+			otherId: selectedUser?.id,
+		};
+		if (isFollowing) {
+			dispatch(unfollowUser(payload));
+		} else {
+			dispatch(followUser(payload));
+		}
 	};
 
 	return (
@@ -98,17 +137,17 @@ const NotUserProfile: React.FC<any> = () => {
 						</Modal>
 					</div>
 				</div>
-				<div className="follow-button">
-					<Button
-						onClick={() => {
-							alert("user followed");
-						}}
-						variant="outlined"
-						sx={{ ml: 55 }}
-					>
-						Follow
-					</Button>
-				</div>
+				{user?.id !== Number(id) && (
+					<div className="follow-button">
+						<Button
+							onClick={handleFollowClick}
+							variant="outlined"
+							sx={{ ml: 55 }}
+						>
+							{isFollowing ? "Unfollow" : "Follow"}
+						</Button>
+					</div>
+				)}
 			</div>
 			<div className="flex-column column-reverse">
 				{posts?.map(

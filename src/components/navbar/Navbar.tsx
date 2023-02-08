@@ -45,7 +45,7 @@ const Navbar: React.FC<any> = () => {
 					<Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
 						Fluttr
 					</Typography>
-					<SearchBar />
+					{user?.email && <SearchBar />}
 					<Tooltip disableFocusListener disableTouchListener title={log}>
 						<IconButton
 							size="large"

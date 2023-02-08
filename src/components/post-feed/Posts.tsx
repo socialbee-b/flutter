@@ -1,28 +1,46 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchPosts, getPosts, getStatus } from "../store/posts.slice";
+import { fetchPosts, getPosts } from "../store/posts.slice";
+import { getCurrentUser, getUser, getUserById } from "../store/users.slice";
 import PostCard from "./PostCard";
 
 const Posts: React.FC<any> = () => {
 	const dispatch = useDispatch<any>();
+	const user = useSelector(getUser);
+	const currentUser = useSelector(getCurrentUser);
 	const posts = useSelector(getPosts);
-	const status = useSelector(getStatus);
+	const [filteredPost, setFilteredPosts] = useState(<></>);
 
 	useEffect(() => {
 		dispatch(fetchPosts());
-	}, []); // eslint-disable-line
+		user?.id && dispatch(getUserById(user?.id));
+	}, [user]); // eslint-disable-line
+
+	const isFollowing = (id: any) => {
+		for (const following of currentUser?.following || []) {
+			if (following?.id === id) {
+				return true;
+			}
+		}
+		return false;
+	};
 
 	useEffect(() => {
-		if (status === "success") {
-			dispatch(fetchPosts());
-		}
-	}, [status]); // eslint-disable-line
+		setFilteredPosts(
+			<>
+				{posts.map(
+					(post: any) =>
+						isFollowing(post?.author?.id) && (
+							<PostCard key={post?.id} post={post} />
+						)
+				)}
+			</>
+		);
+	}, [user, posts]); // eslint-disable-line
 
 	return (
 		<div className="reversedPosts">
-			{posts?.map((post: any) => (
-				<PostCard key={post?.id} post={post} />
-			))}
+			{posts?.length === 0 ? <h2>Loading...</h2> : filteredPost}
 		</div>
 	);
 };
