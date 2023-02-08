@@ -132,6 +132,54 @@ export const changeProfilePic = createAsyncThunk(
 	}
 );
 
+//follow
+export const followUser = createAsyncThunk(
+	"users/follow",
+	async (payload: any) => {
+		try {
+			const response = await axios.put(
+				`${BASE_URL}/users/${payload?.otherId}/follow`,
+				payload?.id,
+				{
+					headers: { "Content-type": "application/json" },
+				}
+			);
+			return response.data;
+		} catch (err: any) {
+			console.log(err);
+			throw new Error(err);
+		}
+	}
+);
+//unfollow
+export const unfollowUser = createAsyncThunk(
+	"users/unfollow",
+	async (payload: any) => {
+		try {
+			const response = await axios.put(
+				`${BASE_URL}/users/${payload?.otherId}/unfollow`,
+				payload?.id,
+				{
+					headers: { "Content-type": "application/json" },
+				}
+			);
+			return response.data;
+		} catch (err: any) {
+			console.log(err);
+			throw new Error(err);
+		}
+	}
+);
+
+export const setUser = createAsyncThunk("users/setUser", async (id: any) => {
+	try {
+		const response = await axios.get(`${BASE_URL}/users/${id}`);
+		return response.data;
+	} catch (err: any) {
+		throw new Error(err);
+	}
+});
+
 // create the user slice
 const usersSlice = createSlice({
 	name: "users",
@@ -227,6 +275,38 @@ const usersSlice = createSlice({
 				state.user = action.payload;
 			})
 			.addCase(changePassword.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(followUser.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(followUser.fulfilled, (state, action) => {
+				state.status = "success";
+				state.user = action.payload[1];
+				state.currentUser = action.payload[0];
+			})
+			.addCase(followUser.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(unfollowUser.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(unfollowUser.fulfilled, (state, action) => {
+				state.status = "success";
+				state.user = action.payload[1];
+				state.currentUser = action.payload[0];
+			})
+			.addCase(unfollowUser.rejected, (state, action) => {
+				state.status = "rejected";
+			})
+			.addCase(setUser.pending, (state, action) => {
+				state.status = "loading";
+			})
+			.addCase(setUser.fulfilled, (state, action) => {
+				state.status = "success";
+				state.user = action.payload;
+			})
+			.addCase(setUser.rejected, (state, action) => {
 				state.status = "rejected";
 			});
 	},
