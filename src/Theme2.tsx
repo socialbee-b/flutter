@@ -16,7 +16,7 @@ export default function ToggleColorMode(props: any) {
 		}
 		const darkmode = localStorage.getItem("darkmode");
 		setMode(darkmode === "light" ? "light" : "dark");
-	}, []); // eslint-disable-line
+	}, []);
 
 	const colorMode = useMemo(
 		() => ({
@@ -30,7 +30,6 @@ export default function ToggleColorMode(props: any) {
 					darkmode === "light" ? "dark" : "light"
 				);
 
-				// toggle our state
 				setMode(darkmode === "light" ? "dark" : "light");
 			},
 		}),

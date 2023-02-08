@@ -41,6 +41,8 @@ const NotUserProfile: React.FC<any> = () => {
 		p: 4,
 	};
 
+	const handleFollowClick = async () => {};
+
 	return (
 		<div>
 			<div className="profile-header">
@@ -102,9 +104,7 @@ const NotUserProfile: React.FC<any> = () => {
 				{user?.id !== Number(id) && (
 					<div className="follow-button">
 						<Button
-							onClick={() => {
-								alert("user followed");
-							}}
+							onClick={handleFollowClick}
 							variant="outlined"
 							sx={{ ml: 55 }}
 						>

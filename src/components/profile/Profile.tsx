@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import UploadFile from "../../s3/UploadFile";
-import { getUser } from "../store/users.slice";
+import { getUser, getUserById } from "../store/users.slice";
 import "./Profile.css";
 import {
 	Box,
@@ -16,7 +16,6 @@ import { fetchPosts, getPosts, getStatus } from "../store/posts.slice";
 import PostCard from "../post-feed/PostCard";
 import FollowingList from "./FollowingList";
 import FollowersList from "./FollowersList";
-// import { FixedSizeList } from 'react-window';
 
 const Profile: React.FC<any> = () => {
 	const user = useSelector(getUser);
@@ -43,6 +42,7 @@ const Profile: React.FC<any> = () => {
 
 	useEffect(() => {
 		dispatch(fetchPosts());
+		dispatch(getUserById(user?.id));
 	}, []); // eslint-disable-line
 
 	useEffect(() => {

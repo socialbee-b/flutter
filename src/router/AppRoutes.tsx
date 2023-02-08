@@ -32,7 +32,7 @@ const AppRoutes: React.FC<unknown> = () => {
 					<Route path="/feed" element={<PostFeed />} />
 					<Route path="/profile" element={<Profile />} />
 					<Route path="/posts/:id" element={<PostPage />} />
-					<Route path="/profile/:id" element={<NotUserProfile />} />
+					<Route path="/users/:id" element={<NotUserProfile />} />
 				</Route>
 			</Route>
 		</Routes>
