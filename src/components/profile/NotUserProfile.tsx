@@ -111,7 +111,7 @@ const NotUserProfile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description" sx={{ mt: 2 }}>
 									{/* list of following goes here! */}
-									<FollowingList user={selectedUser} />
+									<FollowingList />
 								</Typography>
 							</Box>
 						</Modal>
@@ -131,7 +131,7 @@ const NotUserProfile: React.FC<any> = () => {
 								</Typography>
 								<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
 									{/* list of followers goes here! */}
-									<FollowersList user={selectedUser}/>
+									<FollowersList />
 								</Typography>
 							</Box>
 						</Modal>
