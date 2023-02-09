@@ -98,7 +98,6 @@ export const likePost = createAsyncThunk(
 			const response = await axios.put(
 				`${BASE_URL}/posts/${payload.postId}/like/${payload.userId}`
 			);
-			console.log(response.data);
 			return response.data;
 		} catch (err: any) {
 			console.log(err);
@@ -115,7 +114,6 @@ export const unlikePost = createAsyncThunk(
 			const response = await axios.put(
 				`${BASE_URL}/posts/${payload.postId}/unlike/${payload.userId}`
 			);
-			console.log(response.data);
 			return response.data;
 		} catch (err: any) {
 			console.log(err);
@@ -223,6 +221,7 @@ const postsSlice = createSlice({
 			})
 			.addCase(editPostText.fulfilled, (state, action) => {
 				state.status = "success";
+				state.currentPost = action.payload;
 			})
 			.addCase(editPostText.rejected, (state, action) => {
 				state.status = "rejected";

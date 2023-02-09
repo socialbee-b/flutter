@@ -2,7 +2,12 @@ import "./Posts.css";
 import { AiFillHeart, AiOutlineComment, AiOutlineHeart } from "react-icons/ai";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { deletePost, likePost, unlikePost } from "../store/posts.slice";
+import {
+	deletePost,
+	fetchPosts,
+	likePost,
+	unlikePost,
+} from "../store/posts.slice";
 import { addToast } from "../toasts/toasts.slice";
 import { getUser } from "../store/users.slice";
 import { useEffect, useState } from "react";
@@ -10,21 +15,16 @@ import Button from "../Button/Button";
 import { FiEdit, FiTrash } from "react-icons/fi";
 import "./PostCard.css";
 
-const PostCard: React.FC<any> = ({ post }) => {
+const PostCard: React.FC<any> = ({ post, isLoggedInUser }) => {
 	const user = useSelector(getUser);
 	const dispatch = useDispatch<any>();
 	const navigate = useNavigate();
-	const [isLoggedInUser, setIsLoggedInUser] = useState(false);
 	const [postLiked, setPostLiked] = useState(false);
 
-	useEffect(() => {
-		setIsLoggedInUser(post?.author?.id === user?.id);
-	}, []); // eslint-disable-line
-
-	const hasUserLiked = (id: any, likes: any) => {
-		if (likes?.length > 0) {
-			for (const like of likes) {
-				if (like?.id === id) {
+	const hasUserLiked = () => {
+		if (user?.id && post?.likes?.length > 0) {
+			for (const like of post?.likes) {
+				if (like?.id === user?.id) {
 					return true;
 				}
 			}
@@ -33,19 +33,22 @@ const PostCard: React.FC<any> = ({ post }) => {
 	};
 
 	useEffect(() => {
-		setPostLiked(hasUserLiked(user?.id, post?.likes || []));
-	}, [user, post]);
+		setPostLiked(hasUserLiked());
+	}, [user, post]); // eslint-disable-line
 
 	const handleLikeClick = async () => {
 		const payload = {
 			postId: post?.id,
 			userId: user?.id,
 		};
-		try {
-			dispatch(likePost(payload));
-		} catch (err: any) {
-			console.log(err);
-		}
+		dispatch(likePost(payload));
+		dispatch(fetchPosts());
+		dispatch(
+			addToast({
+				status: "success",
+				message: `Liked ${post?.author?.firstName}'s post.`,
+			})
+		);
 	};
 
 	const handleUnlikeClick = async () => {
@@ -53,11 +56,14 @@ const PostCard: React.FC<any> = ({ post }) => {
 			postId: post?.id,
 			userId: user?.id,
 		};
-		try {
-			dispatch(unlikePost(payload));
-		} catch (err: any) {
-			console.log(err);
-		}
+		dispatch(unlikePost(payload));
+		dispatch(fetchPosts());
+		dispatch(
+			addToast({
+				status: "success",
+				message: `Unliked ${post?.author?.firstName}'s post.`,
+			})
+		);
 	};
 
 	const handleCommentClick = async () => {
@@ -65,22 +71,13 @@ const PostCard: React.FC<any> = ({ post }) => {
 	};
 
 	const handleDeletePost = async () => {
-		try {
-			dispatch(deletePost(post?.id));
-			dispatch(
-				addToast({
-					status: "success",
-					message: "Your post has been deleted.",
-				})
-			);
-		} catch (err: any) {
-			dispatch(
-				addToast({
-					status: "error",
-					message: "Unable to delete post.",
-				})
-			);
-		}
+		dispatch(deletePost(post?.id));
+		dispatch(
+			addToast({
+				status: "success",
+				message: "Your post has been deleted.",
+			})
+		);
 	};
 
 	const handleEditPost = async () => {
@@ -91,14 +88,19 @@ const PostCard: React.FC<any> = ({ post }) => {
 		<div className="styledPost">
 			<div className="postHeader">
 				<img src={post?.author?.imageUrl} alt="Headshot" />
-				<div className="postUsername">
+				<div
+					className="postUsername"
+					onClick={() => navigate(`/users/${post?.author?.id}`)}
+				>
 					<h2>{`${post?.author?.firstName} ${post?.author?.lastName}`}</h2>
 					<p>@{post?.author?.username}</p>
 				</div>
 			</div>
 			<div className="postBody">
 				<p>{post?.text}</p>
-				{post?.imageUrl && <img className="pictures" src={post?.imageUrl} alt="" />}
+				{post?.imageUrl && (
+					<img className="pictures" src={post?.imageUrl} alt="" />
+				)}
 			</div>
 			<div className="postFooter space-between">
 				<div className="flex-row">

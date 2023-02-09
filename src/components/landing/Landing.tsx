@@ -1,11 +1,11 @@
 import { Box, Button, Container, Typography } from "@mui/material";
-import React from "react";
 import { useNavigate } from "react-router-dom";
 
 const Landing: React.FC<any> = () => {
 	const navigate = useNavigate();
+
 	return (
-		<Box>
+		<Box sx={{ margin: "5rem auto" }}>
 			<Container
 				sx={{
 					display: "flex",
@@ -17,17 +17,15 @@ const Landing: React.FC<any> = () => {
 			>
 				<Box>
 					<Typography variant="h2" sx={{ fontWeight: "bold" }}>
-						Big Text About Our App Goes Here
+						Stay Connected!
 					</Typography>
 					<Typography
 						variant="body1"
-						sx={{ fontSize: "1rem", color: "#5A6473", my: 2 }}
+						sx={{ fontSize: "20px", color: "#5A6473", my: 2 }}
 					>
-						Lorem ipsum dolor sit amet, consectetur adipisicing elit. Libero,
-						deleniti error iure quae praesentium commodi expedita ea alias vel
-						earum sequi asperiores repellat odio laborum laboriosam, delectus
-						aliquid provident harum!Lorem ipsum dolor sit amet, consectetur
-						adipisicing elit.
+						Welcome to Fluttr: Connecting with others has never been easier;
+						share your thoughts and like/comment on your friends' posts.
+						Register now and unleash your social butterfly!
 					</Typography>
 					<Button
 						onClick={() => navigate("/register")}

@@ -6,6 +6,7 @@ const BASE_URL = "http://localhost:8080";
 // define our initial state
 const initialState = {
 	status: "idle",
+	loginStatus: "idle",
 	user: {},
 	users: [],
 	currentUser: {},
@@ -191,6 +192,9 @@ const usersSlice = createSlice({
 		setStatus(state, action) {
 			state.status = action.payload;
 		},
+		setLoginStatus(state, action) {
+			state.loginStatus = action.payload;
+		},
 		handleLogout(state) {
 			state.user = {};
 			localStorage.setItem("user", "{}");
@@ -208,14 +212,14 @@ const usersSlice = createSlice({
 				state.status = "rejected";
 			})
 			.addCase(login.pending, (state, action) => {
-				state.status = "loading";
+				state.loginStatus = "loading";
 			})
 			.addCase(login.fulfilled, (state, action) => {
-				state.status = "success";
+				state.loginStatus = "success";
 				localStorage.setItem("user", JSON.stringify(action.payload));
 			})
 			.addCase(login.rejected, (state, action) => {
-				state.status = "rejected";
+				state.loginStatus = "rejected";
 			})
 			.addCase(changeUsername.pending, (state, action) => {
 				state.status = "loading";
@@ -315,11 +319,13 @@ const usersSlice = createSlice({
 // export functions you want to use in the app
 export const getUser = (state: any) => state.users.user;
 export const getStatus = (state: any) => state.users.status;
+export const getLoginStatus = (state: any) => state.users.loginStatus;
 export const getCurrentUser = (state: any) => state.users.currentUser;
 export const getAllUsers = (state: any) => state.users.users;
 
 // export actions
-export const { getUserFromLocal, setStatus, handleLogout } = usersSlice.actions; // eslint-disable-line
+export const { getUserFromLocal, setStatus, handleLogout, setLoginStatus } =
+	usersSlice.actions; // eslint-disable-line
 
 // export reducer
 export default usersSlice.reducer;

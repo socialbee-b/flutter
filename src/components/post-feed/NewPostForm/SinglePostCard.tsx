@@ -12,24 +12,28 @@ import {
 	createComment,
 	deleteComment,
 	editPostText,
+	getCurrentPost,
 	likePost,
 	unlikePost,
 } from "../../store/posts.slice";
 import { addToast } from "../../toasts/toasts.slice";
 import "../PostCard.css";
 
-const SinglePostCard: React.FC<any> = ({ post }) => {
+const SinglePostCard: React.FC<any> = () => {
 	const user = useSelector(getUser);
 	const dispatch = useDispatch<any>();
 	const formRef = useRef<HTMLFormElement>(null);
 	const [postLiked, setPostLiked] = useState(false);
 	const [editText, setEditText] = useState(false);
 	const [text, setText] = useState("");
+	const post = useSelector(getCurrentPost);
 
 	const hasUserLiked = (id: any, likes: any) => {
-		for (const like of likes) {
-			if (like?.id === id) {
-				return true;
+		if (likes && likes?.length > 0) {
+			for (const like of likes) {
+				if (like?.id === id) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -155,102 +159,107 @@ const SinglePostCard: React.FC<any> = ({ post }) => {
 				id: post?.id,
 				text,
 			};
-			try {
-				dispatch(editPostText(body));
-				dispatch(
-					addToast({
-						status: "success",
-						message: "Post has been edited.",
-					})
-				);
-				setEditText(false);
-			} catch (err) {
-				dispatch(
-					addToast({
-						status: "error",
-						message: "Unable to edit post.",
-					})
-				);
-			}
+			dispatch(editPostText(body));
+			dispatch(
+				addToast({
+					status: "success",
+					message: "Post has been edited.",
+				})
+			);
+			setEditText(false);
 		}
 	};
 
 	return (
-		<div className="styledPost">
-			<div className="postHeader">
-				<img src={post?.author?.imageUrl} alt="Headshot" />
-				<div className="postUsername">
-					<h2>{`${post?.author?.firstName} ${post?.author?.lastName}`}</h2>
-					<p>@{post?.author?.username}</p>
-				</div>
-			</div>
-			<div className="postBody">
-				{editText ? (
-					<form onSubmit={handleEditPostSubmit}>
-						<textarea
-							value={text}
-							onChange={(e) => setText(e.target.value)}
-						></textarea>
-						<Button>Edit Post</Button>
-					</form>
-				) : (
-					<p>{post?.text}</p>
-				)}
-				{post?.imageUrl && <img className="pictures" src={post?.imageUrl} alt="" />}
-			</div>
-			<div className="postFooter">
-				<div className="footerIcon">
-					{postLiked ? (
-						<AiFillHeart className="liked" onClick={handleUnlikeClick} />
-					) : (
-						<AiOutlineHeart onClick={handleLikeClick} />
-					)}
-					<p>{post?.likes?.length || 0} Likes</p>
-				</div>
-				<div className="footerIcon">
-					<AiOutlineComment onClick={handleCommentClick} />
-					<p>{post?.comments?.length || 0} Comments</p>
-				</div>
-				{user?.id === post?.author?.id && (
-					<div className="footerIcon">
-						<AiOutlineEdit onClick={handleEditPost} />
-						<p>Edit Post</p>
-					</div>
-				)}
-			</div>
-			{showCommentInput && (
-				<div className="createComment">
-					<form
-						ref={formRef}
-						className="flex-row"
-						onSubmit={handleCreateComment}
-					>
-						<input ref={commentRef} type="text" placeholder="Write message" />
-						<Button>Add Comment</Button>
-					</form>
-				</div>
-			)}
-			<div className="postComments">
-				<h3>Comments</h3>
-				<div className="flex-column gap-0 column-reverse">
-					{post?.comments?.map((comment: any) => (
-						<div key={comment?.id} className="postComment">
-							<div className="commentHeader">
-								<img src={comment?.author?.imageUrl} alt="" />
-								<h4>{`${comment?.author?.firstName} ${comment?.author?.lastName}`}</h4>
-								<p
-									onClick={() => handleDeleteComment(comment?.id)}
-									className="deleteComment"
-								>
-									Delete Comment
-								</p>
-							</div>
-							<p>{comment?.text}</p>
+		<>
+			{post?.author?.imageUrl ? (
+				<div className="styledPost">
+					<div className="postHeader">
+						<img src={post?.author?.imageUrl} alt="Headshot" />
+						<div className="postUsername">
+							<h2>{`${post?.author?.firstName} ${post?.author?.lastName}`}</h2>
+							<p>@{post?.author?.username}</p>
 						</div>
-					))}
+					</div>
+					<div className="postBody">
+						{editText ? (
+							<form onSubmit={handleEditPostSubmit}>
+								<textarea
+									value={text}
+									onChange={(e) => setText(e.target.value)}
+								></textarea>
+								<Button>Edit Post</Button>
+							</form>
+						) : (
+							<p>{post?.text}</p>
+						)}
+						{post?.imageUrl && (
+							<img className="pictures" src={post?.imageUrl} alt="" />
+						)}
+					</div>
+					<div className="postFooter">
+						<div className="footerIcon">
+							{postLiked ? (
+								<AiFillHeart className="liked" onClick={handleUnlikeClick} />
+							) : (
+								<AiOutlineHeart onClick={handleLikeClick} />
+							)}
+							<p>{post?.likes?.length || 0} Likes</p>
+						</div>
+						<div className="footerIcon">
+							<AiOutlineComment onClick={handleCommentClick} />
+							<p>{post?.comments?.length || 0} Comments</p>
+						</div>
+						{user?.id === post?.author?.id && (
+							<div className="footerIcon">
+								<AiOutlineEdit onClick={handleEditPost} />
+								<p>Edit Post</p>
+							</div>
+						)}
+					</div>
+					{showCommentInput && (
+						<div className="createComment">
+							<form
+								ref={formRef}
+								className="flex-row"
+								onSubmit={handleCreateComment}
+							>
+								<input
+									ref={commentRef}
+									type="text"
+									placeholder="Write message"
+								/>
+								<Button>Add Comment</Button>
+							</form>
+						</div>
+					)}
+					<div className="postComments">
+						<h3>Comments</h3>
+						<div className="flex-column gap-0 column-reverse">
+							{post?.comments?.map((comment: any) => (
+								<div key={comment?.id} className="postComment">
+									<div className="commentHeader">
+										<img src={comment?.author?.imageUrl} alt="" />
+										<h4>{`${comment?.author?.firstName} ${comment?.author?.lastName}`}</h4>
+										{comment?.author?.id === user?.id && (
+											<p
+												onClick={() => handleDeleteComment(comment?.id)}
+												className="deleteComment"
+											>
+												Delete Comment
+											</p>
+										)}
+									</div>
+									<p>{comment?.text}</p>
+								</div>
+							))}
+						</div>
+					</div>
 				</div>
-			</div>
-		</div>
+			) : (
+				<h2>Loading..</h2>
+			)}
+		</>
 	);
 };
 

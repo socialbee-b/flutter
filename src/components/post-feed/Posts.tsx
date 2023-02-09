@@ -1,23 +1,21 @@
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchPosts, getPosts } from "../store/posts.slice";
-import { getCurrentUser, getUser, getUserById } from "../store/users.slice";
+import { getUser } from "../store/users.slice";
 import PostCard from "./PostCard";
 
 const Posts: React.FC<any> = () => {
 	const dispatch = useDispatch<any>();
 	const user = useSelector(getUser);
-	const currentUser = useSelector(getCurrentUser);
 	const posts = useSelector(getPosts);
 	const [filteredPost, setFilteredPosts] = useState(<></>);
 
 	useEffect(() => {
 		dispatch(fetchPosts());
-		user?.id && dispatch(getUserById(user?.id));
 	}, [user]); // eslint-disable-line
 
 	const isFollowing = (id: any) => {
-		for (const following of currentUser?.following || []) {
+		for (const following of user?.following || []) {
 			if (following?.id === id) {
 				return true;
 			}
@@ -31,7 +29,11 @@ const Posts: React.FC<any> = () => {
 				{posts.map(
 					(post: any) =>
 						isFollowing(post?.author?.id) && (
-							<PostCard key={post?.id} post={post} />
+							<PostCard
+								key={post?.id}
+								post={post}
+								isLoggedInUser={user?.id === post?.author?.id}
+							/>
 						)
 				)}
 			</>

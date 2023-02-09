@@ -89,3 +89,13 @@ h1 {
 .capitalize {
 	text-transform: capitalize;
 }
+
+.center {
+	margin: 5rem auto;
+	text-align: center;
+}
+
+.default-text {
+	text-decoration: none;
+	color: inherit;
+}
