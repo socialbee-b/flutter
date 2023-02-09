@@ -2,7 +2,7 @@
 
 Here you'll find information on how to locally build and run this application. 
 
-## Prerequisites
+## Prereqs
 
 You'll need to download both VSCode [here](https://code.visualstudio.com/download) and intelliJ [here](https://www.jetbrains.com/idea/download/#section=windows). 
 If you did not previously have IntelliJ on your local machine, you will also need to install a JDK. we used JDK-11 for this project. The download can be found [here](https://www.oracle.com/java/technologies/javase/jdk11-archive-downloads.html).
