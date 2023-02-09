@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const BASE_URL = "http://localhost:8080";
+const BASE_URL = "http://flutterdeployedbucket.s3-website-us-east-1.amazonaws.com";
 
 // define our initial state
 const initialState = {
