@@ -7,6 +7,9 @@ Welcome to Fluttr! This application uses a React front end, an AWS RDS database,
 
 http://flutterdeployedbucket.s3-website-us-east-1.amazonaws.com/
 
+## Backend Repository
+https://github.com/socialbee-b/fluttrbackend
+
 ## Tehcnologies Used
 
 - TypeScript
