@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUser, handleLogout } from "../store/users.slice";
 import { useEffect, useState } from "react";
 import SearchBar from "../searchbar/SearchBar";
+import { Link } from "react-router-dom";
 
 const Navbar: React.FC<any> = () => {
 	const navigate = useNavigate();
@@ -43,7 +44,9 @@ const Navbar: React.FC<any> = () => {
 			<AppBar position="static" color="transparent">
 				<Toolbar>
 					<Typography variant="h4" component="div" sx={{ flexGrow: 1 }}>
-						Fluttr
+						<Link to="/" className="default-text">
+							Fluttr
+						</Link>
 					</Typography>
 					{user?.email && <SearchBar />}
 					<Tooltip disableFocusListener disableTouchListener title={log}>

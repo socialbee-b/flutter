@@ -1,7 +1,12 @@
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import UploadFile from "../../s3/UploadFile";
-import { getCurrentUser, getUser, getUserById } from "../store/users.slice";
+import {
+	getCurrentUser,
+	getUser,
+	getUserById,
+	getUserFromLocal,
+} from "../store/users.slice";
 import "./Profile.css";
 import {
 	Box,
@@ -22,8 +27,8 @@ import FollowingList from "./FollowingList";
 import FollowersList from "./FollowersList";
 
 const Profile: React.FC<any> = () => {
-	const currentUser = useSelector(getCurrentUser);
 	const user = useSelector(getUser);
+	const currentUser = useSelector(getCurrentUser);
 	const dispatch = useDispatch<any>();
 	const status = useSelector(getStatus);
 
@@ -50,16 +55,14 @@ const Profile: React.FC<any> = () => {
 	}, []); // eslint-disable-line
 
 	useEffect(() => {
+		dispatch(getUserFromLocal());
+	}, [status]); //eslint-disable-line
+
+	useEffect(() => {
 		if (user?.id) {
 			dispatch(getUserById(user?.id));
 		}
 	}, [user]); // eslint-disable-line
-
-	useEffect(() => {
-		if (status === "success") {
-			dispatch(fetchPosts());
-		}
-	}, [status]); // eslint-disable-line
 
 	const profilestyle = {
 		position: "absolute" as "absolute",
@@ -94,11 +97,11 @@ const Profile: React.FC<any> = () => {
 						aria-labelledby="modal-uploadpfp-title"
 						aria-describedby="modal-uploadpfp-desc"
 					>
-						<DialogTitle style={{textAlign: "center"}}>
+						<DialogTitle style={{ textAlign: "center" }}>
 							Upload Picture
 						</DialogTitle>
 						<DialogContent>
-							<DialogContentText style={{textAlign: "center"}}>
+							<DialogContentText style={{ textAlign: "center" }}>
 								Select an image.
 							</DialogContentText>
 							<Typography
@@ -106,10 +109,7 @@ const Profile: React.FC<any> = () => {
 								id="modal-uploadpfp-desc"
 							>
 								<UploadFile />
-								<Button onClick={handleClose3}
-									fullWidth
-									sx={{ mt: 1 }}
-								>
+								<Button onClick={handleClose3} fullWidth sx={{ mt: 1 }}>
 									Close
 								</Button>
 							</Typography>
@@ -137,7 +137,6 @@ const Profile: React.FC<any> = () => {
 									Following
 								</Typography>
 								<Typography id="modal-modal-description" sx={{ mt: 2 }}>
-									{/* list of following goes here! */}
 									<FollowingList />
 								</Typography>
 							</Box>
@@ -157,7 +156,6 @@ const Profile: React.FC<any> = () => {
 									Followers
 								</Typography>
 								<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
-									{/* list of followers goes here! */}
 									<FollowersList />
 								</Typography>
 							</Box>
@@ -169,7 +167,11 @@ const Profile: React.FC<any> = () => {
 				{posts?.map(
 					(post: any) =>
 						post?.author?.id === user?.id && (
-							<PostCard key={post?.id} post={post} />
+							<PostCard
+								key={post?.id}
+								post={post}
+								isLoggedInUser={user?.id === post?.author?.id}
+							/>
 						)
 				)}
 			</div>

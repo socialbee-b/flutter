@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import {
 	followUser,
 	getCurrentUser,
+	getStatus,
 	getUser,
 	getUserById,
 	setUser,
@@ -22,6 +23,7 @@ const NotUserProfile: React.FC<any> = () => {
 	const selectedUser = useSelector(getCurrentUser);
 	const posts = useSelector(getPosts);
 	const dispatch = useDispatch<any>();
+	const status = useSelector(getStatus);
 
 	useEffect(() => {
 		dispatch(getUserById(id));
@@ -65,7 +67,7 @@ const NotUserProfile: React.FC<any> = () => {
 
 	useEffect(() => {
 		setIsFollowing(hasUserFollowed());
-	}, [user, selectedUser]); // eslint-disable-line
+	}, [selectedUser]); // eslint-disable-line
 
 	const handleFollowClick = async () => {
 		const payload = {
@@ -80,84 +82,98 @@ const NotUserProfile: React.FC<any> = () => {
 	};
 
 	return (
-		<div>
-			<div className="profile-header">
-				<div className="profile-picture">
-					<img
-						className="profile-picture"
-						src={selectedUser?.imageUrl}
-						alt="profile pic"
-					/>
-				</div>
-				<div className="flex-column">
-					<h2>
-						{selectedUser?.firstName} {selectedUser?.lastName}
-					</h2>
-					<p className="username">@{selectedUser?.username}</p>
+		<>
+			{status === "loading" || status === "idle" ? (
+				<h2>Loading...</h2>
+			) : (
+				<div>
+					<div className="profile-header">
+						<div className="profile-picture">
+							<img
+								className="profile-picture"
+								src={selectedUser?.imageUrl}
+								alt="profile pic"
+							/>
+						</div>
+						<div className="flex-column">
+							<h2>
+								{selectedUser?.firstName} {selectedUser?.lastName}
+							</h2>
+							<p className="username">@{selectedUser?.username}</p>
 
-					<div className="flex-row">
-						<Button onClick={handleOpen}>
-							{selectedUser?.following?.length} Following
-						</Button>
-						<Modal
-							open={open}
-							onClose={handleClose}
-							aria-labelledby="modal-modal-title"
-							aria-describedby="modal-modal-description"
-						>
-							<Box sx={style}>
-								<Typography id="modal-modal-title" variant="h6" component="h2">
-									Following
-								</Typography>
-								<Typography id="modal-modal-description" sx={{ mt: 2 }}>
-									{/* list of following goes here! */}
-									<FollowingList />
-								</Typography>
-							</Box>
-						</Modal>
+							<div className="flex-row">
+								<Button onClick={handleOpen}>
+									{selectedUser?.following?.length} Following
+								</Button>
+								<Modal
+									open={open}
+									onClose={handleClose}
+									aria-labelledby="modal-modal-title"
+									aria-describedby="modal-modal-description"
+								>
+									<Box sx={style}>
+										<Typography
+											id="modal-modal-title"
+											variant="h6"
+											component="h2"
+										>
+											Following
+										</Typography>
+										<Typography id="modal-modal-description" sx={{ mt: 2 }}>
+											{/* list of following goes here! */}
+											<FollowingList />
+										</Typography>
+									</Box>
+								</Modal>
 
-						<Button onClick={handleOpen2}>
-							{selectedUser?.followers?.length} Followers
-						</Button>
-						<Modal
-							open={open2}
-							onClose={handleClose2}
-							aria-labelledby="modal-modal-title2"
-							aria-describedby="modal-modal-description2"
-						>
-							<Box sx={style}>
-								<Typography id="modal-modal-title2" variant="h6" component="h2">
-									Followers
-								</Typography>
-								<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
-									{/* list of followers goes here! */}
-									<FollowersList />
-								</Typography>
-							</Box>
-						</Modal>
+								<Button onClick={handleOpen2}>
+									{selectedUser?.followers?.length} Followers
+								</Button>
+								<Modal
+									open={open2}
+									onClose={handleClose2}
+									aria-labelledby="modal-modal-title2"
+									aria-describedby="modal-modal-description2"
+								>
+									<Box sx={style}>
+										<Typography
+											id="modal-modal-title2"
+											variant="h6"
+											component="h2"
+										>
+											Followers
+										</Typography>
+										<Typography id="modal-modal-description2" sx={{ mt: 2 }}>
+											{/* list of followers goes here! */}
+											<FollowersList />
+										</Typography>
+									</Box>
+								</Modal>
+							</div>
+						</div>
+						{user?.id !== Number(id) && (
+							<div className="follow-button">
+								<Button
+									onClick={handleFollowClick}
+									variant="outlined"
+									sx={{ ml: 55 }}
+								>
+									{isFollowing ? "Unfollow" : "Follow"}
+								</Button>
+							</div>
+						)}
+					</div>
+					<div className="flex-column column-reverse">
+						{posts?.map(
+							(post: any) =>
+								post?.author?.id === selectedUser?.id && (
+									<PostCard key={post?.id} post={post} />
+								)
+						)}
 					</div>
 				</div>
-				{user?.id !== Number(id) && (
-					<div className="follow-button">
-						<Button
-							onClick={handleFollowClick}
-							variant="outlined"
-							sx={{ ml: 55 }}
-						>
-							{isFollowing ? "Unfollow" : "Follow"}
-						</Button>
-					</div>
-				)}
-			</div>
-			<div className="flex-column column-reverse">
-				{posts?.map(
-					(post: any) =>
-						post?.author?.id === selectedUser?.id && (
-							<PostCard key={post?.id} post={post} />
-						)
-				)}
-			</div>
-		</div>
+			)}
+		</>
 	);
 };
 

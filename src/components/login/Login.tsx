@@ -12,12 +12,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import { FormEvent, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-	getStatus,
-	getUserFromLocal,
-	login,
-	setStatus,
-} from "../store/users.slice";
+import { getLoginStatus, login, setLoginStatus } from "../store/users.slice";
 import { addToast } from "../toasts/toasts.slice";
 
 const theme = createTheme();
@@ -28,10 +23,10 @@ export default function Login() {
 
 	const navigate = useNavigate();
 	const dispatch = useDispatch<any>();
-	const status = useSelector(getStatus);
+	const loginStatus = useSelector(getLoginStatus);
 
 	useEffect(() => {
-		if (status === "rejected") {
+		if (loginStatus === "rejected") {
 			dispatch(
 				addToast({
 					status: "error",
@@ -39,8 +34,24 @@ export default function Login() {
 				})
 			);
 		}
-		dispatch(setStatus("idle"));
-	}, [status]); // eslint-disable-line
+		if (loginStatus === "success") {
+			// reset form
+			setEmail("");
+			setPassword("");
+
+			// rerouting
+			navigate("/profile");
+
+			// send success message
+			dispatch(
+				addToast({
+					status: "success",
+					message: "You have been logged in.",
+				})
+			);
+		}
+		loginStatus !== "idle" && dispatch(setLoginStatus("idle"));
+	}, [loginStatus]); // eslint-disable-line
 
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
@@ -55,20 +66,6 @@ export default function Login() {
 			const payload = { email, password };
 			try {
 				dispatch(login(payload));
-				// reset form
-				setEmail("");
-				setPassword("");
-
-				dispatch(getUserFromLocal());
-
-				navigate("/feed");
-
-				dispatch(
-					addToast({
-						status: "success",
-						message: "You have been logged in.",
-					})
-				);
 			} catch (err: any) {
 				dispatch(
 					addToast({
@@ -98,12 +95,7 @@ export default function Login() {
 					<Typography component="h1" variant="h5">
 						Sign in
 					</Typography>
-					<Box
-						component="form"
-						onSubmit={handleSubmit}
-						noValidate
-						sx={{ mt: 1 }}
-					>
+					<form onSubmit={handleSubmit}>
 						<TextField
 							value={email}
 							onChange={(e) => setEmail(e.target.value)}
@@ -143,7 +135,7 @@ export default function Login() {
 								</Link>
 							</Grid>
 						</Grid>
-					</Box>
+					</form>
 				</Box>
 			</Container>
 		</ThemeProvider>

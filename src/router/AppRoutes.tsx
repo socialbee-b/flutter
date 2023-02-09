@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Landing from "../components/landing/Landing";
 import Layout from "../components/Layout/Layout";
 import Login from "../components/login/Login";
+import OutOfBounds from "../components/OutOfBoundsPage/OutOfBounds";
 import PostFeed from "../components/post-feed/PostFeed";
 import PostPage from "../components/PostPage/PostPage";
 import NotUserProfile from "../components/profile/NotUserProfile";
@@ -34,6 +35,7 @@ const AppRoutes: React.FC<unknown> = () => {
 					<Route path="/posts/:id" element={<PostPage />} />
 					<Route path="/users/:id" element={<NotUserProfile />} />
 				</Route>
+				<Route path="/*" element={<OutOfBounds />} />
 			</Route>
 		</Routes>
 	);
